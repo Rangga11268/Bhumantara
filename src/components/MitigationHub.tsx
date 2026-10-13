@@ -214,7 +214,7 @@ export const MitigationHub: React.FC<MitigationHubProps> = ({
     }).join('\n');
 
     const memo = `===============================================================
-${language === 'id' ? 'MEMORANDUM PENUGASAN PATROLI LAPANGAN - TERRA HARMONIA INTELLIGENCE' : 'FIELD PATROL DISPATCH MEMORANDUM - TERRA HARMONIA INTELLIGENCE'}
+${language === 'id' ? 'MEMORANDUM PENUGASAN PATROLI LAPANGAN - WANAREKSA EARTH INTELLIGENCE' : 'FIELD PATROL DISPATCH MEMORANDUM - WANAREKSA EARTH INTELLIGENCE'}
 NASA Space Apps Jakarta 2026 - ${language === 'id' ? 'Sistem Peringatan Dini Kebakaran Kubah Gambut' : 'Peatland Wildfire Early Warning & Mitigation System'}
 ===============================================================
 ${language === 'id' ? 'Tanggal Operasi' : 'Operation Date'}  : ${patrolDate}
@@ -744,7 +744,7 @@ ${language === 'id' ? 'Sumber Data: NASA FIRMS (MODIS 1km / VIIRS 375m) & Open-M
                         {/* WhatsApp Dispatch Button */}
                         <a
                           href={`https://wa.me/?text=${encodeURIComponent(
-                            `🚨 *DISPOSISI DARURAT TITIK PANAS TERRA HARMONIA*\n` +
+                            `🚨 *DISPOSISI DARURAT TITIK PANAS WANAREKSA*\n` +
                             `Wilayah: ${selectedAOI.name} (${loc.regency}${loc.district ? `, ${loc.district}` : ''})\n` +
                             `Koordinat: ${spot.lat.toFixed(5)}, ${spot.lon.toFixed(5)}\n` +
                             `FRP: ${spot.frp} MW | Sensor: ${spot.instrument} (${spot.satellite})\n` +
