@@ -98,8 +98,8 @@ Without mathematical and spatial harmonization, raw historical archives create a
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/Rangga11268/Bhumantara.git
-cd Bhumantara
+git clone https://github.com/Rangga11268/Wanareksa.git
+cd Wanareksa
 
 # 2. Install dependencies
 npm install
