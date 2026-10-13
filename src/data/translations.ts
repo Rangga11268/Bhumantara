@@ -3,7 +3,7 @@ export type Language = 'en' | 'id';
 export const translations = {
   en: {
     // Header & Navigation
-    appName: 'Terra Harmonia',
+    appName: 'Bhumantara',
     appTagline: 'NASA Space Apps 2026',
     subTagline: 'MODIS and VIIRS Multi-Sensor Burning Activity Record',
     harmonized: 'Harmonized',
@@ -344,7 +344,7 @@ export const translations = {
   },
   id: {
     // Header & Navigation
-    appName: 'Terra Harmonia',
+    appName: 'Bhumantara',
     appTagline: 'NASA Space Apps 2026',
     subTagline: 'Rekam Jejak Aktivitas Pembakaran Multi-Sensor MODIS dan VIIRS',
     harmonized: 'Terharmonisasi',

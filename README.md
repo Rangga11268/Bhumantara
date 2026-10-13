@@ -1,14 +1,14 @@
 <div align="center">
 
-  <img src="public/terra_harmonia_transparent.svg" alt="Terra Harmonia Logo" width="120" height="120" />
+  <img src="public/bhumantara_logo.svg" alt="Bhumantara Emblem" width="130" height="130" />
 
-  # Terra Harmonia
-  ### Multi-Decadal Earth Observation Satellite Harmonization & Wildfire Intelligence Platform
-  ### Platform Harmonisasi Satelit Observasi Bumi & Intelijen Kebakaran Hutan Multi-Dekade
+  # BHUMANTARA (भूमान्तर)
+  ### Planetary Multi-Sensor Climatology & Indonesian Tropical Peatland Intelligence Suite
+  ### Platform Harmonisasi Satelit Observasi Bumi & Intelijen Gambut Tropis Multi-Dekade
 
   [![NASA Space Apps Challenge](https://img.shields.io/badge/NASA_Space_Apps-2026_Global_Challenge-0B3D91?style=for-the-badge&logo=nasa&logoColor=white)](https://www.spaceappschallenge.org/)
   [![Challenge Category](https://img.shields.io/badge/Challenge-MODIS_&_VIIRS_Harmonization-EA580C?style=for-the-badge)](https://www.spaceappschallenge.org/)
-  [![Live Satellite Data](https://img.shields.io/badge/Data_Feed-NASA_FIRMS_&_Open--Meteo-10B981?style=for-the-badge)](https://firms.modaps.eosdis.nasa.gov/)
+  [![Live Satellite Data](https://img.shields.io/badge/Data_Feed-NASA_FIRMS_NRT_&_GIBS-10B981?style=for-the-badge)](https://firms.modaps.eosdis.nasa.gov/)
   [![TypeScript](https://img.shields.io/badge/TypeScript-5.7-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
   [![React](https://img.shields.io/badge/React-18.3-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://reactjs.org/)
   [![Vite](https://img.shields.io/badge/Vite-6.1-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
@@ -25,57 +25,58 @@
 
 ## Executive Summary
 
+**Bhumantara**—derived from ancient Sanskrit for the nexus of **Earth (*Bhumi*)** and **Space (*Antara*)**—is an authoritative planetary climatology system developed for the NASA Space Apps Challenge 2026.
+
 For over two decades, NASA Earth Observation satellites have tracked global active fire events:
-1. **MODIS (Terra & Aqua)**: 1.0 km nadir resolution, operational since 2000.
-2. **VIIRS (Suomi-NPP & NOAA-20)**: 375 m nadir resolution, operational since 2012.
+1. **MODIS (Terra & Aqua)**: 1.0 km nadir footprint, operational since 2000.
+2. **VIIRS (Suomi-NPP & NOAA-20)**: 375 m nadir footprint, operational since 2012.
 
-Because VIIRS provides an observational ground footprint approximately **7 times smaller** than MODIS, a single contiguous wildfire front registers as **3 to 7 separate raw VIIRS detections**. 
+Because VIIRS provides an observational ground footprint approximately **7 times smaller** than MODIS, a single contiguous tropical peatland fire front registers as **3 to 7 separate raw VIIRS detections**. 
 
-Without mathematical and spatial harmonization, raw historical archives create a dangerous statistical artifact: **wildfire frequency appears to abruptly triple post-2012**. This distorts long-term climate baselines, fire regime analysis, and disaster mitigation resource allocation.
+Without mathematical and spatial harmonization, raw historical archives create a dangerous statistical illusion: **wildfire frequency appears to artificially triple post-2012**. This distorts long-term climate baselines, carbon emission accounting, and national peatland restoration policies across Indonesia's **14.9 million hectares of fragile peat dome ecosystems**.
 
-**Terra Harmonia** bridges this technological gap through **5.5 km equal-area spatial binning**, **cross-sensor Fire Radiative Power (FRP) radiometric calibration**, and **real-time meteorological telemetry integration**, providing environmental authorities with an authoritative multi-decade intelligence suite.
+**Bhumantara** resolves this distortion through:
+* **5.5 km equal-area spatial binning** (neutralizing sensor footprint overcounting)
+* **Stefan-Boltzmann Fire Radiative Power (FRP) cross-sensor calibration**
+* **In-situ hydrological coupling with BRGM statutory Peat Water Table depths ($TMAG < -40\text{ cm}$)**
+* **Frontline rapid-response dispatch pipelines** (instant WhatsApp SitRep formatting & RFC 7946 open GeoJSON GIS exports)
 
 ---
 
-## Key Modules & Platform Capabilities
+## Key Modules & Platform Architecture
 
 ```
 ┌──────────────────────────────────────────────────────────────────────────────────────────┐
-│                                TERRA HARMONIA ARCHITECTURE                               │
+│                                  BHUMANTARA ARCHITECTURE                                 │
 ├────────────────────────────┬────────────────────────────┬────────────────────────────────┤
 │    🛰️ SENSOR HARMONIZATION  │    🗺️ GIS & INTELLIGENCE   │    🛡️ MITIGATION & PROGNOSIS   │
 ├────────────────────────────┼────────────────────────────┼────────────────────────────────┤
-│ • 5.5 km Spatial Binning   │ • Hard Boundary Lock       │ • Live Open-Meteo Weather API  │
-│ • FRP Cross-Calibration    │   (Indonesia Archipelago)  │ • BRGM Peatland TMAT Physics   │
-│ • 26-Year Baseline Normal. │ • 2000-2026 Epoch Stepper  │ • 14-Day Multi-Variable Trend  │
-│ • Multi-Sensor Footprint   │ • Split-Screen Dual Map    │ • 1-Click Executive SitRep PDF │
-│   Interactive Simulator    │ • Custom Polygon Inspector │ • High-Performance Hotspots   │
+│ • 5.5 km Spatial Binning   │ • Sovereign Boundary Lock  │ • NASA FIRMS NRT 24h Live Feed │
+│ • Stefan-Boltzmann FRP     │   (Indonesia Archipelago)  │ • BRGM Peat Hydrology Physics  │
+│ • 26-Year Climatology      │ • 2000-2026 Epoch Matrix   │ • 500-Run Monte Carlo Lab      │
+│ • Optical Footprint Visual │ • Dual-Map Sensor Sync     │ • 1-Click Executive SitRep PDF │
+│   Interactive Demonstrator │ • Custom Polygon Inspector │ • Frontline WhatsApp SitRep    │
 └────────────────────────────┴────────────────────────────┴────────────────────────────────┘
 ```
 
-### 1. Longitudinal Harmonization Engine
-- **Equal-Area 5.5 km Grid Clustering**: Merges fragmented sub-pixel detections from overlapping orbits into unified physical fire events.
-- **Empirical Radiometric Calibration**:
-  $$\text{FRP}_{\text{calibrated}} = (\text{FRP}_{\text{MODIS}} \times 1.04) + (\text{FRP}_{\text{VIIRS}} \times 0.88)$$
-- **Burning Activity Index (BAI)**: Normalizes cluster density and thermal radiative energy flux onto a standardized 0-100 severity scale.
-- **Statistical Anomaly Detection**: Computes running 26-year historical weekly baselines to detect anomalous surges ($Z > 2.0\sigma$).
+### 1. Multi-Decadal Sensor Harmonization Core
+- **5.5 km Equal-Area Grid Clustering**: Aggregates fragmented sub-pixel detections from overlapping satellite passes into discrete physical fire events ($A \approx 26.2\text{ km}^2$).
+- **Radiometric FRP Normalization**:
+  $$\text{FRP}_{\text{calibrated}} = (\text{FRP}_{\text{MODIS}} \times 1.00) + (\text{FRP}_{\text{VIIRS}} \times 0.88)$$
+- **Burning Activity Index (BAI)**: Normalizes cluster density and thermal radiative flux onto a standardized 0–100 severity metric.
+- **Statistical Anomaly Detection (Z-Score)**: Evaluates weekly fire activity against 26-year running baseline averages to flag catastrophic climate anomalies ($Z > +2.0\sigma$, e.g., 2015 Super El Niño and 2019 positive IOD).
 
-### 2. Indonesian Archipelago GIS & Intelligence Suite
-- **Hard Boundary Lock**: Constrains map exploration strictly to the sovereign coordinates of Indonesia (`[-11.5° S, 94.0° E]` to `[6.5° N, 141.5° E]`) with `maxBoundsViscosity: 1.0` and `minZoom: 4`.
-- **26-Year Historical Timeline**: Slider-free epoch controller with instant year steppers (`-1`, `+1`) and landmark climate anomaly presets (*2000 Baseline, 2015 Super El Niño, 2019 El Niño, 2023 El Niño, 2026 Live*).
-- **Dual Map A/B Comparator**: Simultaneous side-by-side synchronized view comparing raw multi-sensor telemetry against calibrated clusters.
-- **Peat Dome Polygon Inspector**: Interactive GeoJSON polygon drawing tool calculating instant area, total thermal output, and localized peat risk.
-- **Web Speech AI Briefing**: Synthesizes real-time situation reports into natural voice audio for incident commanders.
+### 2. Indonesian Archipelago GIS & Spatial Intelligence
+- **Sovereign Boundary Lock**: Restricts navigation precisely to the Indonesian equatorial archipelago (`[-11.5° S, 94.0° E]` to `[6.5° N, 141.5° E]`) with zero map wander.
+- **26-Year Historical Climatology Matrix**: 52-week annual matrix spanning 2000 to 2026, complete with 1-click disaster benchmarks (*2015 Super El Niño, 2019 IOD+, 2023 El Niño, 2022-2026 Restoration Era*).
+- **Synchronized Dual-Map Comparator**: Real-time side-by-side inspection contrasting raw multi-sensor telemetry against calibrated clusters.
+- **Peat Dome Polygon Inspector**: Interactive vector polygon tool delivering instant area calculations, total Megawatt output, and sub-surface smoldering risk assessments.
 
-### 3. Mitigation Hub & Operational Prognosis
-- **Live Meteorological Telemetry**: Direct integration with Open-Meteo API for real-time temperature, relative humidity, wind speed, and Days Without Rain (HTH).
-- **BRGM Peat Hydrology Physics**: Computes Groundwater Depth (TMAT) vs the critical -40 cm statutory limit, peat moisture content (%), burn depth (cm), and CO₂e emissions per hectare.
-- **High-Performance Hotspot Explorer**: Instant in-memory chunking (24 items/page) with 1-click filter chips (*FRP ≥50MW, VIIRS 375m, MODIS 1km*) and instant search.
-- **Direct 1-Click PDF SitRep Dossier**: Client-side high-resolution PDF generation via `jsPDF` and `html2canvas` formatted to official national standard.
-
-### 4. Harmonization Laboratory & Sensor Physics
-- **Interactive Spatial Sampling Demonstrator**: Real-time SVG canvas visually rendering how a physical fire front is sampled by MODIS 1 km pixels vs VIIRS 375 m pixels vs Terra Harmonia 5.5 km bins.
-- **Sensor Specification Matrix**: Complete technical reference comparing NASA EOS (Terra/Aqua) and JPSS (Suomi-NPP/NOAA-20) satellite instrumentation.
+### 3. Frontline Mitigation Hub & Peat Hydrology
+- **BRGM Peat Hydrology Physics**: Evaluates statutory Groundwater Table depth (TMAG) against the critical $-40\text{ cm}$ statutory boundary, smoldering burn depth, and carbon emissions ($1.75\text{ Gt CO}_2\text{e}$ peak benchmark).
+- **Manggala Agni Dispatch Generator**: 1-click automated WhatsApp / SMS dispatch summaries detailing exact coordinates, regency names, and peat dome vulnerability indicators.
+- **Executive SitRep Dossier**: High-resolution, printable A4 PDF reporting generated directly client-side via `jsPDF` and `html2canvas`.
+- **Open Geospatial Interoperability**: Full export compatibility supporting RFC 7946 standard GeoJSON and calibrated CSV formats.
 
 ---
 
@@ -84,12 +85,12 @@ Without mathematical and spatial harmonization, raw historical archives create a
 | Layer | Technologies |
 |---|---|
 | **Core Framework** | React 18.3, TypeScript 5.7, Vite 6.1 |
-| **Styling & Design System** | Tailwind CSS 3.4, Apple-Inspired Telemetry Aesthetics, 100% Slider-Free UX |
-| **Mapping & GIS** | Leaflet 1.9, Esri World Imagery, CartoDB Voyager |
-| **Data Visualization** | Recharts 3.10 (Multi-series Area, Composed Bar, Radial Pie, Sparklines) |
+| **Design System** | Tailwind CSS 3.4, Strict Anti-Slop Guidelines, WCAG AA Verified Contrast |
+| **Mapping & GIS** | Leaflet 1.9, CartoDB Voyager, Esri World Imagery |
+| **Data Analytics** | Recharts 3.10 (Multi-series Area, Composed Bars, Polar Radar) |
 | **Document Generation** | jsPDF 4.2, html2canvas 1.4, DOMPurify |
-| **Live APIs** | NASA FIRMS REST API, Open-Meteo Global Weather API |
-| **Compliance** | Strict Anti-Slop Guidelines, WCAG AA Contrast, Full Bilingual (ID / EN) |
+| **Live APIs** | NASA FIRMS REST API, Open-Meteo Planetary Telemetry |
+| **Internationalization** | Comprehensive Bilingual Architecture (Bahasa Indonesia & English) |
 
 ---
 
@@ -103,115 +104,38 @@ cd TerraHarmonia
 # 2. Install dependencies
 npm install
 
-# 3. Start local development server
+# 3. Launch local development server
 npm run dev
 
-# 4. Build for production
+# 4. Compile production build
 npm run build
 ```
 
 ---
-
-<br />
 
 # 🇮🇩 Bahasa Indonesia
 
 ## Ringkasan Eksekutif
 
-Selama lebih dari dua dekade, satelit observasi bumi NASA telah memantau kebakaran hutan dan lahan (karhutla) secara global:
-1. **MODIS (Terra & Aqua)**: Resolusi 1.0 km pada nadir, beroperasi sejak tahun 2000.
-2. **VIIRS (Suomi-NPP & NOAA-20)**: Resolusi 375 m pada nadir, beroperasi sejak akhir 2011/2012.
+**Bhumantara**—berasal dari bahasa Sanskerta untuk pertemuan antara **Bumi (*Bhumi*)** dan **Antariksa (*Antara*)**—adalah platform intelijen dan harmonisasi data satelit multi-dekade untuk NASA Space Apps Challenge 2026.
 
-Karena ukuran piksel VIIRS sekitar **7 kali lebih kecil** dibandingkan MODIS, satu front kebakaran yang sama di lapangan sering kali terdeteksi sebagai **3 hingga 7 titik terpisah oleh sensor VIIRS**.
+Selama lebih dari dua dekade, satelit observasi bumi NASA telah memantau titik api kebakaran global:
+1. **MODIS (Terra & Aqua)**: Resolusi piksel 1.0 km, beroperasi sejak tahun 2000.
+2. **VIIRS (Suomi-NPP & NOAA-20)**: Resolusi piksel 375 m, beroperasi sejak tahun 2012.
 
-Tanpa harmonisasi matematis dan spasial, arsip historis mentah memicu ilusi statistik yang berbahaya: **seolah-olah frekuensi kebakaran melonjak 3x lipat pasca-2012**. Hal ini mendistorsi garis dasar (*baseline*) iklim jangka panjang, analisis tren kebakaran, dan alokasi sumber daya pemadaman darurat.
+Karena sensor VIIRS memiliki jejak optik **7 kali lebih rapat** daripada MODIS, satu garis kebakaran gambut tunggal terdeteksi sebagai **3 hingga 7 titik deteksi terpisah** pada data mentah VIIRS.
 
-**Terra Harmonia** menyelesaikan disparitas teknologi ini melalui **pengelompokan spasial equal-area 5.5 km**, **kalibrasi radiometrik daya radiasi api (FRP)**, dan **integrasi telemetri cuaca live**, memberikan platform intelijen multi-dekade yang presisi dan tervalidasi bagi otoritas lingkungan hidup.
+Tanpa harmonisasi matematis dan spasial, data historis mentah menciptakan ilusi statistik yang berbahaya: **frekuensi kebakaran hutan seolah-olah melonjak 300% pasca-2012**. Hal ini mendistorsi data acuan iklim jangka panjang dan perencanaan anggaran restorasi pada **14.9 juta hektar ekosistem kubah gambut Indonesia**.
 
----
-
-## Arsitektur & Kemampuan Utama Platform
-
-```
-┌──────────────────────────────────────────────────────────────────────────────────────────┐
-│                                STRUKTUR TERRA HARMONIA                                   │
-├────────────────────────────┬────────────────────────────┬────────────────────────────────┤
-│    🛰️ HARMONISASI SENSOR    │     🗺️ GIS & INTELIJEN     │    🛡️ MITIGASI & PROGNOSIS     │
-├────────────────────────────┼────────────────────────────┼────────────────────────────────┤
-│ • Spatial Binning 5.5 km   │ • Penguncian Batas Peta    │ • Cuaca Live Open-Meteo API    │
-│ • Kalibrasi Radiometri FRP │   (Khusus Kepulauan RI)    │ • Model Fisika TMAT BRGM       │
-│ • Normalisasi Tren 26 Thn  │ • Stepper Tahun 2000-2026  │ • Grafik Prognosis 14 Hari     │
-│ • Simulator Interaktif     │ • Split-Screen Peta Ganda  │ • Download Dokumen SitRep PDF  │
-│   Footprint Spasial Sensor │ • Inspektur Poligon Gambut │ • Explorer Titik Panas Cepat   │
-└────────────────────────────┴────────────────────────────┴────────────────────────────────┘
-```
-
-### 1. Mesin Harmonisasi Lintas-Dekade
-- **Spatial Binning Equal-Area 5.5 km**: Menyatukan titik-titik sub-piksel terfragmentasi dari berbagai orbit satelit ke dalam satu klaster fisik yang koheren.
-- **Kalibrasi Radiometrik Empiris**:
-  $$\text{FRP}_{\text{terkalibrasi}} = (\text{FRP}_{\text{MODIS}} \times 1.04) + (\text{FRP}_{\text{VIIRS}} \times 0.88)$$
-- **Indeks Aktivitas Pembakaran (BAI)**: Menstandarkan kerapatan titik dan daya radiasi energi termal ke dalam skala keparahan 0-100.
-- **Deteksi Anomali Statistik**: Menghitung rata-rata bergerak historis 26 tahun tiap minggu kalender untuk mendeteksi lonjakan ekstrem ($Z > 2.0\sigma$).
-
-### 2. Suite GIS & Intelijen Kepulauan Indonesia
-- **Penguncian Batas Kedaulatan Peta (*Hard Boundary Lock*)**: Membatasi navigasi peta secara ketat hanya pada wilayah kedaulatan Indonesia (`[-11.5° LS, 94.0° BT]` hingga `[6.5° LU, 141.5° BT]`) dengan `maxBoundsViscosity: 1.0` dan `minZoom: 4` (pengguna tidak bisa menggeser keluar dari Indonesia).
-- **Timeline Historis 26 Tahun Bebas Slider**: Navigasi tahunan menggunakan tombol stepper (`-1`, `+1`) dan tombol pintas anomali iklim (*2000 Baseline, 2015 Super El Niño, 2019 El Niño, 2023 El Niño, 2026 Live*).
-- **Komparasi Peta Ganda A/B**: Tampilan layar terbagi (*split-screen*) sinkron untuk membandingkan data mentah sensor vs data terharmonisasi.
-- **Inspektur Poligon Kubah Gambut**: Fitur gambar GeoJSON poligon interaktif untuk menghitung luas area, total pelepasan energi radiasi termal, dan risiko spesifik kubah gambut.
-- **Briefing Suara AI (Web Speech API)**: Membacakan laporan situasi intelejen terkini dalam bentuk audio untuk komandan operasi lapangan.
-
-### 3. Hub Mitigasi & Prognosis Operasional Lapangan
-- **Telemetri Cuaca Live**: Integrasi langsung dengan Open-Meteo API untuk data suhu, kelembapan udara (RH), kecepatan angin, dan Hari Tanpa Hujan (HTH).
-- **Fisika Hidrologi Gambut BRGM**: Menghitung Tinggi Muka Air Tanah (TMAT) terhadap ambang batas kritis -40 cm BRGM/KLHK, Kadar Air Gambut (%), estimasi kedalaman bakar (cm), dan potensi emisi CO₂e per hektar.
-- **Explorer Titik Panas Berperforma Tinggi**: Sistem pemuatan data cepat (24 item per halaman) dengan chip filter 1-klik (*FRP ≥50MW, VIIRS 375m, MODIS 1km*) dan pencarian instan tanpa *lag*.
-- **Download Langsung PDF Laporan Situasi (SitRep)**: Pembuatan dokumen PDF resmi beresolusi tinggi langsung di peramban via `jsPDF` dan `html2canvas` berstandar A4 nasional.
-
-### 4. Laboratorium Harmonisasi & Fisika Sensor
-- **Simulator Footprint Sensor Interaktif (SVG Visualizer)**: Visualisasi grafis langsung yang memperlihatkan bagaimana sebuah kebakaran fisik dideteksi oleh piksel MODIS 1 km vs sub-piksel VIIRS 375 m vs grid 5.5 km Terra Harmonia.
-- **Matriks Spesifikasi Teknis Satelit**: Tabel perbandingan lengkap spesifikasi instrumen satelit NASA EOS (Terra/Aqua) dan JPSS (Suomi-NPP/NOAA-20).
+**Bhumantara** menyelesaikan distorsi ini melalui:
+* **Agregasi spasial sel 5.5 km equal-area** (menghilangkan overcounting pergantian sensor)
+* **Kalibrasi daya radiasi termal Stefan-Boltzmann FRP (Megawatt)**
+* **Korelasi hidrologi gambut nyata dengan batas kritis Tinggi Muka Air Gambut BRGM (TMAG < -40 cm)**
+* **Pipeline aksi cepat lapangan** (generator disposisi WhatsApp regu Manggala Agni & ekspor terbuka GeoJSON standar RFC 7946)
 
 ---
 
-## Panduan Instalasi & Penggunaan
+## Hak Cipta & Lisensi
 
-### Prasyarat
-- Node.js (versi 18.0.0 atau lebih tinggi)
-- npm atau yarn
-
-### Langkah Pemasangan
-
-```bash
-# 1. Kloning repositori
-git clone https://github.com/Rangga11268/TerraHarmonia.git
-cd TerraHarmonia
-
-# 2. Pasang dependensi
-npm install
-
-# 3. Jalankan server pengembangan lokal
-npm run dev
-
-# 4. Bangun versi produksi
-npm run build
-```
-
----
-
-## Tim & Sumber Data Terbuka
-
-- **Kategori Tantangan**: NASA Space Apps Challenge 2026: *Harmonization of MODIS and VIIRS Hot Spots*
-- **Nama Tim**: Terra Harmonia
-- **Peserta**: Darell Rangga
-- **Sumber Data Terbuka**:
-  - NASA FIRMS (Fire Information for Resource Management System)
-  - Arsip Sensor Satelit MODIS (Terra & Aqua)
-  - Arsip Sensor Satelit VIIRS (Suomi-NPP & NOAA-20)
-  - Model Prakiraan Cuaca Global Open-Meteo
-  - Parameter Hidrologi Badan Restorasi Gambut dan Mangrove (BRGM)
-
----
-
-<div align="center">
-  <p>Didedikasikan untuk memajukan sains observasi bumi, transparansi data lingkungan hidup, dan pencegahan kebakaran lahan gambut di Indonesia.</p>
-  <sub>Terra Harmonia © 2026. Dibangun dengan telemetri terbuka NASA Earth Observation.</sub>
-</div>
+Dikembangkan dengan bangga oleh **Tim Bhumantara** untuk **NASA Space Apps Challenge 2026**.  
+Didistribusikan di bawah lisensi terbuka [MIT License](LICENSE).

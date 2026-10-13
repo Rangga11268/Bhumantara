@@ -41,13 +41,13 @@ export const Logo: React.FC<LogoProps> = ({
 
   return (
     <div className={`inline-flex items-center gap-2 select-none shrink-0 max-w-full overflow-hidden ${className}`}>
-      {/* Dual Logo Lockup: Terra Harmonia Emblem × NASA Meatball */}
+      {/* Dual Logo Lockup: Bhumantara Emblem × NASA Meatball */}
       <div className="flex items-center gap-1.5 shrink-0">
-        {/* Terra Harmonia Emblem */}
+        {/* Bhumantara Emblem */}
         <div className={`flex items-center justify-center shrink-0 ${emblem}`}>
           <img
-            src="/terra_harmonia_transparent.svg"
-            alt="Terra Harmonia Emblem"
+            src="/bhumantara_logo.svg"
+            alt="Bhumantara Emblem"
             className="w-full h-full max-w-full max-h-full object-contain shrink-0 filter drop-shadow-[0_1px_2px_rgba(0,0,0,0.06)]"
             loading="eager"
           />
@@ -76,7 +76,7 @@ export const Logo: React.FC<LogoProps> = ({
       {/* Brand Typography */}
       <div className="flex flex-col justify-center min-w-0 leading-tight shrink truncate">
         <div className={`tracking-tight text-[#1d1d1f] dark:text-white font-bold flex items-center gap-1.5 truncate ${title}`}>
-          <span className="truncate">Terra Harmonia</span>
+          <span className="truncate">Bhumantara</span>
         </div>
         {showSubtitle && (
           <span className={`text-[#86868b] dark:text-[#9ca3af] tracking-normal font-medium hidden sm:block truncate ${sub}`}>

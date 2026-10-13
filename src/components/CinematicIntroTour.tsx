@@ -67,12 +67,12 @@ export const CinematicIntroTour: React.FC<CinematicIntroTourProps> = ({
 
       {/* Top Telemetry Header */}
       <header className="relative z-10 w-full max-w-5xl mx-auto px-6 sm:px-10 pt-8 pb-4 flex items-center justify-between border-b border-slate-800/80 backdrop-blur-xs">
-        {/* Dual Brand Lockup: Terra Harmonia Emblem × NASA Insignia */}
+        {/* Dual Brand Lockup: Bhumantara Emblem × NASA Insignia */}
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-[#0b1b36] border border-blue-500/40 p-1.5 flex items-center justify-center shadow-lg shadow-blue-950">
             <img
-              src="/terra_harmonia_transparent.svg"
-              alt="Terra Harmonia Emblem"
+              src="/bhumantara_logo.svg"
+              alt="Bhumantara Emblem"
               className="w-full h-full object-contain"
             />
           </div>
@@ -87,7 +87,7 @@ export const CinematicIntroTour: React.FC<CinematicIntroTourProps> = ({
           <div className="ml-1">
             <div className="flex items-center gap-2">
               <span className="font-extrabold text-sm sm:text-base tracking-tight text-white">
-                Terra Harmonia
+                Bhumantara
               </span>
               <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-blue-950 text-blue-300 border border-blue-800/70">
                 SPACE APPS 2026
@@ -125,10 +125,10 @@ export const CinematicIntroTour: React.FC<CinematicIntroTourProps> = ({
         
         {/* Prominent Logo Crest Badge */}
         <div className="flex flex-col items-center space-y-3">
-          <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-[#0b1b36]/90 border border-blue-400/50 p-3 flex items-center justify-center shadow-2xl shadow-blue-950/80 backdrop-blur-md">
+          <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-[#0b1b36]/90 border border-blue-400/50 p-2.5 flex items-center justify-center shadow-2xl shadow-blue-950/80 backdrop-blur-md">
             <img
-              src="/terra_harmonia_transparent.svg"
-              alt="Terra Harmonia Logo"
+              src="/bhumantara_logo.svg"
+              alt="Bhumantara Logo"
               className="w-full h-full object-contain filter drop-shadow"
             />
           </div>

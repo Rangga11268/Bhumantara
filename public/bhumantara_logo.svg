@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128" fill="none">
+  <defs>
+    <!-- Deep Space Orbital Blue -->
+    <linearGradient id="spaceOrbitGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="50%" stop-color="#0284c7" />
+      <stop offset="100%" stop-color="#0b3d91" />
+    </linearGradient>
+
+    <!-- Emerald Peat Biosphere Gradient -->
+    <linearGradient id="peatBiosphereGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#34d399" />
+      <stop offset="50%" stop-color="#059669" />
+      <stop offset="100%" stop-color="#064e3b" />
+    </linearGradient>
+
+    <!-- Stefan-Boltzmann Calibrated Thermal Core -->
+    <linearGradient id="thermalCoreGrad" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#dc2626" />
+      <stop offset="45%" stop-color="#ea580c" />
+      <stop offset="80%" stop-color="#f59e0b" />
+      <stop offset="100%" stop-color="#fef08a" />
+    </linearGradient>
+
+    <!-- Sensor Beam Cone Projection -->
+    <linearGradient id="sensorConeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.8" />
+      <stop offset="100%" stop-color="#059669" stop-opacity="0.1" />
+    </linearGradient>
+  </defs>
+
+  <!-- 1. Outer Polar Orbit 1 (Terra MODIS - 98.2° Inclination) -->
+  <ellipse cx="64" cy="64" rx="58" ry="24" stroke="url(#spaceOrbitGrad)" stroke-width="2.2" stroke-dasharray="6 4" transform="rotate(-30 64 64)" opacity="0.75" />
+
+  <!-- 2. Outer Polar Orbit 2 (Suomi-NPP VIIRS - 98.7° Inclination) -->
+  <ellipse cx="64" cy="64" rx="54" ry="28" stroke="url(#peatBiosphereGrad)" stroke-width="2.0" stroke-dasharray="7 5" transform="rotate(40 64 64)" opacity="0.8" />
+
+  <!-- 3. Satellite Node 1: Terra MODIS Sensor (1 km Footprint) -->
+  <g transform="translate(18, 38)">
+    <circle cx="0" cy="0" r="4.5" fill="#0284c7" stroke="#ffffff" stroke-width="1.5" />
+    <circle cx="0" cy="0" r="8" stroke="#38bdf8" stroke-width="0.8" opacity="0.6" />
+  </g>
+
+  <!-- 4. Satellite Node 2: Suomi-NPP VIIRS Sensor (375 m Footprint) -->
+  <g transform="translate(108, 86)">
+    <circle cx="0" cy="0" r="4" fill="#059669" stroke="#ffffff" stroke-width="1.5" />
+    <circle cx="0" cy="0" r="7.5" stroke="#34d399" stroke-width="0.8" opacity="0.6" />
+  </g>
+
+  <!-- 5. Central Earth Bhumi Sphere (The Terrestrial Core) -->
+  <circle cx="64" cy="64" r="34" fill="#070b19" stroke="#1e293b" stroke-width="1.5" />
+  <circle cx="64" cy="64" r="33" fill="url(#peatBiosphereGrad)" fill-opacity="0.25" />
+
+  <!-- 6. Lat/Lon Graticule Equatorial Mesh -->
+  <ellipse cx="64" cy="64" rx="34" ry="12" stroke="#38bdf8" stroke-width="1" stroke-opacity="0.3" />
+  <line x1="64" y1="30" x2="64" y2="98" stroke="#38bdf8" stroke-width="1" stroke-opacity="0.3" />
+
+  <!-- 7. Nusantara Sacred Geometry (Tumpal Motif / Peat Dome Ridge) -->
+  <!-- Back Shield Layer -->
+  <path d="M 64 34 L 84 74 L 64 88 L 44 74 Z" fill="#0b1b36" stroke="#0284c7" stroke-width="1.5" opacity="0.9" />
+
+  <!-- 8. Luminous Stefan-Boltzmann Radiant Flame & Equal-Area Core -->
+  <!-- Outer Flame Wing -->
+  <path d="M 64 36 C 72 48 82 58 80 72 C 78 84 69 90 64 90 C 59 90 50 84 48 72 C 46 58 56 48 64 36 Z" fill="url(#thermalCoreGrad)" opacity="0.95" />
+
+  <!-- Inner High-Intensity Flame Hearth -->
+  <path d="M 64 48 C 69 56 74 63 73 72 C 72 79 67 83 64 83 C 61 83 56 79 55 72 C 54 63 59 56 64 48 Z" fill="#fff" fill-opacity="0.85" />
+
+  <!-- 9. Equal-Area 5.5 km Hexagonal Alignment Marker (Center Target) -->
+  <polygon points="64,56 70,60 70,68 64,72 58,68 58,60" fill="none" stroke="#070b19" stroke-width="1.5" opacity="0.8" />
+  <circle cx="64" cy="64" r="2.5" fill="#dc2626" />
+
+  <!-- 10. Apex Celestial Star (North Star / Planetary Alignment Point) -->
+  <path d="M 64 12 L 66 18 L 72 20 L 66 22 L 64 28 L 62 22 L 56 20 L 62 18 Z" fill="#f8fafc" />
+</svg>
