@@ -34,7 +34,9 @@ export const BurningCalendar: React.FC<BurningCalendarProps> = ({
   const MONTHS = language === 'id' ? MONTHS_ID : MONTHS_EN;
 
   // View modes: 'matrix' (Dense 52-week heatmap) or 'monthly' (Mobile-first monthly card breakdown)
-  const [viewMode, setViewMode] = useState<'matrix' | 'monthly'>('matrix');
+  const [viewMode, setViewMode] = useState<'matrix' | 'monthly'>(() => {
+    return typeof window !== 'undefined' && window.innerWidth < 768 ? 'monthly' : 'matrix';
+  });
   const [hoveredData, setHoveredData] = useState<HarmonizedWeekData | null>(null);
   const [pinnedData, setPinnedData] = useState<HarmonizedWeekData | null>(null);
 
@@ -310,7 +312,7 @@ export const BurningCalendar: React.FC<BurningCalendarProps> = ({
                         title={language === 'id' ? `Klik untuk melihat rincian bulanan tahun ${year}` : `Click to view monthly details for ${year}`}
                       >
                         <span className={isCurrentPlayback ? 'text-[#0071e3] dark:text-blue-400' : ''}>{year}</span>
-                        <span className="text-[9px] text-[#86868b] dark:text-[#6b7280] font-normal">
+                        <span className="text-[9px] text-[#4b5563] dark:text-[#94a3b8] font-medium">
                           {isDual ? 'V+M' : 'MOD'}
                         </span>
                       </button>

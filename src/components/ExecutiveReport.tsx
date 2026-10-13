@@ -5,8 +5,7 @@ import { Printer, FileText, Download, Loader2, Moon, Sun, MapPin, ChevronDown } 
 import { LiveWeatherData } from '../services/weatherApi';
 import { resolveHotspotLocation } from '../utils/locationResolver';
 import { getRegionalPeatProfile, calculateFireTriage } from '../data/regionalPeatProfiles';
-import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
+
 
 interface ExecutiveReportProps {
   language: Language;
@@ -75,6 +74,12 @@ export const ExecutiveReport: React.FC<ExecutiveReportProps> = ({
         setPaperTheme('light');
         await new Promise((resolve) => setTimeout(resolve, 150));
       }
+
+      // Dynamically load heavy rendering libraries only on demand
+      const [{ default: html2canvas }, { default: jsPDF }] = await Promise.all([
+        import('html2canvas'),
+        import('jspdf')
+      ]);
 
       // Render high-res crisp canvas
       const canvas = await html2canvas(docElement, {
@@ -168,6 +173,7 @@ export const ExecutiveReport: React.FC<ExecutiveReportProps> = ({
           <div className="flex items-center bg-slate-100 dark:bg-[#1e293b] p-1 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-medium">
             <button
               onClick={() => setPaperTheme('light')}
+              aria-label={language === 'id' ? 'Tampilan Kertas Putih Resmi' : 'Official White Paper View'}
               className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg transition-all cursor-pointer ${
                 paperTheme === 'light'
                   ? 'bg-white text-slate-900 shadow-2xs font-bold'
@@ -180,6 +186,7 @@ export const ExecutiveReport: React.FC<ExecutiveReportProps> = ({
             </button>
             <button
               onClick={() => setPaperTheme('dark')}
+              aria-label={language === 'id' ? 'Tampilan Kertas Gelap Taktis' : 'Tactical Dark Paper View'}
               className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg transition-all cursor-pointer ${
                 paperTheme === 'dark'
                   ? 'bg-slate-900 dark:bg-[#0c121e] text-white shadow-2xs font-bold border border-slate-700'
@@ -196,6 +203,7 @@ export const ExecutiveReport: React.FC<ExecutiveReportProps> = ({
           <button
             onClick={handleDownloadDirectPDF}
             disabled={isGeneratingPdf}
+            aria-label={language === 'id' ? 'Unduh Dokumen PDF Resmi' : 'Download Official PDF'}
             className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold flex items-center gap-2 shadow-xs transition cursor-pointer min-h-[40px] disabled:opacity-50"
           >
             {isGeneratingPdf ? (
@@ -214,6 +222,7 @@ export const ExecutiveReport: React.FC<ExecutiveReportProps> = ({
           {/* Browser Print Button */}
           <button
             onClick={handlePrint}
+            aria-label={language === 'id' ? 'Cetak Dokumen Format A4' : 'Print A4 Document'}
             className="px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-black dark:bg-slate-800 dark:hover:bg-slate-700 text-white text-xs font-semibold flex items-center gap-2 shadow-xs transition cursor-pointer min-h-[40px]"
           >
             <Printer className="w-4 h-4 text-emerald-400" />
@@ -229,11 +238,14 @@ export const ExecutiveReport: React.FC<ExecutiveReportProps> = ({
             <div className="p-1 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800/80 text-emerald-600 dark:text-emerald-400 shrink-0">
               <MapPin className="w-3.5 h-3.5" />
             </div>
-            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 shrink-0">
+            <label htmlFor="executive-sector-select" className="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 shrink-0 cursor-pointer">
               {language === 'id' ? 'Sektor Sasaran:' : 'Target Sector:'}
-            </span>
+            </label>
             <div className="relative flex-1">
               <select
+                id="executive-sector-select"
+                name="executiveSector"
+                aria-label={language === 'id' ? 'Sektor Sasaran' : 'Target Sector'}
                 value={selectedAOI.id}
                 onChange={(e) => {
                   const found = PRESET_AOIS.find((a) => a.id === e.target.value);

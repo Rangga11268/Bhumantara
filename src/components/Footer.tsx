@@ -241,7 +241,7 @@ export const Footer: React.FC<FooterProps> = ({ language, onSelectTab }) => {
                 href="https://github.com/Rangga11268/Wanareksa"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#1d1d1f] hover:bg-black dark:bg-emerald-600 dark:hover:bg-emerald-700 text-white font-semibold transition shadow-xs min-h-[44px] cursor-pointer"
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#1d1d1f] hover:bg-black dark:bg-emerald-700 dark:hover:bg-emerald-800 text-white font-bold transition shadow-xs min-h-[44px] cursor-pointer"
               >
                 <span>GitHub Repository</span>
                 <ExternalLink className="w-3.5 h-3.5 text-white/80" />

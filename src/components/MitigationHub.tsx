@@ -352,6 +352,9 @@ ${language === 'id' ? 'Sumber Data: NASA FIRMS (MODIS 1km / VIIRS 375m) & Open-M
             </div>
             <div className="relative flex-1">
               <select
+                id="mitigation-sector-select"
+                name="mitigationSector"
+                aria-label={language === 'id' ? 'Sektor Target' : 'Target Sector'}
                 value={selectedAOI.id}
                 onChange={(e) => {
                   const targetAOI = PRESET_AOIS.find((a) => a.id === e.target.value);
@@ -495,10 +498,13 @@ ${language === 'id' ? 'Sumber Data: NASA FIRMS (MODIS 1km / VIIRS 375m) & Open-M
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
               <div>
-                <label className="font-semibold text-[#1d1d1f] dark:text-white block mb-1">
+                <label htmlFor="mitigation-taskforce-select" className="font-semibold text-[#1d1d1f] dark:text-white block mb-1 cursor-pointer">
                   {language === 'id' ? 'Satuan Kerja Penerima Tugas:' : 'Assigned Taskforce Unit:'}
                 </label>
                 <select
+                  id="mitigation-taskforce-select"
+                  name="mitigationTaskforce"
+                  aria-label={language === 'id' ? 'Satuan Kerja Penerima Tugas' : 'Assigned Taskforce Unit'}
                   value={selectedTeamUnit}
                   onChange={(e) => setSelectedTeamUnit(e.target.value as any)}
                   className="w-full px-3 py-2 rounded-xl bg-[#f5f5f7] dark:bg-[#151d2f] border border-[#e5e5e7] dark:border-[#1f2937] text-[#1d1d1f] dark:text-white font-medium focus:outline-none focus:ring-2 focus:ring-[#0071e3]"

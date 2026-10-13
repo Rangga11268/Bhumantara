@@ -86,6 +86,12 @@ export const MapViewer: React.FC<MapViewerProps> = ({
     });
 
     mapInstanceRef.current = map;
+
+    return () => {
+      map.off();
+      map.remove();
+      mapInstanceRef.current = null;
+    };
   }, []);
 
   // Basemap switcher
@@ -335,6 +341,7 @@ export const MapViewer: React.FC<MapViewerProps> = ({
           <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-900 rounded-xl p-1 border border-slate-200 dark:border-slate-800">
             <button
               onClick={() => setShowViirs(!showViirs)}
+              aria-label="Toggle VIIRS 375m Satellite Layer"
               className={`px-2 py-0.5 rounded-lg flex items-center gap-1 font-semibold transition cursor-pointer text-[11px] ${
                 showViirs
                   ? 'bg-red-500 text-white shadow-xs'
@@ -347,6 +354,7 @@ export const MapViewer: React.FC<MapViewerProps> = ({
 
             <button
               onClick={() => setShowModis(!showModis)}
+              aria-label="Toggle MODIS 1km Satellite Layer"
               className={`px-2 py-0.5 rounded-lg flex items-center gap-1 font-semibold transition cursor-pointer text-[11px] ${
                 showModis
                   ? 'bg-red-700 text-white shadow-xs'
@@ -360,6 +368,9 @@ export const MapViewer: React.FC<MapViewerProps> = ({
 
           {/* FRP Intensity Filter */}
           <select
+            id="map-frp-threshold"
+            name="frpThreshold"
+            aria-label="Filter Fire Radiative Power (FRP) Threshold"
             value={frpThreshold}
             onChange={(e) => setFrpThreshold(Number(e.target.value))}
             className="px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 text-xs font-medium cursor-pointer"
@@ -374,6 +385,7 @@ export const MapViewer: React.FC<MapViewerProps> = ({
           <div className="flex items-center bg-slate-100 dark:bg-slate-900 rounded-xl p-0.5 font-medium border border-slate-200 dark:border-slate-800">
             <button
               onClick={() => setBasemap('dark')}
+              aria-label={`${t.darkMap} - Basemap`}
               className={`px-2.5 py-1 rounded-lg transition-all cursor-pointer ${
                 basemap === 'dark'
                   ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-xs font-semibold'
@@ -384,6 +396,7 @@ export const MapViewer: React.FC<MapViewerProps> = ({
             </button>
             <button
               onClick={() => setBasemap('satellite')}
+              aria-label="Sat HD - Basemap"
               className={`px-2.5 py-1 rounded-lg transition-all cursor-pointer ${
                 basemap === 'satellite'
                   ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-xs font-semibold'
@@ -394,6 +407,7 @@ export const MapViewer: React.FC<MapViewerProps> = ({
             </button>
             <button
               onClick={() => setBasemap('nasa_gibs')}
+              aria-label="NASA GIBS - Basemap"
               className={`px-2.5 py-1 rounded-lg transition-all cursor-pointer flex items-center gap-1 ${
                 basemap === 'nasa_gibs'
                   ? 'bg-sky-600 text-white shadow-xs font-bold'
@@ -409,7 +423,8 @@ export const MapViewer: React.FC<MapViewerProps> = ({
           {/* Full Screen Map Explorer Button */}
           <button
             onClick={() => setIsFullMapOpen(true)}
-            className="flex items-center gap-1.5 px-3 py-1 bg-slate-900 dark:bg-white text-white dark:text-slate-900 hover:bg-slate-800 dark:hover:bg-slate-100 rounded-xl font-medium transition-all shadow-xs shrink-0 cursor-pointer"
+            aria-label={language === 'id' ? 'Buka Peta Layar Penuh' : 'Open Full Screen Map Explorer'}
+            className="flex items-center gap-1.5 px-3 py-1 bg-slate-900 dark:bg-white text-white dark:text-slate-900 hover:bg-slate-800 dark:hover:bg-slate-100 rounded-xl font-medium transition-all shadow-xs shrink-0 cursor-pointer min-h-[32px]"
             title={language === 'id' ? 'Buka Peta Penuh' : 'Open Full Screen Map'}
           >
             <Maximize2 className="w-3.5 h-3.5" />

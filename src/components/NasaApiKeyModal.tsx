@@ -67,10 +67,13 @@ export const NasaApiKeyModal: React.FC<NasaApiKeyModalProps> = ({
 
         <form onSubmit={handleSave} className="space-y-4">
           <div>
-            <label className="block text-xs font-semibold text-[#1d1d1f] dark:text-white mb-1.5">
+            <label htmlFor="nasa-firms-map-key" className="block text-xs font-semibold text-[#1d1d1f] dark:text-white mb-1.5 cursor-pointer">
               NASA FIRMS MAP_KEY ({language === 'id' ? 'Opsional' : 'Optional'}):
             </label>
             <input
+              id="nasa-firms-map-key"
+              name="nasaFirmsMapKey"
+              aria-label="NASA FIRMS MAP_KEY"
               type="text"
               value={inputKey}
               onChange={(e) => setInputKey(e.target.value)}

@@ -257,7 +257,14 @@ export const FullMapModal: React.FC<FullMapModalProps> = ({
       map.invalidateSize();
     }, 100);
 
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(timer);
+      if (mapInstanceRef.current) {
+        mapInstanceRef.current.off();
+        mapInstanceRef.current.remove();
+        mapInstanceRef.current = null;
+      }
+    };
   }, [isOpen]);
 
   // Basemap switcher

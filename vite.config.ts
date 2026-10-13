@@ -10,7 +10,8 @@ export default defineConfig({
         manualChunks: {
           'vendor-charts': ['recharts'],
           'vendor-leaflet': ['leaflet'],
-          'vendor-icons': ['lucide-react']
+          'vendor-icons': ['lucide-react'],
+          'vendor-pdf': ['jspdf', 'html2canvas']
         }
       }
     },

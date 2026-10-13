@@ -1,0 +1,11 @@
+# Wanareksa — Earth Observation & Peatland Sentinel
+
+> Wanareksa is an open-source Indonesian Peatland Wildfire Intelligence & Satellite Harmonization platform developed for the NASA Space Apps Challenge 2026.
+
+## Overview
+Wanareksa harmonizes multi-sensor NASA Earth Observation datasets (MODIS 1km, VIIRS 375m) and combines them with peatland hydrological data (BRGM TMAG thresholds, canal block monitoring) to deliver early warnings and actionable wildfire mitigation intelligence for Indonesian peatlands.
+
+## Links & Data Sources
+- [NASA FIRMS Data](https://firms.modaps.eosdis.nasa.gov/)
+- [Harmonization Methodology](https://github.com/Rangga11268/Wanareksa#harmonization-methodology)
+- [Official GitHub Repository](https://github.com/Rangga11268/Wanareksa)

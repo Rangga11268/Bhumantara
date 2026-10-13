@@ -26,6 +26,8 @@ export const DualMapComparison: React.FC<DualMapComparisonProps> = ({
   const mapBRef = useRef<HTMLDivElement>(null);
   const leafletMapA = useRef<L.Map | null>(null);
   const leafletMapB = useRef<L.Map | null>(null);
+  const canvasRendererA = useRef<L.Canvas | null>(null);
+  const canvasRendererB = useRef<L.Canvas | null>(null);
   const layerGroupA = useRef<L.LayerGroup | null>(null);
   const layerGroupB = useRef<L.LayerGroup | null>(null);
 
@@ -64,6 +66,9 @@ export const DualMapComparison: React.FC<DualMapComparisonProps> = ({
 
     const timer = setTimeout(() => {
       if (mapARef.current && !leafletMapA.current) {
+        const canvasA = L.canvas({ padding: 0.5 });
+        canvasRendererA.current = canvasA;
+
         const mapA = L.map(mapARef.current, {
           center: selectedAOI.center,
           zoom: selectedAOI.zoom,
@@ -73,6 +78,8 @@ export const DualMapComparison: React.FC<DualMapComparisonProps> = ({
           maxBoundsViscosity: 1.0,
           zoomControl: false,
           attributionControl: false,
+          preferCanvas: true,
+          renderer: canvasA,
         });
 
         L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
@@ -84,6 +91,9 @@ export const DualMapComparison: React.FC<DualMapComparisonProps> = ({
       }
 
       if (mapBRef.current && !leafletMapB.current) {
+        const canvasB = L.canvas({ padding: 0.5 });
+        canvasRendererB.current = canvasB;
+
         const mapB = L.map(mapBRef.current, {
           center: selectedAOI.center,
           zoom: selectedAOI.zoom,
@@ -93,6 +103,8 @@ export const DualMapComparison: React.FC<DualMapComparisonProps> = ({
           maxBoundsViscosity: 1.0,
           zoomControl: false,
           attributionControl: false,
+          preferCanvas: true,
+          renderer: canvasB,
         });
 
         L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
@@ -124,6 +136,16 @@ export const DualMapComparison: React.FC<DualMapComparisonProps> = ({
 
     return () => {
       clearTimeout(timer);
+      if (leafletMapA.current) {
+        leafletMapA.current.off();
+        leafletMapA.current.remove();
+        leafletMapA.current = null;
+      }
+      if (leafletMapB.current) {
+        leafletMapB.current.off();
+        leafletMapB.current.remove();
+        leafletMapB.current = null;
+      }
     };
   }, [selectedAOI, isSyncMove]);
 
@@ -153,6 +175,7 @@ export const DualMapComparison: React.FC<DualMapComparisonProps> = ({
         weight: 1,
         opacity: 0.9,
         fillOpacity: 0.75,
+        renderer: canvasRendererA.current || undefined,
       });
 
       const loc = resolveHotspotLocation(h.lat, h.lon, selectedAOI.id, language);
@@ -193,6 +216,7 @@ export const DualMapComparison: React.FC<DualMapComparisonProps> = ({
         weight: 1,
         opacity: 0.9,
         fillOpacity: 0.75,
+        renderer: canvasRendererB.current || undefined,
       });
 
       const loc = resolveHotspotLocation(h.lat, h.lon, selectedAOI.id, language);
@@ -266,10 +290,13 @@ export const DualMapComparison: React.FC<DualMapComparisonProps> = ({
           {/* Controls Bar A */}
           <div className="bg-white dark:bg-[#111827] px-4 py-3 border-b border-[#e5e5e7] dark:border-[#1f2937] flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <span className="text-xs font-bold text-[#86868b] dark:text-[#9ca3af] uppercase">
+              <label htmlFor="dual-map-year-a" className="text-xs font-bold text-[#86868b] dark:text-[#9ca3af] uppercase cursor-pointer">
                 {language === 'id' ? 'Tahun A:' : 'Year A:'}
-              </span>
+              </label>
               <select
+                id="dual-map-year-a"
+                name="yearA"
+                aria-label={language === 'id' ? 'Pilih Tahun Komparasi A' : 'Select Comparison Year A'}
                 value={yearA}
                 onChange={(e) => setYearA(Number(e.target.value))}
                 className="bg-[#f5f5f7] dark:bg-[#1f2937] border border-[#e5e5e7] dark:border-[#374151] rounded-lg px-3 py-1.5 text-xs font-bold text-[#1d1d1f] dark:text-white focus:outline-none focus:border-[#1d1d1f] dark:focus:border-white cursor-pointer min-h-[36px]"
@@ -303,10 +330,13 @@ export const DualMapComparison: React.FC<DualMapComparisonProps> = ({
           {/* Controls Bar B */}
           <div className="bg-white dark:bg-[#111827] px-4 py-3 border-b border-[#e5e5e7] dark:border-[#1f2937] flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <span className="text-xs font-bold text-[#86868b] dark:text-[#9ca3af] uppercase">
+              <label htmlFor="dual-map-year-b" className="text-xs font-bold text-[#86868b] dark:text-[#9ca3af] uppercase cursor-pointer">
                 {language === 'id' ? 'Tahun B:' : 'Year B:'}
-              </span>
+              </label>
               <select
+                id="dual-map-year-b"
+                name="yearB"
+                aria-label={language === 'id' ? 'Pilih Tahun Komparasi B' : 'Select Comparison Year B'}
                 value={yearB}
                 onChange={(e) => setYearB(Number(e.target.value))}
                 className="bg-[#f5f5f7] dark:bg-[#1f2937] border border-[#e5e5e7] dark:border-[#374151] rounded-lg px-3 py-1.5 text-xs font-bold text-[#1d1d1f] dark:text-white focus:outline-none focus:border-[#1d1d1f] dark:focus:border-white cursor-pointer min-h-[36px]"

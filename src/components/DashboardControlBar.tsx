@@ -74,6 +74,8 @@ export const DashboardControlBar: React.FC<DashboardControlBarProps> = ({
           <div className="relative flex-1 w-full max-w-full md:max-w-md">
             <select
               id="aoi-select"
+              name="aoi"
+              aria-label={t.region}
               value={selectedAOI.id}
               onChange={(e) => {
                 const aoi = PRESET_AOIS.find((a) => a.id === e.target.value);
