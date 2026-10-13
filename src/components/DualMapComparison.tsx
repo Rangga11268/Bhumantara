@@ -21,15 +21,28 @@ export const DualMapComparison: React.FC<DualMapComparisonProps> = ({
   const [yearA, setYearA] = useState<number>(2015);
   const [yearB, setYearB] = useState<number>(2021);
   const [isSyncMove, setIsSyncMove] = useState<boolean>(true);
+  const [basemap, setBasemap] = useState<'satellite' | 'dark' | 'light'>('satellite');
 
   const mapARef = useRef<HTMLDivElement>(null);
   const mapBRef = useRef<HTMLDivElement>(null);
   const leafletMapA = useRef<L.Map | null>(null);
   const leafletMapB = useRef<L.Map | null>(null);
+  const tileLayerARef = useRef<L.TileLayer | null>(null);
+  const tileLayerBRef = useRef<L.TileLayer | null>(null);
   const canvasRendererA = useRef<L.Canvas | null>(null);
   const canvasRendererB = useRef<L.Canvas | null>(null);
   const layerGroupA = useRef<L.LayerGroup | null>(null);
   const layerGroupB = useRef<L.LayerGroup | null>(null);
+
+  const getTileUrl = (bm: 'satellite' | 'dark' | 'light') => {
+    if (bm === 'satellite') {
+      return 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
+    }
+    if (bm === 'dark') {
+      return 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}';
+    }
+    return 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}';
+  };
 
   // Filter hotspots for year A and year B
   const hotspotsA = useMemo(() => {
@@ -82,7 +95,7 @@ export const DualMapComparison: React.FC<DualMapComparisonProps> = ({
           renderer: canvasA,
         });
 
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+        tileLayerARef.current = L.tileLayer(getTileUrl(basemap), {
           maxZoom: 18,
         }).addTo(mapA);
 
@@ -107,7 +120,7 @@ export const DualMapComparison: React.FC<DualMapComparisonProps> = ({
           renderer: canvasB,
         });
 
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+        tileLayerBRef.current = L.tileLayer(getTileUrl(basemap), {
           maxZoom: 18,
         }).addTo(mapB);
 
@@ -140,14 +153,29 @@ export const DualMapComparison: React.FC<DualMapComparisonProps> = ({
         leafletMapA.current.off();
         leafletMapA.current.remove();
         leafletMapA.current = null;
+        tileLayerARef.current = null;
       }
       if (leafletMapB.current) {
         leafletMapB.current.off();
         leafletMapB.current.remove();
         leafletMapB.current = null;
+        tileLayerBRef.current = null;
       }
     };
   }, [selectedAOI, isSyncMove]);
+
+  // Synchronize dynamic basemap switches
+  useEffect(() => {
+    const url = getTileUrl(basemap);
+    if (leafletMapA.current) {
+      if (tileLayerARef.current) leafletMapA.current.removeLayer(tileLayerARef.current);
+      tileLayerARef.current = L.tileLayer(url, { maxZoom: 18 }).addTo(leafletMapA.current);
+    }
+    if (leafletMapB.current) {
+      if (tileLayerBRef.current) leafletMapB.current.removeLayer(tileLayerBRef.current);
+      tileLayerBRef.current = L.tileLayer(url, { maxZoom: 18 }).addTo(leafletMapB.current);
+    }
+  }, [basemap]);
 
   // Re-center when AOI changes
   useEffect(() => {
@@ -263,7 +291,44 @@ export const DualMapComparison: React.FC<DualMapComparisonProps> = ({
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          {/* Basemap Switcher */}
+          <div className="flex items-center bg-[#f5f5f7] dark:bg-[#1f2937] p-1 rounded-xl border border-[#e5e5e7] dark:border-[#374151] text-xs font-semibold">
+            <button
+              onClick={() => setBasemap('satellite')}
+              aria-label="Basemap Satelit HD"
+              className={`px-2.5 py-1 rounded-lg transition cursor-pointer min-h-[30px] ${
+                basemap === 'satellite'
+                  ? 'bg-sky-700 text-white font-bold shadow-xs'
+                  : 'text-[#6e6e73] dark:text-[#9ca3af] hover:text-[#1d1d1f] dark:hover:text-white'
+              }`}
+            >
+              {language === 'id' ? 'Satelit HD' : 'Sat HD'}
+            </button>
+            <button
+              onClick={() => setBasemap('dark')}
+              aria-label="Basemap Kanvas Gelap"
+              className={`px-2.5 py-1 rounded-lg transition cursor-pointer min-h-[30px] ${
+                basemap === 'dark'
+                  ? 'bg-sky-700 text-white font-bold shadow-xs'
+                  : 'text-[#6e6e73] dark:text-[#9ca3af] hover:text-[#1d1d1f] dark:hover:text-white'
+              }`}
+            >
+              {language === 'id' ? 'Kanvas Gelap' : 'Dark'}
+            </button>
+            <button
+              onClick={() => setBasemap('light')}
+              aria-label="Basemap Kanvas Terang"
+              className={`px-2.5 py-1 rounded-lg transition cursor-pointer min-h-[30px] ${
+                basemap === 'light'
+                  ? 'bg-sky-700 text-white font-bold shadow-xs'
+                  : 'text-[#6e6e73] dark:text-[#9ca3af] hover:text-[#1d1d1f] dark:hover:text-white'
+              }`}
+            >
+              {language === 'id' ? 'Kanvas Terang' : 'Light'}
+            </button>
+          </div>
+
           <button
             onClick={() => setIsSyncMove(!isSyncMove)}
             className={`px-3 py-1.5 rounded-xl text-xs font-semibold border transition flex items-center gap-1.5 cursor-pointer min-h-[36px] ${
