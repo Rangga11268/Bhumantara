@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <title>WASKITHA — Aerospace W Sentinel</title>
+  <g fill="#080E1A" fill-rule="evenodd">
+    <!-- Outer Hexagonal Frame Ring (True hollow polygon) -->
+    <path d="M 128,18 L 224,73 L 224,183 L 128,238 L 32,183 L 32,73 Z
+             M 128,32 L 44,80 L 44,176 L 128,224 L 212,176 L 212,80 Z"/>
+    
+    <!-- Left Wing of 'W' (Snapped to 75 deg) -->
+    <polygon points="56,86 86,86 110,176 80,176"/>
+    
+    <!-- Right Wing of 'W' (Snapped to 105 deg / mirror 75) -->
+    <polygon points="200,86 170,86 146,176 176,176"/>
+    
+    <!-- Central Chevron / Tumpal Spearhead -->
+    <polygon points="128,64.43 152,154 128,140.14 104,154"/>
+    
+    <!-- Nadir Telemetry Core -->
+    <circle cx="128" cy="192" r="12"/>
+  </g>
+</svg>

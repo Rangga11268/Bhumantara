@@ -228,7 +228,7 @@ export const PolygonInspector: React.FC<PolygonInspectorProps> = ({
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `terra_harmonia_zonal_${customGeoJsonName ? 'custom' : selectedPreset.id}.geojson`;
+    a.download = `wanareksa_zonal_${customGeoJsonName ? 'custom' : selectedPreset.id}.geojson`;
     a.click();
     URL.revokeObjectURL(url);
   };

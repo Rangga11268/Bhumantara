@@ -77,7 +77,7 @@ export const LandingStory: React.FC<LandingStoryProps> = ({
   const [copiedClone, setCopiedClone] = useState(false);
 
   const handleCopyClone = () => {
-    navigator.clipboard.writeText('git clone https://github.com/Rangga11268/TerraHarmonia.git');
+    navigator.clipboard.writeText('git clone https://github.com/Rangga11268/Bhumantara.git');
     setCopiedClone(true);
     setTimeout(() => setCopiedClone(false), 2000);
   };
@@ -565,7 +565,7 @@ export const LandingStory: React.FC<LandingStoryProps> = ({
           <div className="flex items-center gap-2 text-neutral-300 min-w-0 max-w-full overflow-x-auto py-1">
             <Terminal className="w-4 h-4 text-sky-400 shrink-0" />
             <span className="text-neutral-500">$</span>
-            <span className="text-sky-300 truncate">git clone https://github.com/Rangga11268/TerraHarmonia.git</span>
+            <span className="text-sky-300 truncate">git clone https://github.com/Rangga11268/Bhumantara.git</span>
           </div>
 
           <button

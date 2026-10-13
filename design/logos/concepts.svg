@@ -1,0 +1,281 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1600" height="840" viewBox="0 0 1600 840"><rect width="1600" height="840" fill="#f7f7f4"/><text x="60" y="78" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="40" font-weight="700" fill="#161616">Indonesian Aerospace Identity — Logo Concepts</text><text x="60" y="116" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="20" fill="#6b6b6b">Concepts for review — pick a direction (or tell me what you like in each).</text><rect x="60" y="150" width="474.667" height="630" rx="18" fill="#fff" stroke="#161616" stroke-width="2"/><g><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" x="90" y="190" width="414.667" height="300" preserveAspectRatio="xMidYMid meet">
+  <title>WANAREKSA — Kawung Sentinel Aperture</title>
+  <g fill="#080E1A" fill-rule="evenodd">
+    <!-- Outer Aerospace Ring (Donut) -->
+    <path d="M 128,14 A 114,114 0 1 0 128,242 A 114,114 0 1 0 128,14 Z M 128,26 A 102,102 0 1 1 128,230 A 102,102 0 1 1 128,26 Z"/>
+    
+    <!-- North Petal (Orbital Zenith) -->
+    <path d="M 128,36 C 148,64 164,88 152,112 C 144,124 136,128 128,128 C 120,128 112,124 104,112 C 92,88 108,64 128,36 Z"/>
+    
+    <!-- South Petal (Peatland Nadir) -->
+    <path d="M 128,220 C 108,192 92,168 104,144 C 112,132 120,128 128,128 C 136,128 144,132 152,144 C 164,168 148,192 128,220 Z"/>
+    
+    <!-- West Petal (Swath West) -->
+    <path d="M 36,128 C 64,108 88,92 112,104 C 124,112 128,120 128,128 C 128,136 124,144 112,152 C 88,164 64,148 36,128 Z"/>
+    
+    <!-- East Petal (Swath East) -->
+    <path d="M 220,128 C 192,148 168,164 144,152 C 132,144 128,136 128,128 C 128,120 132,112 144,104 C 168,92 192,108 220,128 Z"/>
+    
+    <!-- Four Cardinal Telemetry Sensors -->
+    <path d="M 80,70 A 10,10 0 1 0 80,90 A 10,10 0 1 0 80,70 Z"/>
+    <path d="M 176,70 A 10,10 0 1 0 176,90 A 10,10 0 1 0 176,70 Z"/>
+    <path d="M 80,166 A 10,10 0 1 0 80,186 A 10,10 0 1 0 80,166 Z"/>
+    <path d="M 176,166 A 10,10 0 1 0 176,186 A 10,10 0 1 0 176,166 Z"/>
+    
+    <!-- Central Aperture Focal Lens with true negative space -->
+    <path d="M 128,104 A 24,24 0 1 0 128,152 A 24,24 0 1 0 128,104 Z M 128,116 A 12,12 0 1 1 128,140 A 12,12 0 1 1 128,116 Z"/>
+  </g>
+</svg>
+</g><g><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" x="90" y="516" width="64" height="64" preserveAspectRatio="xMidYMid meet">
+  <title>WANAREKSA — Kawung Sentinel Aperture</title>
+  <g fill="#080E1A" fill-rule="evenodd">
+    <!-- Outer Aerospace Ring (Donut) -->
+    <path d="M 128,14 A 114,114 0 1 0 128,242 A 114,114 0 1 0 128,14 Z M 128,26 A 102,102 0 1 1 128,230 A 102,102 0 1 1 128,26 Z"/>
+    
+    <!-- North Petal (Orbital Zenith) -->
+    <path d="M 128,36 C 148,64 164,88 152,112 C 144,124 136,128 128,128 C 120,128 112,124 104,112 C 92,88 108,64 128,36 Z"/>
+    
+    <!-- South Petal (Peatland Nadir) -->
+    <path d="M 128,220 C 108,192 92,168 104,144 C 112,132 120,128 128,128 C 136,128 144,132 152,144 C 164,168 148,192 128,220 Z"/>
+    
+    <!-- West Petal (Swath West) -->
+    <path d="M 36,128 C 64,108 88,92 112,104 C 124,112 128,120 128,128 C 128,136 124,144 112,152 C 88,164 64,148 36,128 Z"/>
+    
+    <!-- East Petal (Swath East) -->
+    <path d="M 220,128 C 192,148 168,164 144,152 C 132,144 128,136 128,128 C 128,120 132,112 144,104 C 168,92 192,108 220,128 Z"/>
+    
+    <!-- Four Cardinal Telemetry Sensors -->
+    <path d="M 80,70 A 10,10 0 1 0 80,90 A 10,10 0 1 0 80,70 Z"/>
+    <path d="M 176,70 A 10,10 0 1 0 176,90 A 10,10 0 1 0 176,70 Z"/>
+    <path d="M 80,166 A 10,10 0 1 0 80,186 A 10,10 0 1 0 80,166 Z"/>
+    <path d="M 176,166 A 10,10 0 1 0 176,186 A 10,10 0 1 0 176,166 Z"/>
+    
+    <!-- Central Aperture Focal Lens with true negative space -->
+    <path d="M 128,104 A 24,24 0 1 0 128,152 A 24,24 0 1 0 128,104 Z M 128,116 A 12,12 0 1 1 128,140 A 12,12 0 1 1 128,116 Z"/>
+  </g>
+</svg>
+</g><text x="122" y="600" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" fill="#8a8a8a" text-anchor="middle">64px</text><g><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" x="180" y="548" width="32" height="32" preserveAspectRatio="xMidYMid meet">
+  <title>WANAREKSA — Kawung Sentinel Aperture</title>
+  <g fill="#080E1A" fill-rule="evenodd">
+    <!-- Outer Aerospace Ring (Donut) -->
+    <path d="M 128,14 A 114,114 0 1 0 128,242 A 114,114 0 1 0 128,14 Z M 128,26 A 102,102 0 1 1 128,230 A 102,102 0 1 1 128,26 Z"/>
+    
+    <!-- North Petal (Orbital Zenith) -->
+    <path d="M 128,36 C 148,64 164,88 152,112 C 144,124 136,128 128,128 C 120,128 112,124 104,112 C 92,88 108,64 128,36 Z"/>
+    
+    <!-- South Petal (Peatland Nadir) -->
+    <path d="M 128,220 C 108,192 92,168 104,144 C 112,132 120,128 128,128 C 136,128 144,132 152,144 C 164,168 148,192 128,220 Z"/>
+    
+    <!-- West Petal (Swath West) -->
+    <path d="M 36,128 C 64,108 88,92 112,104 C 124,112 128,120 128,128 C 128,136 124,144 112,152 C 88,164 64,148 36,128 Z"/>
+    
+    <!-- East Petal (Swath East) -->
+    <path d="M 220,128 C 192,148 168,164 144,152 C 132,144 128,136 128,128 C 128,120 132,112 144,104 C 168,92 192,108 220,128 Z"/>
+    
+    <!-- Four Cardinal Telemetry Sensors -->
+    <path d="M 80,70 A 10,10 0 1 0 80,90 A 10,10 0 1 0 80,70 Z"/>
+    <path d="M 176,70 A 10,10 0 1 0 176,90 A 10,10 0 1 0 176,70 Z"/>
+    <path d="M 80,166 A 10,10 0 1 0 80,186 A 10,10 0 1 0 80,166 Z"/>
+    <path d="M 176,166 A 10,10 0 1 0 176,186 A 10,10 0 1 0 176,166 Z"/>
+    
+    <!-- Central Aperture Focal Lens with true negative space -->
+    <path d="M 128,104 A 24,24 0 1 0 128,152 A 24,24 0 1 0 128,104 Z M 128,116 A 12,12 0 1 1 128,140 A 12,12 0 1 1 128,116 Z"/>
+  </g>
+</svg>
+</g><text x="196" y="600" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" fill="#8a8a8a" text-anchor="middle">32px</text><g><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" x="238" y="564" width="16" height="16" preserveAspectRatio="xMidYMid meet">
+  <title>WANAREKSA — Kawung Sentinel Aperture</title>
+  <g fill="#080E1A" fill-rule="evenodd">
+    <!-- Outer Aerospace Ring (Donut) -->
+    <path d="M 128,14 A 114,114 0 1 0 128,242 A 114,114 0 1 0 128,14 Z M 128,26 A 102,102 0 1 1 128,230 A 102,102 0 1 1 128,26 Z"/>
+    
+    <!-- North Petal (Orbital Zenith) -->
+    <path d="M 128,36 C 148,64 164,88 152,112 C 144,124 136,128 128,128 C 120,128 112,124 104,112 C 92,88 108,64 128,36 Z"/>
+    
+    <!-- South Petal (Peatland Nadir) -->
+    <path d="M 128,220 C 108,192 92,168 104,144 C 112,132 120,128 128,128 C 136,128 144,132 152,144 C 164,168 148,192 128,220 Z"/>
+    
+    <!-- West Petal (Swath West) -->
+    <path d="M 36,128 C 64,108 88,92 112,104 C 124,112 128,120 128,128 C 128,136 124,144 112,152 C 88,164 64,148 36,128 Z"/>
+    
+    <!-- East Petal (Swath East) -->
+    <path d="M 220,128 C 192,148 168,164 144,152 C 132,144 128,136 128,128 C 128,120 132,112 144,104 C 168,92 192,108 220,128 Z"/>
+    
+    <!-- Four Cardinal Telemetry Sensors -->
+    <path d="M 80,70 A 10,10 0 1 0 80,90 A 10,10 0 1 0 80,70 Z"/>
+    <path d="M 176,70 A 10,10 0 1 0 176,90 A 10,10 0 1 0 176,70 Z"/>
+    <path d="M 80,166 A 10,10 0 1 0 80,186 A 10,10 0 1 0 80,166 Z"/>
+    <path d="M 176,166 A 10,10 0 1 0 176,186 A 10,10 0 1 0 176,166 Z"/>
+    
+    <!-- Central Aperture Focal Lens with true negative space -->
+    <path d="M 128,104 A 24,24 0 1 0 128,152 A 24,24 0 1 0 128,104 Z M 128,116 A 12,12 0 1 1 128,140 A 12,12 0 1 1 128,116 Z"/>
+  </g>
+</svg>
+</g><text x="246" y="600" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" fill="#8a8a8a" text-anchor="middle">16px</text><text x="90.0" y="636" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="26" font-weight="700" fill="#161616">A · WANAREKSA</text><text x="90.0" y="664" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="15" font-weight="700" fill="#161616" letter-spacing="1.5">RECOMMENDED</text><text x="90.0" y="698" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="19" fill="#555">Kawung Sentinel Aperture: 4 cardinal</text><text x="90.0" y="724" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="19" fill="#555">satellite swaths + central thermal core.</text><rect x="562.667" y="150" width="474.667" height="630" rx="18" fill="#fff" stroke="#e4e4e0" stroke-width="1"/><g><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" x="592.667" y="190" width="414.667" height="300" preserveAspectRatio="xMidYMid meet">
+  <title>NETRABUANA — Planetary Orbital Eye</title>
+  <g fill="#080E1A" fill-rule="evenodd">
+    <!-- Upper Orbital Eyelid Arc -->
+    <path d="M 28,128 C 64,56 192,56 228,128 C 188,84 68,84 28,128 Z"/>
+    
+    <!-- Lower Orbital Eyelid Arc -->
+    <path d="M 28,128 C 64,200 192,200 228,128 C 188,172 68,172 28,128 Z"/>
+    
+    <!-- Central Planetary Sphere with Equatorial Horizon Slot cut through -->
+    <path d="M 128,80 A 48,48 0 1 0 128,176 A 48,48 0 1 0 128,80 Z
+             M 82,124 L 174,124 A 4,4 0 0 1 174,132 L 82,132 A 4,4 0 0 1 82,124 Z
+             M 128,112 A 16,16 0 1 1 128,144 A 16,16 0 1 1 128,112 Z"/>
+    
+    <!-- Sensor Core -->
+    <circle cx="128" cy="128" r="8"/>
+    
+    <!-- Polar Zenith & Nadir Telemetry Beacons -->
+    <circle cx="128" cy="44" r="8"/>
+    <circle cx="128" cy="212" r="8"/>
+  </g>
+</svg>
+</g><g><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" x="592.667" y="516" width="64" height="64" preserveAspectRatio="xMidYMid meet">
+  <title>NETRABUANA — Planetary Orbital Eye</title>
+  <g fill="#080E1A" fill-rule="evenodd">
+    <!-- Upper Orbital Eyelid Arc -->
+    <path d="M 28,128 C 64,56 192,56 228,128 C 188,84 68,84 28,128 Z"/>
+    
+    <!-- Lower Orbital Eyelid Arc -->
+    <path d="M 28,128 C 64,200 192,200 228,128 C 188,172 68,172 28,128 Z"/>
+    
+    <!-- Central Planetary Sphere with Equatorial Horizon Slot cut through -->
+    <path d="M 128,80 A 48,48 0 1 0 128,176 A 48,48 0 1 0 128,80 Z
+             M 82,124 L 174,124 A 4,4 0 0 1 174,132 L 82,132 A 4,4 0 0 1 82,124 Z
+             M 128,112 A 16,16 0 1 1 128,144 A 16,16 0 1 1 128,112 Z"/>
+    
+    <!-- Sensor Core -->
+    <circle cx="128" cy="128" r="8"/>
+    
+    <!-- Polar Zenith & Nadir Telemetry Beacons -->
+    <circle cx="128" cy="44" r="8"/>
+    <circle cx="128" cy="212" r="8"/>
+  </g>
+</svg>
+</g><text x="624.667" y="600" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" fill="#8a8a8a" text-anchor="middle">64px</text><g><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" x="682.667" y="548" width="32" height="32" preserveAspectRatio="xMidYMid meet">
+  <title>NETRABUANA — Planetary Orbital Eye</title>
+  <g fill="#080E1A" fill-rule="evenodd">
+    <!-- Upper Orbital Eyelid Arc -->
+    <path d="M 28,128 C 64,56 192,56 228,128 C 188,84 68,84 28,128 Z"/>
+    
+    <!-- Lower Orbital Eyelid Arc -->
+    <path d="M 28,128 C 64,200 192,200 228,128 C 188,172 68,172 28,128 Z"/>
+    
+    <!-- Central Planetary Sphere with Equatorial Horizon Slot cut through -->
+    <path d="M 128,80 A 48,48 0 1 0 128,176 A 48,48 0 1 0 128,80 Z
+             M 82,124 L 174,124 A 4,4 0 0 1 174,132 L 82,132 A 4,4 0 0 1 82,124 Z
+             M 128,112 A 16,16 0 1 1 128,144 A 16,16 0 1 1 128,112 Z"/>
+    
+    <!-- Sensor Core -->
+    <circle cx="128" cy="128" r="8"/>
+    
+    <!-- Polar Zenith & Nadir Telemetry Beacons -->
+    <circle cx="128" cy="44" r="8"/>
+    <circle cx="128" cy="212" r="8"/>
+  </g>
+</svg>
+</g><text x="698.667" y="600" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" fill="#8a8a8a" text-anchor="middle">32px</text><g><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" x="740.667" y="564" width="16" height="16" preserveAspectRatio="xMidYMid meet">
+  <title>NETRABUANA — Planetary Orbital Eye</title>
+  <g fill="#080E1A" fill-rule="evenodd">
+    <!-- Upper Orbital Eyelid Arc -->
+    <path d="M 28,128 C 64,56 192,56 228,128 C 188,84 68,84 28,128 Z"/>
+    
+    <!-- Lower Orbital Eyelid Arc -->
+    <path d="M 28,128 C 64,200 192,200 228,128 C 188,172 68,172 28,128 Z"/>
+    
+    <!-- Central Planetary Sphere with Equatorial Horizon Slot cut through -->
+    <path d="M 128,80 A 48,48 0 1 0 128,176 A 48,48 0 1 0 128,80 Z
+             M 82,124 L 174,124 A 4,4 0 0 1 174,132 L 82,132 A 4,4 0 0 1 82,124 Z
+             M 128,112 A 16,16 0 1 1 128,144 A 16,16 0 1 1 128,112 Z"/>
+    
+    <!-- Sensor Core -->
+    <circle cx="128" cy="128" r="8"/>
+    
+    <!-- Polar Zenith & Nadir Telemetry Beacons -->
+    <circle cx="128" cy="44" r="8"/>
+    <circle cx="128" cy="212" r="8"/>
+  </g>
+</svg>
+</g><text x="748.667" y="600" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" fill="#8a8a8a" text-anchor="middle">16px</text><text x="592.6666666666667" y="636" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="26" font-weight="700" fill="#161616">B · NETRABUANA</text><text x="592.6666666666667" y="670" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="19" fill="#555">Planetary Orbital Eye: Dual polar orbits</text><text x="592.6666666666667" y="696" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="19" fill="#555">forming a remote sensing eye over equator.</text><rect x="1065.33" y="150" width="474.667" height="630" rx="18" fill="#fff" stroke="#e4e4e0" stroke-width="1"/><g><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" x="1095.33" y="190" width="414.667" height="300" preserveAspectRatio="xMidYMid meet">
+  <title>WASKITHA — Aerospace W Sentinel</title>
+  <g fill="#080E1A" fill-rule="evenodd">
+    <!-- Outer Hexagonal Frame Ring (True hollow polygon) -->
+    <path d="M 128,18 L 224,73 L 224,183 L 128,238 L 32,183 L 32,73 Z
+             M 128,32 L 44,80 L 44,176 L 128,224 L 212,176 L 212,80 Z"/>
+    
+    <!-- Left Wing of 'W' (Snapped to 75 deg) -->
+    <polygon points="56,86 86,86 110,176 80,176"/>
+    
+    <!-- Right Wing of 'W' (Snapped to 105 deg / mirror 75) -->
+    <polygon points="200,86 170,86 146,176 176,176"/>
+    
+    <!-- Central Chevron / Tumpal Spearhead -->
+    <polygon points="128,64.43 152,154 128,140.14 104,154"/>
+    
+    <!-- Nadir Telemetry Core -->
+    <circle cx="128" cy="192" r="12"/>
+  </g>
+</svg>
+</g><g><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" x="1095.33" y="516" width="64" height="64" preserveAspectRatio="xMidYMid meet">
+  <title>WASKITHA — Aerospace W Sentinel</title>
+  <g fill="#080E1A" fill-rule="evenodd">
+    <!-- Outer Hexagonal Frame Ring (True hollow polygon) -->
+    <path d="M 128,18 L 224,73 L 224,183 L 128,238 L 32,183 L 32,73 Z
+             M 128,32 L 44,80 L 44,176 L 128,224 L 212,176 L 212,80 Z"/>
+    
+    <!-- Left Wing of 'W' (Snapped to 75 deg) -->
+    <polygon points="56,86 86,86 110,176 80,176"/>
+    
+    <!-- Right Wing of 'W' (Snapped to 105 deg / mirror 75) -->
+    <polygon points="200,86 170,86 146,176 176,176"/>
+    
+    <!-- Central Chevron / Tumpal Spearhead -->
+    <polygon points="128,64.43 152,154 128,140.14 104,154"/>
+    
+    <!-- Nadir Telemetry Core -->
+    <circle cx="128" cy="192" r="12"/>
+  </g>
+</svg>
+</g><text x="1127.33" y="600" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" fill="#8a8a8a" text-anchor="middle">64px</text><g><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" x="1185.33" y="548" width="32" height="32" preserveAspectRatio="xMidYMid meet">
+  <title>WASKITHA — Aerospace W Sentinel</title>
+  <g fill="#080E1A" fill-rule="evenodd">
+    <!-- Outer Hexagonal Frame Ring (True hollow polygon) -->
+    <path d="M 128,18 L 224,73 L 224,183 L 128,238 L 32,183 L 32,73 Z
+             M 128,32 L 44,80 L 44,176 L 128,224 L 212,176 L 212,80 Z"/>
+    
+    <!-- Left Wing of 'W' (Snapped to 75 deg) -->
+    <polygon points="56,86 86,86 110,176 80,176"/>
+    
+    <!-- Right Wing of 'W' (Snapped to 105 deg / mirror 75) -->
+    <polygon points="200,86 170,86 146,176 176,176"/>
+    
+    <!-- Central Chevron / Tumpal Spearhead -->
+    <polygon points="128,64.43 152,154 128,140.14 104,154"/>
+    
+    <!-- Nadir Telemetry Core -->
+    <circle cx="128" cy="192" r="12"/>
+  </g>
+</svg>
+</g><text x="1201.33" y="600" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" fill="#8a8a8a" text-anchor="middle">32px</text><g><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" x="1243.33" y="564" width="16" height="16" preserveAspectRatio="xMidYMid meet">
+  <title>WASKITHA — Aerospace W Sentinel</title>
+  <g fill="#080E1A" fill-rule="evenodd">
+    <!-- Outer Hexagonal Frame Ring (True hollow polygon) -->
+    <path d="M 128,18 L 224,73 L 224,183 L 128,238 L 32,183 L 32,73 Z
+             M 128,32 L 44,80 L 44,176 L 128,224 L 212,176 L 212,80 Z"/>
+    
+    <!-- Left Wing of 'W' (Snapped to 75 deg) -->
+    <polygon points="56,86 86,86 110,176 80,176"/>
+    
+    <!-- Right Wing of 'W' (Snapped to 105 deg / mirror 75) -->
+    <polygon points="200,86 170,86 146,176 176,176"/>
+    
+    <!-- Central Chevron / Tumpal Spearhead -->
+    <polygon points="128,64.43 152,154 128,140.14 104,154"/>
+    
+    <!-- Nadir Telemetry Core -->
+    <circle cx="128" cy="192" r="12"/>
+  </g>
+</svg>
+</g><text x="1251.33" y="600" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" fill="#8a8a8a" text-anchor="middle">16px</text><text x="1095.3333333333335" y="636" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="26" font-weight="700" fill="#161616">C · WASKITHA</text><text x="1095.3333333333335" y="670" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="19" fill="#555">Aerospace Chevron Sentinel: Dynamic W wings</text><text x="1095.3333333333335" y="696" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="19" fill="#555">with nadir telemetry beam.</text></svg>

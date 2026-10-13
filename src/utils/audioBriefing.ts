@@ -66,9 +66,9 @@ export function speakSituationBriefing(
   // Generate localized text briefing
   let text = '';
   if (language === 'id') {
-    text = `Laporan Situasi Terra Harmonia. Wilayah pengamatan aktif: ${aoi.name}. Tipe ekosistem: ${aoi.biome}. Terdeteksi ${hotspotCount.toLocaleString('id-ID')} titik panas dalam rekaman pengamatan satelit dengan ${anomalyCount} minggu anomali historis. Status kewaspadaan kebakaran gambut berada pada level siaga. Disarankan pemantauan tinggi muka air tanah dan patroli sekat kanal secara intensif.`;
+    text = `Laporan Situasi Wanareksa. Wilayah pengamatan aktif: ${aoi.name}. Tipe ekosistem: ${aoi.biome}. Terdeteksi ${hotspotCount.toLocaleString('id-ID')} titik panas dalam rekaman pengamatan satelit dengan ${anomalyCount} minggu anomali historis. Status kewaspadaan kebakaran gambut berada pada level siaga. Disarankan pemantauan tinggi muka air tanah dan patroli sekat kanal secara intensif.`;
   } else {
-    text = `Terra Harmonia Situation Briefing. Active monitoring region: ${aoi.name}. Biome type: ${aoi.biome}. Detected ${hotspotCount.toLocaleString('en-US')} total satellite hotspot records with ${anomalyCount} historical anomaly weeks. Peatland fire alert level is elevated. Immediate groundwater table monitoring and canal block patrols are recommended.`;
+    text = `Wanareksa Situation Briefing. Active monitoring region: ${aoi.name}. Biome type: ${aoi.biome}. Detected ${hotspotCount.toLocaleString('en-US')} total satellite hotspot records with ${anomalyCount} historical anomaly weeks. Peatland fire alert level is elevated. Immediate groundwater table monitoring and canal block patrols are recommended.`;
   }
 
   const utterance = new SpeechSynthesisUtterance(text);

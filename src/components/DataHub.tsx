@@ -67,7 +67,7 @@ export const DataHub: React.FC<DataHubProps> = ({
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.download = `TerraHarmonia_${selectedAOI.id}_2000_2026_Calibrated.csv`;
+      link.download = `Wanareksa_${selectedAOI.id}_2000_2026_Calibrated.csv`;
       link.click();
     } else if (downloadFormat === 'json') {
       const jsonContent = JSON.stringify(calendarMatrix, null, 2);
@@ -75,7 +75,7 @@ export const DataHub: React.FC<DataHubProps> = ({
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.download = `TerraHarmonia_${selectedAOI.id}_2000_2026_Calibrated.json`;
+      link.download = `Wanareksa_${selectedAOI.id}_2000_2026_Calibrated.json`;
       link.click();
     } else {
       // RFC 7946 Standard GeoJSON FeatureCollection with 5.5km Bounding Polygons
@@ -91,7 +91,7 @@ export const DataHub: React.FC<DataHubProps> = ({
 
         return {
           type: 'Feature',
-          id: `terra_harmonia_${selectedAOI.id}_${d.year}_w${d.week}`,
+          id: `wanareksa_${selectedAOI.id}_${d.year}_w${d.week}`,
           geometry: {
             type: 'Polygon',
             coordinates: [
@@ -120,14 +120,14 @@ export const DataHub: React.FC<DataHubProps> = ({
             is_critical_window: d.isCriticalPeriod,
             is_unusual_anomaly: d.isUnusualCondition,
             crs: 'EPSG:4326 - WGS 84',
-            data_source: 'NASA EOS / JPSS FIRMS Harmonized by Terra Harmonia'
+            data_source: 'NASA EOS / JPSS FIRMS Harmonized by Wanareksa'
           }
         };
       });
 
       const geoJsonData = {
         type: 'FeatureCollection',
-        name: `TerraHarmonia_${selectedAOI.id}_5_5km_Grid_2000_2026`,
+        name: `Wanareksa_${selectedAOI.id}_5_5km_Grid_2000_2026`,
         crs: {
           type: 'name',
           properties: { name: 'urn:ogc:def:crs:OGC:1.3:CRS84' }
@@ -139,7 +139,7 @@ export const DataHub: React.FC<DataHubProps> = ({
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.download = `TerraHarmonia_${selectedAOI.id}_2000_2026_GIS.geojson`;
+      link.download = `Wanareksa_${selectedAOI.id}_2000_2026_GIS.geojson`;
       link.click();
     }
   };

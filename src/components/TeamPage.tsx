@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Language, translations } from '../data/translations';
+import { WanareksaEmblem } from './Logo';
 import {
   User,
   Award,
@@ -332,16 +333,12 @@ export const TeamPage: React.FC<TeamPageProps> = ({ language }) => {
 
               {/* High-Resolution Emblem */}
               <div className="relative z-10 w-40 h-40 sm:w-48 sm:h-48 flex items-center justify-center filter drop-shadow-[0_12px_24px_rgba(0,0,0,0.18)]">
-                <img
-                  src="/terra_harmonia_transparent.svg"
-                  alt="Terra Harmonia Emblem Large"
-                  className="w-full h-full object-contain"
-                />
+                <WanareksaEmblem className="w-full h-full object-contain" />
               </div>
 
               {/* Bottom Badge */}
               <div className="absolute bottom-3 left-4 right-4 flex items-center justify-between text-[11px] text-[#86868b] dark:text-[#9ca3af]">
-                <span className="font-mono">SVG 64×64 Pure Vector</span>
+                <span className="font-mono">SVG 256×256 Pure Vector</span>
                 <span className="font-semibold text-emerald-600 dark:text-emerald-400">100% Scalable (Zero Pixelation)</span>
               </div>
             </div>
@@ -349,14 +346,14 @@ export const TeamPage: React.FC<TeamPageProps> = ({ language }) => {
             {/* Dual Lockup Presentation */}
             <div className="mt-4 flex items-center gap-3 p-3 bg-[#f5f5f7] dark:bg-[#151d2f] rounded-2xl border border-[#e5e5e7] dark:border-[#1f2937]">
               <div className="w-8 h-8 flex items-center justify-center">
-                <img src="/terra_harmonia_transparent.svg" alt="Emblem" className="w-full h-full object-contain" />
+                <WanareksaEmblem className="w-full h-full object-contain" />
               </div>
               <span className="text-[#86868b] font-bold text-sm">×</span>
               <div className="w-8 h-8 rounded-full overflow-hidden shadow-2xs">
                 <img src="/nasa_meatball.svg" alt="NASA Meatball" className="w-full h-full object-contain" />
               </div>
               <div className="text-left text-xs pl-1">
-                <span className="font-bold text-[#1d1d1f] dark:text-white block">Terra Harmonia × NASA Insignia</span>
+                <span className="font-bold text-[#1d1d1f] dark:text-white block">Wanareksa × NASA Insignia</span>
                 <span className="text-[10px] text-[#86868b] dark:text-[#9ca3af]">Official Hackathon Collaboration Lockup</span>
               </div>
             </div>
@@ -366,8 +363,8 @@ export const TeamPage: React.FC<TeamPageProps> = ({ language }) => {
           <div className="lg:col-span-6 space-y-4">
             <div className="p-5 rounded-2xl bg-[#fbfbfd] dark:bg-[#151d2f] border border-[#e5e5e7] dark:border-[#1f2937] space-y-2">
               <div className="flex items-center gap-3">
-                <div className="px-3 py-1.5 rounded-xl bg-blue-50 dark:bg-blue-950/50 border border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300 font-bold text-sm">
-                  TERRA
+                <div className="px-3 py-1.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 font-bold text-sm">
+                  WANA
                 </div>
                 <div>
                   <h3 className="font-bold text-base text-[#1d1d1f] dark:text-white">{t.terraTitle}</h3>
@@ -381,8 +378,8 @@ export const TeamPage: React.FC<TeamPageProps> = ({ language }) => {
 
             <div className="p-5 rounded-2xl bg-[#fbfbfd] dark:bg-[#151d2f] border border-[#e5e5e7] dark:border-[#1f2937] space-y-2">
               <div className="flex items-center gap-3">
-                <div className="px-3 py-1.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 font-bold text-sm">
-                  HARMONIA
+                <div className="px-3 py-1.5 rounded-xl bg-blue-50 dark:bg-blue-950/50 border border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300 font-bold text-sm">
+                  REKSA
                 </div>
                 <div>
                   <h3 className="font-bold text-base text-[#1d1d1f] dark:text-white">{t.harmoniaTitle}</h3>
@@ -795,7 +792,7 @@ export const TeamPage: React.FC<TeamPageProps> = ({ language }) => {
         </div>
 
         <a
-          href="https://github.com/Rangga11268/TerraHarmonia"
+          href="https://github.com/Rangga11268/Bhumantara"
           target="_blank"
           rel="noopener noreferrer"
           className="px-5 py-2.5 rounded-xl bg-[#1d1d1f] hover:bg-black dark:bg-emerald-600 dark:hover:bg-emerald-700 text-white font-semibold transition flex items-center gap-2 shadow-xs shrink-0 cursor-pointer min-h-[44px]"

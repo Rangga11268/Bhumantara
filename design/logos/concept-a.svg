@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <title>WANAREKSA — Kawung Sentinel Aperture</title>
+  <g fill="#080E1A" fill-rule="evenodd">
+    <!-- Outer Aerospace Ring (Donut) -->
+    <path d="M 128,14 A 114,114 0 1 0 128,242 A 114,114 0 1 0 128,14 Z M 128,26 A 102,102 0 1 1 128,230 A 102,102 0 1 1 128,26 Z"/>
+    
+    <!-- North Petal (Orbital Zenith) -->
+    <path d="M 128,36 C 148,64 164,88 152,112 C 144,124 136,128 128,128 C 120,128 112,124 104,112 C 92,88 108,64 128,36 Z"/>
+    
+    <!-- South Petal (Peatland Nadir) -->
+    <path d="M 128,220 C 108,192 92,168 104,144 C 112,132 120,128 128,128 C 136,128 144,132 152,144 C 164,168 148,192 128,220 Z"/>
+    
+    <!-- West Petal (Swath West) -->
+    <path d="M 36,128 C 64,108 88,92 112,104 C 124,112 128,120 128,128 C 128,136 124,144 112,152 C 88,164 64,148 36,128 Z"/>
+    
+    <!-- East Petal (Swath East) -->
+    <path d="M 220,128 C 192,148 168,164 144,152 C 132,144 128,136 128,128 C 128,120 132,112 144,104 C 168,92 192,108 220,128 Z"/>
+    
+    <!-- Four Cardinal Telemetry Sensors -->
+    <path d="M 80,70 A 10,10 0 1 0 80,90 A 10,10 0 1 0 80,70 Z"/>
+    <path d="M 176,70 A 10,10 0 1 0 176,90 A 10,10 0 1 0 176,70 Z"/>
+    <path d="M 80,166 A 10,10 0 1 0 80,186 A 10,10 0 1 0 80,166 Z"/>
+    <path d="M 176,166 A 10,10 0 1 0 176,186 A 10,10 0 1 0 176,166 Z"/>
+    
+    <!-- Central Aperture Focal Lens with true negative space -->
+    <path d="M 128,104 A 24,24 0 1 0 128,152 A 24,24 0 1 0 128,104 Z M 128,116 A 12,12 0 1 1 128,140 A 12,12 0 1 1 128,116 Z"/>
+  </g>
+</svg>

@@ -564,7 +564,7 @@ export const FullMapModal: React.FC<FullMapModalProps> = ({
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `TerraHarmonia_GIS_${selectedAOI.id}_${selectedYear}.geojson`;
+    a.download = `Wanareksa_GIS_${selectedAOI.id}_${selectedYear}.geojson`;
     a.click();
     URL.revokeObjectURL(url);
   };

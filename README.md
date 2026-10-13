@@ -1,8 +1,8 @@
 <div align="center">
 
-  <img src="public/bhumantara_logo.svg" alt="Bhumantara Emblem" width="130" height="130" />
+  <img src="public/wanareksa_logo.svg" alt="Wanareksa Emblem" width="130" height="130" />
 
-  # BHUMANTARA (भूमान्तर)
+  # WANAREKSA
   ### Planetary Multi-Sensor Climatology & Indonesian Tropical Peatland Intelligence Suite
   ### Platform Harmonisasi Satelit Observasi Bumi & Intelijen Gambut Tropis Multi-Dekade
 
@@ -25,7 +25,7 @@
 
 ## Executive Summary
 
-**Bhumantara**—derived from ancient Sanskrit for the nexus of **Earth (*Bhumi*)** and **Space (*Antara*)**—is an authoritative planetary climatology system developed for the NASA Space Apps Challenge 2026.
+**Wanareksa**—derived from Old Javanese/Kawi for **Rainforest (*Wana*)** and **Sentinel Guardian (*Reksa*)**—is an authoritative planetary climatology system developed for the NASA Space Apps Challenge 2026.
 
 For over two decades, NASA Earth Observation satellites have tracked global active fire events:
 1. **MODIS (Terra & Aqua)**: 1.0 km nadir footprint, operational since 2000.
@@ -35,7 +35,7 @@ Because VIIRS provides an observational ground footprint approximately **7 times
 
 Without mathematical and spatial harmonization, raw historical archives create a dangerous statistical illusion: **wildfire frequency appears to artificially triple post-2012**. This distorts long-term climate baselines, carbon emission accounting, and national peatland restoration policies across Indonesia's **14.9 million hectares of fragile peat dome ecosystems**.
 
-**Bhumantara** resolves this distortion through:
+**Wanareksa** resolves this distortion through:
 * **5.5 km equal-area spatial binning** (neutralizing sensor footprint overcounting)
 * **Stefan-Boltzmann Fire Radiative Power (FRP) cross-sensor calibration**
 * **In-situ hydrological coupling with BRGM statutory Peat Water Table depths ($TMAG < -40\text{ cm}$)**
@@ -47,7 +47,7 @@ Without mathematical and spatial harmonization, raw historical archives create a
 
 ```
 ┌──────────────────────────────────────────────────────────────────────────────────────────┐
-│                                  BHUMANTARA ARCHITECTURE                                 │
+│                                   WANAREKSA ARCHITECTURE                                 │
 ├────────────────────────────┬────────────────────────────┬────────────────────────────────┤
 │    🛰️ SENSOR HARMONIZATION  │    🗺️ GIS & INTELLIGENCE   │    🛡️ MITIGATION & PROGNOSIS   │
 ├────────────────────────────┼────────────────────────────┼────────────────────────────────┤
@@ -98,8 +98,8 @@ Without mathematical and spatial harmonization, raw historical archives create a
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/Rangga11268/TerraHarmonia.git
-cd TerraHarmonia
+git clone https://github.com/Rangga11268/Bhumantara.git
+cd Bhumantara
 
 # 2. Install dependencies
 npm install
@@ -117,7 +117,7 @@ npm run build
 
 ## Ringkasan Eksekutif
 
-**Bhumantara**—berasal dari bahasa Sanskerta untuk pertemuan antara **Bumi (*Bhumi*)** dan **Antariksa (*Antara*)**—adalah platform intelijen dan harmonisasi data satelit multi-dekade untuk NASA Space Apps Challenge 2026.
+**Wanareksa**—berasal dari bahasa Jawa Kuno/Kawi untuk **Rimba Belantara (*Wana*)** dan **Sang Penjaga (*Reksa*)**—adalah platform intelijen dan harmonisasi data satelit multi-dekade untuk NASA Space Apps Challenge 2026.
 
 Selama lebih dari dua dekade, satelit observasi bumi NASA telah memantau titik api kebakaran global:
 1. **MODIS (Terra & Aqua)**: Resolusi piksel 1.0 km, beroperasi sejak tahun 2000.
@@ -127,7 +127,7 @@ Karena sensor VIIRS memiliki jejak optik **7 kali lebih rapat** daripada MODIS, 
 
 Tanpa harmonisasi matematis dan spasial, data historis mentah menciptakan ilusi statistik yang berbahaya: **frekuensi kebakaran hutan seolah-olah melonjak 300% pasca-2012**. Hal ini mendistorsi data acuan iklim jangka panjang dan perencanaan anggaran restorasi pada **14.9 juta hektar ekosistem kubah gambut Indonesia**.
 
-**Bhumantara** menyelesaikan distorsi ini melalui:
+**Wanareksa** menyelesaikan distorsi ini melalui:
 * **Agregasi spasial sel 5.5 km equal-area** (menghilangkan overcounting pergantian sensor)
 * **Kalibrasi daya radiasi termal Stefan-Boltzmann FRP (Megawatt)**
 * **Korelasi hidrologi gambut nyata dengan batas kritis Tinggi Muka Air Gambut BRGM (TMAG < -40 cm)**
@@ -137,5 +137,5 @@ Tanpa harmonisasi matematis dan spasial, data historis mentah menciptakan ilusi 
 
 ## Hak Cipta & Lisensi
 
-Dikembangkan dengan bangga oleh **Tim Bhumantara** untuk **NASA Space Apps Challenge 2026**.  
+Dikembangkan dengan bangga oleh **Tim Wanareksa** untuk **NASA Space Apps Challenge 2026**.  
 Didistribusikan di bawah lisensi terbuka [MIT License](LICENSE).

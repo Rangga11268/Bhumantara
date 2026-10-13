@@ -42,7 +42,7 @@ export const CriticalAlerts: React.FC<CriticalAlertsProps> = ({
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.setAttribute('href', url);
-    link.setAttribute('download', `TerraHarmonia_${selectedAOI.id}_2000_2026.csv`);
+    link.setAttribute('download', `Wanareksa_${selectedAOI.id}_2000_2026.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
