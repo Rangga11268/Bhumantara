@@ -1,5 +1,5 @@
 /**
- * TerraHarmonia Voice Audio Briefing
+ * Wanareksa Voice Audio Briefing
  * Native Web Speech API synthesis for hands-free command center situation updates.
  * Automatically adapts speech language and matching synthesizer voice (Indonesian vs English).
  */

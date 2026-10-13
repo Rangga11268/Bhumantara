@@ -697,11 +697,11 @@ export const Footer: React.FC<FooterProps> = ({ language, onSelectTab }) => {
                 <p className="text-xs text-[#515154] dark:text-[#9ca3af] leading-relaxed">
                   {selectedSat === 'terra'
                     ? (language === 'id'
-                      ? 'Satelit unggulan NASA diluncurkan pada 18 Desember 1999 pada orbit Sun-Synchronous 705 km. Sensor MODIS menjadi tulang punggung pengamatan deret waktu 26 tahun Terra Harmonia.'
-                      : 'NASA flagship Earth observation satellite launched on Dec 18, 1999 into a 705 km Sun-Synchronous orbit. Its MODIS sensor anchors Terra Harmonia 26-year baseline.')
+                      ? 'Satelit unggulan NASA diluncurkan pada 18 Desember 1999 pada orbit Sun-Synchronous 705 km. Sensor MODIS menjadi tulang punggung pengamatan deret waktu 26 tahun Wanareksa.'
+                      : 'NASA flagship Earth observation satellite launched on Dec 18, 1999 into a 705 km Sun-Synchronous orbit. Its MODIS sensor anchors Wanareksa 26-year baseline.')
                     : (language === 'id'
-                      ? 'Diluncurkan pada 28 Oktober 2011 oleh NASA/NOAA pada orbit 824 km. Sensor VIIRS membawa pita resolusi tinggi 375m yang diselaraskan oleh algoritma Terra Harmonia.'
-                      : 'Launched on Oct 28, 2011 by NASA/NOAA into an 824 km orbit. Its VIIRS sensor delivers 375m high-resolution bands harmonized by Terra Harmonia.')}
+                      ? 'Diluncurkan pada 28 Oktober 2011 oleh NASA/NOAA pada orbit 824 km. Sensor VIIRS membawa pita resolusi tinggi 375m yang diselaraskan oleh algoritma Wanareksa.'
+                      : 'Launched on Oct 28, 2011 by NASA/NOAA into an 824 km orbit. Its VIIRS sensor delivers 375m high-resolution bands harmonized by Wanareksa.')}
                 </p>
               </div>
 
@@ -779,7 +779,7 @@ export const Footer: React.FC<FooterProps> = ({ language, onSelectTab }) => {
         <div className="pt-6 border-t border-[#e5e5e7] dark:border-[#1f2937] flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#86868b] dark:text-[#9ca3af]">
           <div className="flex items-center gap-3">
             <Logo size="sm" showSubtitle={false} showNasaBadge={true} />
-            <span>&copy; 2026 Terra Harmonia &bull; NASA Space Apps Jakarta 2026 &bull; NASA FIRMS &amp; Earthdata</span>
+            <span>&copy; 2026 Wanareksa &bull; NASA Space Apps Jakarta 2026 &bull; NASA FIRMS &amp; Earthdata</span>
           </div>
 
           <div className="flex items-center gap-4 text-[11px]">

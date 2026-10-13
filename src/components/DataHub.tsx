@@ -381,7 +381,7 @@ export const DataHub: React.FC<DataHubProps> = ({
                 </p>
 
                 <div className="p-2.5 rounded-lg bg-sky-50/60 dark:bg-sky-950/30 border border-sky-100 dark:border-sky-900/50 text-xs text-sky-900 dark:text-sky-300 flex items-start gap-2">
-                  <span className="font-semibold shrink-0">Impact in Terra Harmonia:</span>
+                  <span className="font-semibold shrink-0">Impact in Wanareksa:</span>
                   <span>{ref.keyTakeaway}</span>
                 </div>
               </div>

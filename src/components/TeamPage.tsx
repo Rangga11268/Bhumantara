@@ -156,7 +156,7 @@ export const TeamPage: React.FC<TeamPageProps> = ({ language }) => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center pt-2">
           <div className="lg:col-span-8 space-y-3">
             <h1 className="text-3xl sm:text-5xl font-bold text-[#1d1d1f] dark:text-white tracking-tight leading-tight">
-              Terra Harmonia
+              Wanareksa
             </h1>
             <p className="text-base sm:text-lg text-[#515154] dark:text-[#d1d5db] max-w-3xl leading-relaxed">
               {t.teamHeroDesc}
@@ -205,8 +205,8 @@ export const TeamPage: React.FC<TeamPageProps> = ({ language }) => {
             </h2>
             <p className="text-xs sm:text-sm text-white/90 max-w-xl leading-relaxed">
               {language === 'id'
-                ? 'Kreator Tunggal, Arsitek Geospasial & Pengembang Full-Stack Terra Harmonia untuk NASA Space Apps Challenge 2026.'
-                : 'Solo Creator, Geospatial Architect & Full-Stack Engineer of Terra Harmonia for NASA Space Apps Challenge 2026.'}
+                ? 'Kreator Tunggal, Arsitek Geospasial & Pengembang Full-Stack Wanareksa untuk NASA Space Apps Challenge 2026.'
+                : 'Solo Creator, Geospatial Architect & Full-Stack Engineer of Wanareksa for NASA Space Apps Challenge 2026.'}
             </p>
             <div className="flex flex-wrap items-center gap-2 pt-1 text-[11px]">
               <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/30 text-emerald-200 border border-emerald-400/30 font-medium">
@@ -664,8 +664,8 @@ export const TeamPage: React.FC<TeamPageProps> = ({ language }) => {
             </h2>
             <p className="text-xs text-[#6e6e73] dark:text-[#9ca3af] mt-1">
               {language === 'id'
-                ? 'Seluruh aspek rekayasa sistem Terra Harmonia dikembangkan secara mandiri oleh Rangga melalui 4 pilar kompetensi lintas disiplin:'
-                : 'All engineering aspects of Terra Harmonia were independently architected by Rangga across 4 core multidisciplinary pillars:'}
+                ? 'Seluruh aspek rekayasa sistem Wanareksa dikembangkan secara mandiri oleh Rangga melalui 4 pilar kompetensi lintas disiplin:'
+                : 'All engineering aspects of Wanareksa were independently architected by Rangga across 4 core multidisciplinary pillars:'}
             </p>
           </div>
           <span className="text-xs font-semibold text-[#86868b] dark:text-[#9ca3af] bg-[#f5f5f7] dark:bg-[#151d2f] px-3.5 py-1.5 rounded-full border border-[#e5e5e7] dark:border-[#1f2937] shrink-0 self-start sm:self-auto">

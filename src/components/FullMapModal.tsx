@@ -538,7 +538,7 @@ export const FullMapModal: React.FC<FullMapModalProps> = ({
         year: selectedYear,
         generatedAt: new Date().toISOString(),
         totalFeatures: activeSet.length,
-        harmonizedBy: 'Terra Harmonia NASA Harmonization Engine',
+        harmonizedBy: 'Wanareksa NASA Harmonization Engine',
       },
       features: activeSet.map((h) => ({
         type: 'Feature',
@@ -594,7 +594,7 @@ export const FullMapModal: React.FC<FullMapModalProps> = ({
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0 hidden sm:inline-block" />
             <div className="truncate">
               <h1 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white tracking-tight leading-tight truncate">
-                Terra Harmonia GIS Explorer
+                Wanareksa GIS Explorer
               </h1>
               <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate hidden md:block">
                 {language === 'id'

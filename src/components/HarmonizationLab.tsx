@@ -61,8 +61,8 @@ export const HarmonizationLab: React.FC<HarmonizationLabProps> = ({ language }) 
         </h1>
         <p className="text-sm text-[#6e6e73] dark:text-[#9ca3af] max-w-3xl leading-relaxed">
           {language === 'id'
-            ? 'Pada 2012, NASA mengoperasikan sensor VIIRS (resolusi 375m) berdampingan dengan MODIS (1km). Karena ukuran piksel VIIRS 7 kali lebih kecil, satu kebakaran hutan yang sama terdeteksi sebagai banyak titik terpisah. Algoritma Terra Harmonia menyatukan deteksi ke dalam grid 5.5 km untuk mengembalikan perbandingan historis 2000-2026 yang valid.'
-            : 'In 2012, NASA deployed the VIIRS sensor (375m resolution) alongside MODIS (1km). With 7x smaller pixel footprints, a single fire front registers as multiple adjacent detections. Terra Harmonia resolves this via 5.5 km spatial binning to preserve scientific continuity across 2000-2026.'}
+            ? 'Pada 2012, NASA mengoperasikan sensor VIIRS (resolusi 375m) berdampingan dengan MODIS (1km). Karena ukuran piksel VIIRS 7 kali lebih kecil, satu kebakaran hutan yang sama terdeteksi sebagai banyak titik terpisah. Algoritma Wanareksa menyatukan deteksi ke dalam grid 5.5 km untuk mengembalikan perbandingan historis 2000-2026 yang valid.'
+            : 'In 2012, NASA deployed the VIIRS sensor (375m resolution) alongside MODIS (1km). With 7x smaller pixel footprints, a single fire front registers as multiple adjacent detections. Wanareksa resolves this via 5.5 km spatial binning to preserve scientific continuity across 2000-2026.'}
         </p>
       </div>
 
@@ -347,10 +347,10 @@ export const HarmonizationLab: React.FC<HarmonizationLabProps> = ({ language }) 
                     </pattern>
                   </defs>
 
-                  {/* 5.5km Equal-Area Bin Box (Terra Harmonia) */}
+                  {/* 5.5km Equal-Area Bin Box (Wanareksa) */}
                   <rect x="50" y="20" width="300" height="260" rx="16" fill="#1e293b" fillOpacity="0.5" stroke="#10b981" strokeWidth="2" strokeDasharray="6,4" />
                   <text x="60" y="42" fill="#34d399" fontSize="10" fontFamily="monospace" fontWeight="bold">
-                    TERRA HARMONIA: 1 Equal-Area Cluster (5.5 km)
+                    WANAREKSA: 1 Equal-Area Cluster (5.5 km)
                   </text>
 
                   {/* MODIS Grid Overlay (Left Side) */}
@@ -429,7 +429,7 @@ export const HarmonizationLab: React.FC<HarmonizationLabProps> = ({ language }) 
                 <div className="p-3.5 rounded-xl bg-emerald-50/40 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-900/60 space-y-1.5">
                   <div className="text-[10.5px] font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-400 flex items-center gap-1">
                     <ShieldCheck className="w-3.5 h-3.5" />
-                    <span>{language === 'id' ? 'Terra Harmonia (Terkalibrasi)' : 'Harmonized 5.5 km Grid'}</span>
+                    <span>{language === 'id' ? 'Wanareksa (Terkalibrasi)' : 'Harmonized 5.5 km Grid'}</span>
                   </div>
                   <div className="flex justify-between items-baseline pt-1">
                     <span className="text-[#6e6e73] dark:text-[#9ca3af]">Klaster Terverifikasi:</span>
@@ -532,7 +532,7 @@ export const HarmonizationLab: React.FC<HarmonizationLabProps> = ({ language }) 
                   <th className="py-2.5 pr-4">{language === 'id' ? 'Parameter' : 'Parameter'}</th>
                   <th className="py-2.5 px-4">MODIS (Terra / Aqua)</th>
                   <th className="py-2.5 px-4">VIIRS (Suomi-NPP / NOAA)</th>
-                  <th className="py-2.5 pl-4">Terra Harmonia</th>
+                  <th className="py-2.5 pl-4">Wanareksa</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#e5e5e7] dark:divide-[#1f2937] text-[#1d1d1f] dark:text-[#f3f4f6]">

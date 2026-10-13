@@ -25,7 +25,7 @@ export const CinematicIntroTour: React.FC<CinematicIntroTourProps> = ({
     setIsExiting(true);
     setTimeout(() => {
       try {
-        localStorage.setItem('terra_harmonia_intro_seen', 'true');
+        localStorage.setItem('wanareksa_intro_seen', 'true');
       } catch (e) {}
       if (onEnterApp) onEnterApp();
       onClose();
@@ -149,8 +149,8 @@ export const CinematicIntroTour: React.FC<CinematicIntroTourProps> = ({
         {/* Problem Statement & Solution Narrative */}
         <p className="text-sm sm:text-base text-slate-300 max-w-2xl leading-relaxed font-normal">
           {language === 'id'
-            ? 'Peralihan sensor optik dari Terra MODIS (1 km) ke Suomi-NPP VIIRS (375 m) menyebabkan lonjakan data titik api semu hingga 300%. Terra Harmonia merekonsiliasi seluruh data historis 2000-2026 ke dalam grid sel 5.5 km dan daya radiasi termal Stefan-Boltzmann untuk deteksi kebakaran bawah tanah yang akurat.'
-            : 'The optical sensor transition from Terra MODIS (1 km) to Suomi-NPP VIIRS (375 m) caused an artificial 300% surge in raw fire counts. Terra Harmonia reconciles the entire 2000-2026 archive into a 5.5 km equal-area grid and Stefan-Boltzmann thermal power calibration for accurate peat fire mitigation.'}
+            ? 'Peralihan sensor optik dari Terra MODIS (1 km) ke Suomi-NPP VIIRS (375 m) menyebabkan lonjakan data titik api semu hingga 300%. Wanareksa merekonsiliasi seluruh data historis 2000-2026 ke dalam grid sel 5.5 km dan daya radiasi termal Stefan-Boltzmann untuk deteksi kebakaran bawah tanah yang akurat.'
+            : 'The optical sensor transition from Terra MODIS (1 km) to Suomi-NPP VIIRS (375 m) caused an artificial 300% surge in raw fire counts. Wanareksa reconciles the entire 2000-2026 archive into a 5.5 km equal-area grid and Stefan-Boltzmann thermal power calibration for accurate peat fire mitigation.'}
         </p>
 
         {/* Scientific Evidence Numbers Table */}

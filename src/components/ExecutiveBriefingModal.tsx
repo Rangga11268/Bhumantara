@@ -88,7 +88,7 @@ export const ExecutiveBriefingModal: React.FC<ExecutiveBriefingModalProps> = ({
         <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 pb-4 border-b-2 border-slate-900 dark:border-slate-100 print:border-black">
           <div>
             <div className="text-[11px] font-mono uppercase tracking-widest text-sky-600 dark:text-sky-400 font-bold">
-              Terra Harmonia &bull; NASA Space Apps Challenge 2026
+              Wanareksa &bull; NASA Space Apps Challenge 2026
             </div>
             <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900 dark:text-white mt-1 print:text-black">
               {language === 'id' ? 'LAPORAN SITUASI INTELIJEN TITIK PANAS & GAMBUT' : 'EXECUTIVE WILDFIRE & PEATLAND SITUATION REPORT'}
@@ -148,8 +148,8 @@ export const ExecutiveBriefingModal: React.FC<ExecutiveBriefingModalProps> = ({
           </div>
           <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
             {language === 'id'
-              ? 'Data mentah mendeteksi total titik api multi-sensor tanpa pembatasan resolusi. Terra Harmonia telah merekonsiliasi pengamatan MODIS (1 km) dan VIIRS (375 m) ke dalam sel spasial equal-area 5.5 km, mencegah pelaporan berlebih (over-counting) hingga 3.2x.'
-              : 'Raw observations combine multi-sensor detections across disparate resolutions. Terra Harmonia has normalized MODIS (1 km) and VIIRS (375 m) detections into 5.5 km equal-area spatial grid cells, preventing artificial overcounting by up to 3.2x.'}
+              ? 'Data mentah mendeteksi total titik api multi-sensor tanpa pembatasan resolusi. Wanareksa telah merekonsiliasi pengamatan MODIS (1 km) dan VIIRS (375 m) ke dalam sel spasial equal-area 5.5 km, mencegah pelaporan berlebih (over-counting) hingga 3.2x.'
+              : 'Raw observations combine multi-sensor detections across disparate resolutions. Wanareksa has normalized MODIS (1 km) and VIIRS (375 m) detections into 5.5 km equal-area spatial grid cells, preventing artificial overcounting by up to 3.2x.'}
           </p>
         </div>
 
@@ -201,7 +201,7 @@ export const ExecutiveBriefingModal: React.FC<ExecutiveBriefingModalProps> = ({
             Data Sources: NASA FIRMS NRT &bull; MODIS MOD14 &bull; VIIRS VNP14IMG &bull; BRGM PRIMS
           </div>
           <div className="font-mono">
-            Generated via Terra Harmonia Offline Core Engine
+            Generated via Wanareksa Offline Core Engine
           </div>
         </div>
 

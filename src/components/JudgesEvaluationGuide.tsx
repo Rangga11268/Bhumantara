@@ -128,8 +128,8 @@ export const JudgesEvaluationGuide: React.FC<JudgesEvaluationGuideProps> = ({
             </div>
             <p className="text-xs text-[#6e6e73] dark:text-[#9ca3af] mt-0.5">
               {language === 'id'
-                ? 'Jelajahi inovasi sains, peta satelit multi-sensor, dan sistem mitigasi karhutla Terra Harmonia melalui 4 alur langkah berikut:'
-                : "Explore Terra Harmonia's multi-sensor science, satellite intelligence, and field mitigation across 4 guided steps:"}
+                ? 'Jelajahi inovasi sains, peta satelit multi-sensor, dan sistem mitigasi karhutla Wanareksa melalui 4 alur langkah berikut:'
+                : "Explore Wanareksa's multi-sensor science, satellite intelligence, and field mitigation across 4 guided steps:"}
             </p>
           </div>
         </div>

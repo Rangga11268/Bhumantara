@@ -288,7 +288,7 @@ export const LandingStory: React.FC<LandingStoryProps> = ({
                   <h3 className="text-base sm:text-lg font-bold text-neutral-900 dark:text-white mt-0.5">
                     {paradoxMode === 'raw'
                       ? (language === 'id' ? 'Lonjakan Semu Titik Api (VIIRS 375 m)' : 'Artificial Sensor Hotspot Surge (VIIRS 375 m)')
-                      : (language === 'id' ? 'Fusi Spasial Setara Terra Harmonia (5.5 km)' : 'Terra Harmonia Equal-Area Spatial Fusion (5.5 km)')}
+                      : (language === 'id' ? 'Fusi Spasial Setara Wanareksa (5.5 km)' : 'Wanareksa Equal-Area Spatial Fusion (5.5 km)')}
                   </h3>
                 </div>
                 <span className={`self-start sm:self-auto text-xs font-mono font-bold px-2.5 py-1 rounded-full ${
@@ -336,7 +336,7 @@ export const LandingStory: React.FC<LandingStoryProps> = ({
               <p className="text-xs text-neutral-600 dark:text-neutral-300 leading-relaxed">
                 {paradoxMode === 'raw'
                   ? 'Sebelum 2012, MODIS (1 km) mendeteksi satu peristiwa kebakaran sebagai 1 titik. Sejak 2012, VIIRS (375 m) memecah garis api yang sama menjadi 7 hingga 9 titik. Jika data tidak diharmonisasi, frekuensi kebakaran tampak melonjak secara semu.'
-                  : 'Algoritma Terra Harmonia mengelompokkan titik api ke dalam grid 5.5 km equal-area dan mengalibrasi daya radiatif api (FRP) Stefan-Boltzmann agar data deret waktu 2000-2026 tetap konsisten dan valid.'}
+                  : 'Algoritma Wanareksa mengelompokkan titik api ke dalam grid 5.5 km equal-area dan mengalibrasi daya radiatif api (FRP) Stefan-Boltzmann agar data deret waktu 2000-2026 tetap konsisten dan valid.'}
               </p>
             </div>
           </ObsidianSpotlightCard>
@@ -393,7 +393,7 @@ export const LandingStory: React.FC<LandingStoryProps> = ({
             <span>{language === 'id' ? 'Pilar Sains & Rekayasa' : 'Scientific & Engineering Pillars'}</span>
           </div>
           <h2 className="text-xl sm:text-3xl font-black text-neutral-900 dark:text-white tracking-tight mt-1">
-            {language === 'id' ? '4 Terobosan Teknologi Terra Harmonia' : '4 Core Technological Breakthroughs'}
+            {language === 'id' ? '4 Terobosan Teknologi Wanareksa' : '4 Core Technological Breakthroughs of Wanareksa'}
           </h2>
         </div>
 

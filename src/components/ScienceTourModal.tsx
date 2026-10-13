@@ -100,8 +100,8 @@ export const ScienceTourModal: React.FC<ScienceTourModalProps> = ({
       badge: language === 'id' ? 'Mesin Harmonisasi 5.5 km' : '5.5 km Harmonization Engine',
       title: language === 'id' ? 'Spatial Equal-Area Binning & Kalibrasi Energi FRP' : 'Equal-Area Binning & Radiative Power Normalization',
       desc: language === 'id'
-        ? 'Terra Harmonia mengelompokkan deteksi tumpang-tindih ke dalam sel heksagonal 5.5 km dan mengalibrasi Fire Radiative Power (FRP Megawatts) menggunakan hukum radiasi Planck & Stefan-Boltzmann, memulihkan integritas perbandingan 2000–2026.'
-        : 'Terra Harmonia aggregates co-located multi-sensor detections into 5.5 km equal-area spatial bins and cross-calibrates Fire Radiative Power (FRP Megawatts) via Stefan-Boltzmann thermal physics, restoring true multi-decadal comparability.',
+        ? 'Wanareksa mengelompokkan deteksi tumpang-tindih ke dalam sel heksagonal 5.5 km dan mengalibrasi Fire Radiative Power (FRP Megawatts) menggunakan hukum radiasi Planck & Stefan-Boltzmann, memulihkan integritas perbandingan 2000–2026.'
+        : 'Wanareksa aggregates co-located multi-sensor detections into 5.5 km equal-area spatial bins and cross-calibrates Fire Radiative Power (FRP Megawatts) via Stefan-Boltzmann thermal physics, restoring true multi-decadal comparability.',
       visual: (
         <div className="p-4 rounded-2xl bg-[#f5f5f7] dark:bg-[#151d2f] border border-[#e5e5e7] dark:border-[#1f2937] space-y-3">
           <div className="flex items-center justify-between text-xs">

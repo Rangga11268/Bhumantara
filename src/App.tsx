@@ -43,7 +43,7 @@ export function App() {
   // Theme state: initialized from localStorage or browser media query
   const [theme, setTheme] = useState<'light' | 'dark'>(() => {
     try {
-      const saved = localStorage.getItem('terra_harmonia_theme');
+      const saved = localStorage.getItem('wanareksa_theme') || localStorage.getItem('terra_harmonia_theme');
       if (saved === 'dark' || saved === 'light') return saved;
       if (typeof window !== 'undefined' && window.matchMedia) {
         return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
@@ -55,7 +55,7 @@ export function App() {
   // Track if user explicitly chose a theme
   const [hasUserOverride, setHasUserOverride] = useState<boolean>(() => {
     try {
-      const saved = localStorage.getItem('terra_harmonia_theme');
+      const saved = localStorage.getItem('wanareksa_theme') || localStorage.getItem('terra_harmonia_theme');
       return saved === 'dark' || saved === 'light';
     } catch (e) {
       return false;
@@ -96,7 +96,7 @@ export function App() {
     setTheme((prev) => {
       const next = prev === 'light' ? 'dark' : 'light';
       try {
-        localStorage.setItem('terra_harmonia_theme', next);
+        localStorage.setItem('wanareksa_theme', next);
       } catch (e) {}
       setHasUserOverride(true);
       return next;
@@ -126,7 +126,7 @@ export function App() {
   const [isTourModalOpen, setIsTourModalOpen] = useState<boolean>(() => {
     try {
       if (typeof window !== 'undefined') {
-        const seen = localStorage.getItem('terra_harmonia_intro_seen');
+        const seen = localStorage.getItem('wanareksa_intro_seen') || localStorage.getItem('terra_harmonia_intro_seen');
         if (!seen) return true; // Auto-open for first-time visitors!
       }
     } catch (e) {}
@@ -140,7 +140,7 @@ export function App() {
   const [isLoadingLive, setIsLoadingLive] = useState<boolean>(false);
   const [liveResult, setLiveResult] = useState<LiveSyncResult | null>(null);
   const [userMapKey, setUserMapKey] = useState<string>(() =>
-    localStorage.getItem('terra_harmonia_map_key') || ''
+    localStorage.getItem('wanareksa_map_key') || localStorage.getItem('terra_harmonia_map_key') || ''
   );
 
   const t = translations[language];
@@ -222,7 +222,7 @@ export function App() {
 
   const handleSaveMapKey = (key: string) => {
     setUserMapKey(key);
-    localStorage.setItem('terra_harmonia_map_key', key);
+    localStorage.setItem('wanareksa_map_key', key);
     if (isLiveSync) loadLiveFeed(selectedAOI, key);
   };
 
@@ -633,13 +633,13 @@ export function App() {
         onClose={() => {
           setIsTourModalOpen(false);
           try {
-            localStorage.setItem('terra_harmonia_intro_seen', 'true');
+            localStorage.setItem('wanareksa_intro_seen', 'true');
           } catch (e) {}
         }}
         onEnterApp={() => {
           setIsTourModalOpen(false);
           try {
-            localStorage.setItem('terra_harmonia_intro_seen', 'true');
+            localStorage.setItem('wanareksa_intro_seen', 'true');
           } catch (e) {}
         }}
       />

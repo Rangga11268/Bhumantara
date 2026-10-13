@@ -111,7 +111,7 @@ export const scientificReferences: ScientificReference[] = [
     doi: '10.5067/FIRMS/WMS.002',
     url: 'https://firms.modaps.eosdis.nasa.gov/',
     abstract: 'Provides low-latency (NRT < 3 hours) near-real-time thermal anomaly vector data and Web Map Tile Services (EPSG:4326) across Terra/Aqua MODIS and Suomi-NPP / NOAA-20 / NOAA-21 VIIRS.',
-    keyTakeaway: 'Powers the live telemetry sync in Terra Harmonia using secure client-side token headers and direct OpenStreetMap/Leaflet raster tile layers.',
+    keyTakeaway: 'Powers the live telemetry sync in Wanareksa using secure client-side token headers and direct OpenStreetMap/Leaflet raster tile layers.',
     bibtex: `@manual{nasafirms2026,
   title={NASA FIRMS: Fire Information for Resource Management System NRT API Documentation},
   author={{NASA ESDIS}},

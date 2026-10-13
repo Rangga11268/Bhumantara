@@ -627,8 +627,8 @@ export const VisualAnalytics: React.FC<VisualAnalyticsProps> = ({
               </div>
               <p className="text-sky-900 dark:text-sky-200 leading-relaxed">
                 {language === 'id'
-                  ? 'Terra Harmonia merekonsiliasi perbedaan resolusi kedua sensor ke dalam sel spasial 5.5 km sehingga menghasilkan linimasa 26 tahun yang konsisten secara ilmiah.'
-                  : 'Terra Harmonia reconciles multi-sensor resolution discrepancies into 5.5 km spatial cells for an un-biased 26-year time series.'}
+                  ? 'Wanareksa merekonsiliasi perbedaan resolusi kedua sensor ke dalam sel spasial 5.5 km sehingga menghasilkan linimasa 26 tahun yang konsisten secara ilmiah.'
+                  : 'Wanareksa reconciles multi-sensor resolution discrepancies into 5.5 km spatial cells for an un-biased 26-year time series.'}
               </p>
             </div>
           </div>
