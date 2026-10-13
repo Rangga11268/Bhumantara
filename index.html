@@ -14,7 +14,7 @@
     <script>
       (function() {
         try {
-          var saved = localStorage.getItem('wanareksa_theme') || localStorage.getItem('terra_harmonia_theme');
+          var saved = localStorage.getItem('wanareksa_theme');
           var systemDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
           if (saved === 'dark' || (!saved && systemDark)) {
             document.documentElement.classList.add('dark');

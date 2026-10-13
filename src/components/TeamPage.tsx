@@ -812,7 +812,7 @@ export const TeamPage: React.FC<TeamPageProps> = ({ language }) => {
         </div>
 
         <a
-          href="https://github.com/Rangga11268/Bhumantara"
+          href="https://github.com/Rangga11268/Wanareksa"
           target="_blank"
           rel="noopener noreferrer"
           className="px-5 py-2.5 rounded-xl bg-[#1d1d1f] hover:bg-black dark:bg-emerald-600 dark:hover:bg-emerald-700 text-white font-semibold transition flex items-center gap-2 shadow-xs shrink-0 cursor-pointer min-h-[44px]"

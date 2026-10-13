@@ -22,6 +22,7 @@ import {
   X,
   ChevronLeft,
   ChevronRight,
+  ChevronDown,
   ArrowUpDown,
   Sparkles,
   Zap,
@@ -341,32 +342,35 @@ ${language === 'id' ? 'Sumber Data: NASA FIRMS (MODIS 1km / VIIRS 375m) & Open-M
 
       {/* 2. Region Quick Selector & Live Telemetry KPI Bar (Hidden in Print) */}
       <div className="print:hidden bg-white dark:bg-[#111827] border border-[#e5e5e7] dark:border-[#1f2937] rounded-2xl p-4 sm:p-5 shadow-xs">
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           
-          {/* Streamlined Responsive Region Badges (No horizontal scrollbar slider) */}
-          <div className="flex flex-wrap items-center gap-1.5 flex-1">
-            <span className="text-xs font-bold text-[#86868b] dark:text-[#9ca3af] mr-1 uppercase shrink-0">
-              {language === 'id' ? 'Sektor:' : 'Sector:'}
-            </span>
-            {PRESET_AOIS.map((aoi) => {
-              const isSelected = selectedAOI.id === aoi.id;
-              const aoiProfile = getRegionalPeatProfile(aoi.id);
-              const label = language === 'id' ? aoiProfile.shortLabelId : aoiProfile.shortLabelEn;
-              return (
-                <button
-                  key={aoi.id}
-                  onClick={() => onSelectAOI(aoi)}
-                  title={aoi.name}
-                  className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer whitespace-nowrap min-h-[34px] ${
-                    isSelected
-                      ? 'bg-emerald-600 dark:bg-emerald-500 text-white shadow-xs font-bold'
-                      : 'bg-[#f5f5f7] dark:bg-[#151d2f] text-[#6e6e73] dark:text-[#9ca3af] hover:text-[#1d1d1f] dark:hover:text-white border border-[#e5e5e7] dark:border-[#1f2937]'
-                  }`}
-                >
-                  {label}
-                </button>
-              );
-            })}
+          {/* Space-Saving Sector Dropdown Selector */}
+          <div className="flex items-center gap-2 flex-1 max-w-lg">
+            <div className="flex items-center gap-1.5 text-xs font-bold text-[#86868b] dark:text-[#9ca3af] uppercase shrink-0">
+              <MapPin className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+              <span>{language === 'id' ? 'Sektor Target:' : 'Target Sector:'}</span>
+            </div>
+            <div className="relative flex-1">
+              <select
+                value={selectedAOI.id}
+                onChange={(e) => {
+                  const targetAOI = PRESET_AOIS.find((a) => a.id === e.target.value);
+                  if (targetAOI) onSelectAOI(targetAOI);
+                }}
+                className="w-full appearance-none bg-[#f5f5f7] dark:bg-[#1a2333] border border-[#e5e5e7] dark:border-[#2d3748] rounded-xl px-3.5 py-2 pr-9 text-xs font-semibold text-[#1d1d1f] dark:text-white cursor-pointer focus:outline-hidden focus:ring-2 focus:ring-emerald-500 transition shadow-2xs"
+              >
+                {PRESET_AOIS.map((aoi) => {
+                  const aoiProfile = getRegionalPeatProfile(aoi.id);
+                  const label = language === 'id' ? aoiProfile.shortLabelId : aoiProfile.shortLabelEn;
+                  return (
+                    <option key={aoi.id} value={aoi.id}>
+                      {label} — {aoiProfile.khgName}
+                    </option>
+                  );
+                })}
+              </select>
+              <ChevronDown className="w-4 h-4 text-[#86868b] dark:text-[#9ca3af] pointer-events-none absolute right-3 top-1/2 -translate-y-1/2" />
+            </div>
           </div>
 
           {/* Live Sync Trigger / Refresh */}
@@ -374,7 +378,7 @@ ${language === 'id' ? 'Sumber Data: NASA FIRMS (MODIS 1km / VIIRS 375m) & Open-M
             <button
               onClick={onRefreshLive}
               disabled={isLoadingLive}
-              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold transition shadow-xs cursor-pointer disabled:opacity-50 shrink-0 min-h-[34px]"
+              className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold transition shadow-xs cursor-pointer disabled:opacity-50 shrink-0 min-h-[38px]"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${isLoadingLive ? 'animate-spin' : ''}`} />
               <span>{isLoadingLive ? (language === 'id' ? 'Menyinkronkan...' : 'Syncing...') : (language === 'id' ? 'Sinkronkan Data Live' : 'Sync Live')}</span>

@@ -43,7 +43,7 @@ export function App() {
   // Theme state: initialized from localStorage or browser media query
   const [theme, setTheme] = useState<'light' | 'dark'>(() => {
     try {
-      const saved = localStorage.getItem('wanareksa_theme') || localStorage.getItem('terra_harmonia_theme');
+      const saved = localStorage.getItem('wanareksa_theme');
       if (saved === 'dark' || saved === 'light') return saved;
       if (typeof window !== 'undefined' && window.matchMedia) {
         return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
@@ -55,7 +55,7 @@ export function App() {
   // Track if user explicitly chose a theme
   const [hasUserOverride, setHasUserOverride] = useState<boolean>(() => {
     try {
-      const saved = localStorage.getItem('wanareksa_theme') || localStorage.getItem('terra_harmonia_theme');
+      const saved = localStorage.getItem('wanareksa_theme');
       return saved === 'dark' || saved === 'light';
     } catch (e) {
       return false;
@@ -126,7 +126,7 @@ export function App() {
   const [isTourModalOpen, setIsTourModalOpen] = useState<boolean>(() => {
     try {
       if (typeof window !== 'undefined') {
-        const seen = localStorage.getItem('wanareksa_intro_seen') || localStorage.getItem('terra_harmonia_intro_seen');
+        const seen = localStorage.getItem('wanareksa_intro_seen');
         if (!seen) return true; // Auto-open for first-time visitors!
       }
     } catch (e) {}

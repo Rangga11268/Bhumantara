@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Logo } from './Logo';
 import { Language, translations } from '../data/translations';
-import { Menu, X, Sun, Moon, Sparkles } from 'lucide-react';
+import { Menu, X, Sun, Moon, Sparkles, BookOpen, Globe2, SlidersHorizontal, ShieldAlert, Database, Users } from 'lucide-react';
 
 export type NavTab = 'story' | 'overview' | 'lab' | 'mitigation' | 'data-hub' | 'team';
 export type ThemeMode = 'system' | 'light' | 'dark';
@@ -33,12 +33,12 @@ export const Navbar: React.FC<NavbarProps> = ({
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const navItems = [
-    { id: 'story' as NavTab, label: t.navStory },
-    { id: 'overview' as NavTab, label: t.navOverview },
-    { id: 'lab' as NavTab, label: t.navLab },
-    { id: 'mitigation' as NavTab, label: t.navMitigation },
-    { id: 'data-hub' as NavTab, label: t.navData },
-    { id: 'team' as NavTab, label: t.navTeam },
+    { id: 'story' as NavTab, label: t.navStory, icon: BookOpen },
+    { id: 'overview' as NavTab, label: t.navOverview, icon: Globe2 },
+    { id: 'lab' as NavTab, label: t.navLab, icon: SlidersHorizontal },
+    { id: 'mitigation' as NavTab, label: t.navMitigation, icon: ShieldAlert },
+    { id: 'data-hub' as NavTab, label: t.navData, icon: Database },
+    { id: 'team' as NavTab, label: t.navTeam, icon: Users },
   ];
 
   const themeLabel = theme === 'dark'
@@ -47,40 +47,45 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   return (
     <>
-      <header className="print:hidden sticky top-0 z-[1000] bg-white/85 dark:bg-[#111827]/85 backdrop-blur-xl border-b border-[#e5e5e7] dark:border-[#1f2937] transition-all w-full">
-        <div className="w-full px-4 sm:px-6 lg:px-8 h-13 sm:h-14 flex items-center justify-between gap-4">
+      <header className="print:hidden sticky top-0 z-[1000] bg-white/90 dark:bg-[#0c121e]/90 backdrop-blur-xl border-b border-[#e5e5e7] dark:border-[#1f2937] transition-all w-full">
+        <div className="w-full px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between gap-4">
           
-          {/* Brand */}
+          {/* Brand Logo */}
           <div className="flex items-center cursor-pointer shrink-0" onClick={() => onSelectTab('overview')}>
             <Logo size="md" />
           </div>
 
-          {/* Desktop Navigation Links (Apple Style Clean Typography) */}
-          <nav className="hidden md:flex items-center gap-7">
+          {/* Desktop Navigation Dock: Space-Efficient Aerospace Segmented Capsule */}
+          <nav className="hidden md:flex items-center bg-[#f0f2f5] dark:bg-[#141d2e] p-1 rounded-2xl border border-slate-200/80 dark:border-slate-800/80 shadow-2xs">
             {navItems.map((item) => {
               const isActive = activeTab === item.id;
+              const Icon = item.icon;
               return (
                 <button
                   key={item.id}
                   onClick={() => onSelectTab(item.id)}
-                  className={`text-[13px] font-medium transition-colors relative py-1.5 cursor-pointer ${
+                  className={`group flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer relative ${
                     isActive
-                      ? 'text-[#1d1d1f] dark:text-white font-semibold'
-                      : 'text-[#86868b] dark:text-[#9ca3af] hover:text-[#1d1d1f] dark:hover:text-white'
+                      ? 'bg-white dark:bg-[#0c121e] text-slate-900 dark:text-white shadow-xs border border-slate-200/70 dark:border-slate-700/70 font-bold'
+                      : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-slate-800/40'
                   }`}
                   aria-current={isActive ? 'page' : undefined}
+                  title={item.label}
                 >
-                  {item.label}
-                  {isActive && (
-                    <span className="absolute -bottom-[9px] left-0 right-0 h-[2px] bg-[#1d1d1f] dark:bg-white rounded-full" />
-                  )}
+                  <Icon className={`w-3.5 h-3.5 transition-colors shrink-0 ${
+                    isActive 
+                      ? (item.id === 'mitigation' ? 'text-rose-500 dark:text-rose-400' : 'text-emerald-600 dark:text-emerald-400')
+                      : 'text-slate-400 dark:text-slate-500 group-hover:text-slate-700 dark:group-hover:text-slate-300'
+                  }`} />
+                  <span className="hidden lg:inline">{item.label}</span>
+                  <span className="lg:hidden">{item.label.split(' ')[0]}</span>
                 </button>
               );
             })}
           </nav>
 
           {/* Right Controls */}
-          <div className="flex items-center gap-2.5 sm:gap-3 shrink-0">
+          <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
             
             {/* Live Indicator */}
             {isLiveSync && (
@@ -134,28 +139,16 @@ export const Navbar: React.FC<NavbarProps> = ({
             {onOpenTour && (
               <button
                 onClick={onOpenTour}
-                className="hidden lg:inline-flex items-center gap-1.5 text-[12px] font-semibold px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-900 transition-all cursor-pointer shadow-2xs"
+                className="hidden xl:inline-flex items-center gap-1.5 text-[12px] font-semibold px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-900 transition-all cursor-pointer shadow-2xs"
                 title={language === 'id' ? 'Buka Ringkasan Ilmiah 30 Detik (Pintasan: ?)' : 'Open 30-Second Science Briefing (Shortcut: ?)'}
               >
                 <Sparkles className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
                 <span>{t.scienceTourBtn}</span>
-                <kbd className="hidden xl:inline text-[9px] font-mono px-1 py-0.2 rounded bg-white dark:bg-[#111827] border border-emerald-300 dark:border-emerald-700 text-emerald-800 dark:text-emerald-200">
+                <kbd className="text-[9px] font-mono px-1 py-0.2 rounded bg-white dark:bg-[#111827] border border-emerald-300 dark:border-emerald-700 text-emerald-800 dark:text-emerald-200">
                   ?
                 </kbd>
               </button>
             )}
-
-            {/* Team Tab Quick Link */}
-            <button
-              onClick={() => onSelectTab('team')}
-              className={`text-[12px] font-medium px-2.5 py-1 rounded-full transition-all hidden sm:inline-block cursor-pointer ${
-                activeTab === 'team'
-                  ? 'bg-[#1d1d1f] dark:bg-white text-white dark:text-[#111827] font-semibold'
-                  : 'text-[#6e6e73] dark:text-[#9ca3af] hover:text-[#1d1d1f] dark:hover:text-white hover:bg-[#f5f5f7] dark:hover:bg-[#1f2937]'
-              }`}
-            >
-              {language === 'id' ? 'Tentang Tim' : 'About Team'}
-            </button>
 
             {/* Mobile Menu Toggle */}
             <button
@@ -195,6 +188,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             <div className="space-y-1">
               {navItems.map((item) => {
                 const isActive = activeTab === item.id;
+                const Icon = item.icon;
                 return (
                   <button
                     key={item.id}
@@ -202,13 +196,14 @@ export const Navbar: React.FC<NavbarProps> = ({
                       onSelectTab(item.id);
                       setIsMobileMenuOpen(false);
                     }}
-                    className={`w-full text-left px-3.5 py-2.5 rounded-xl text-sm font-medium transition min-h-[40px] cursor-pointer ${
+                    className={`w-full text-left px-3.5 py-2.5 rounded-xl text-sm font-medium transition min-h-[42px] cursor-pointer flex items-center gap-2.5 ${
                       isActive
-                        ? 'bg-[#f5f5f7] dark:bg-[#1f2937] text-[#1d1d1f] dark:text-white font-semibold'
-                        : 'text-[#86868b] dark:text-[#9ca3af] hover:bg-[#f5f5f7] dark:hover:bg-[#1f2937] hover:text-[#1d1d1f] dark:hover:text-white'
+                        ? 'bg-slate-100 dark:bg-[#1f2937] text-slate-900 dark:text-white font-bold'
+                        : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-[#1a2333] hover:text-slate-900 dark:hover:text-white'
                     }`}
                   >
-                    {item.label}
+                    <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-400'}`} />
+                    <span>{item.label}</span>
                   </button>
                 );
               })}

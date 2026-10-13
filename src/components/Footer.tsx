@@ -238,7 +238,7 @@ export const Footer: React.FC<FooterProps> = ({ language, onSelectTab }) => {
             </p>
             <div className="pt-1">
               <a
-                href="https://github.com/Rangga11268/Bhumantara"
+                href="https://github.com/Rangga11268/Wanareksa"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#1d1d1f] hover:bg-black dark:bg-emerald-600 dark:hover:bg-emerald-700 text-white font-semibold transition shadow-xs min-h-[44px] cursor-pointer"
