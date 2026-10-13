@@ -70,7 +70,7 @@ const NasaMeatballSvg: React.FC<{ size?: number; className?: string }> = ({ size
 );
 
 /**
- * Pure Vector Wanareksa Emblem (Batik Kawung Sentinel)
+ * Pure Vector Wanareksa Emblem (Orbital Chevron W Insignia)
  * Inlined directly into DOM to eliminate image fetch timing issues and canvas tainting.
  */
 const WanareksaLogoSvg: React.FC<{ size?: number; className?: string }> = ({ size = 44, className = '' }) => (
@@ -82,36 +82,44 @@ const WanareksaLogoSvg: React.FC<{ size?: number; className?: string }> = ({ siz
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
     role="img"
-    aria-label="Wanareksa Emblem"
+    aria-label="Wanareksa Sentinel Emblem"
   >
-    {/* Outer Aerospace Sentinel Ring */}
-    <path d="M 128,14 A 114,114 0 1 0 128,242 A 114,114 0 1 0 128,14 Z M 128,24 A 104,104 0 1 1 128,232 A 104,104 0 1 1 128,24 Z" fill="#0B3D91"/>
-    
-    <g fillRule="evenodd">
-      {/* North Petal: Zenith Telemetry */}
-      <path d="M 128,34 C 150,62 166,88 154,112 C 146,124 137,128 128,128 C 119,128 110,124 102,112 C 90,88 106,62 128,34 Z" fill="#059669"/>
-      
-      {/* South Petal: Nadir Biosphere */}
-      <path d="M 128,222 C 106,194 90,168 102,144 C 110,132 119,128 128,128 C 137,128 146,132 154,144 C 166,168 150,194 128,222 Z" fill="#059669"/>
-      
-      {/* West Petal: Western Swath */}
-      <path d="M 34,128 C 62,106 88,90 112,102 C 124,110 128,119 128,128 C 128,137 124,146 112,154 C 88,166 62,150 34,128 Z" fill="#0B3D91"/>
-      
-      {/* East Petal: Eastern Swath */}
-      <path d="M 222,128 C 194,150 168,166 144,154 C 132,146 128,137 128,128 C 128,119 132,110 144,102 C 168,90 194,106 222,128 Z" fill="#0B3D91"/>
+    {/* Deep Blue NASA Planetary Core (Circular Mission Disc) */}
+    <circle cx="128" cy="128" r="114" fill="#0B3D91" />
 
-      {/* Cardinal Telemetry Crosshair Nodes */}
-      <circle cx="80" cy="80" r="10" fill="#0B3D91"/>
-      <circle cx="176" cy="80" r="10" fill="#0B3D91"/>
-      <circle cx="80" cy="176" r="10" fill="#059669"/>
-      <circle cx="176" cy="176" r="10" fill="#059669"/>
+    {/* Outer Precision Aerospace Bezel Collar (Atmosphere Cyan + Deep Blue) */}
+    <circle cx="128" cy="128" r="114" fill="none" stroke="#38BDF8" strokeWidth="3" />
+    <circle cx="128" cy="128" r="108" fill="none" stroke="#0B3D91" strokeWidth="4" />
 
-      {/* Central Aperture Lens Collar */}
-      <path d="M 128,102 A 26,26 0 1 0 128,154 A 26,26 0 1 0 128,102 Z M 128,114 A 14,14 0 1 1 128,142 A 14,14 0 1 1 128,114 Z" fill="#0B3D91"/>
+    {/* Indonesian Peatland Biosphere Horizon (Nadir Curvature) */}
+    <path d="M 28,152 A 114,114 0 0 0 228,152 C 182,186 74,186 28,152 Z" fill="#059669" />
 
-      {/* Central Fire Radiative Power (FRP) Thermal Core */}
-      <circle cx="128" cy="128" r="9" fill="#D97706"/>
-    </g>
+    {/* NASA Orbital Trajectory Ellipse (Pure White, Sun-Synchronous Polar Track) */}
+    <ellipse cx="128" cy="128" rx="112" ry="34" fill="none" stroke="#FFFFFF" strokeWidth="5" strokeDasharray="140 20" transform="rotate(-28 128 128)" />
+
+    {/* Supersonic Chevron 'W' (Twin Aerospace Vectors Slicing Orbit) */}
+    {/* Left Wing (Pristine Aerospace White for High Contrast) */}
+    <polygon points="58,164 96,66 128,136 108,146 96,114 76,164" fill="#FFFFFF" />
+
+    {/* Right Wing (NASA Supersonic Red Vector) */}
+    <polygon points="198,164 160,66 128,136 148,146 160,114 180,164" fill="#FC3D21" />
+
+    {/* Central Aerospace Chevron Apex Union */}
+    <polygon points="128,78 142,118 128,136 114,118" fill="#FFFFFF" />
+
+    {/* Fire Radiative Power (FRP) Thermal Core Node */}
+    <circle cx="128" cy="78" r="10" fill="#FC3D21" stroke="#FFFFFF" strokeWidth="2" />
+    <circle cx="128" cy="78" r="4.5" fill="#FDE047" />
+
+    {/* Satellite Sentinel Transponder at Orbital Apex */}
+    <circle cx="216" cy="80" r="6" fill="#FFFFFF" />
+    <circle cx="216" cy="80" r="3" fill="#0B3D91" />
+
+    {/* Four Cardinal Telemetry Crosshair Coordinates */}
+    <rect x="127" y="6" width="2" height="6" fill="#FC3D21" />
+    <rect x="127" y="244" width="2" height="6" fill="#059669" />
+    <rect x="6" y="127" width="6" height="2" fill="#38BDF8" />
+    <rect x="244" y="127" width="6" height="2" fill="#38BDF8" />
   </svg>
 );
 

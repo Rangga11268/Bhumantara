@@ -107,30 +107,30 @@ export const TeamPage: React.FC<TeamPageProps> = ({ language }) => {
     {
       name: language === 'id' ? 'Biru Satelit & Kedirgantaraan NASA' : 'NASA Deep Aerospace Navy',
       hex: '#0b3d91',
-      desc: language === 'id' ? 'Mewakili otoritas ilmiah NASA, cincin kedirgantaraan, dan orbit polar LEO' : 'Represents NASA scientific authority, aerospace ring, and polar LEO orbits',
+      desc: language === 'id' ? 'Mewakili otoritas ilmiah NASA, piringan planet misi, dan orbit polar LEO' : 'Represents NASA scientific authority, planetary mission disc, and polar LEO orbits',
       rgb: 'RGB(11, 61, 145)',
-      role: 'Aerospace Ring & Telemetry',
+      role: 'Mission Disc & Core Navy',
     },
     {
-      name: language === 'id' ? 'Emerald Rimba & Kubah Gambut' : 'Peatland Canopy Emerald',
+      name: language === 'id' ? 'Emerald Rimba & Kubah Gambut' : 'Peatland Biosphere Emerald',
       hex: '#059669',
-      desc: language === 'id' ? 'Mewakili kanopi hutan hujan tropis & kubah gambut basah Nusantara (Wana)' : 'Represents tropical rainforest canopy & wet peat domes of Nusantara (Wana)',
+      desc: language === 'id' ? 'Mewakili cakrawala kanopi hutan hujan tropis & kubah gambut basah Nusantara (Wana)' : 'Represents tropical rainforest canopy & wet peat domes of Nusantara (Wana)',
       rgb: 'RGB(5, 150, 105)',
-      role: 'Biosphere & Peat Dome',
+      role: 'Biosphere Horizon (Wana)',
     },
     {
-      name: language === 'id' ? 'Amber Radiatif FRP (Thermal Energy)' : 'Radiative Heat FRP Amber',
-      hex: '#d97706',
-      desc: language === 'id' ? 'Mewakili deteksi energi radiasi termal api aktif (Fire Radiative Power) MODIS & VIIRS' : 'Represents Fire Radiative Power (MW) active thermal energy from MODIS & VIIRS',
-      rgb: 'RGB(217, 119, 6)',
-      role: 'Thermal Anomaly (FRP)',
+      name: language === 'id' ? 'Merah Vektor Supersonik NASA' : 'NASA Supersonic Chevron Red',
+      hex: '#fc3d21',
+      desc: language === 'id' ? 'Mewakili sayap vektor supersonik lambang NASA, inisial delta W, dan anomali termal FRP aktif' : 'Represents NASA supersonic vector wing, delta chevron W, and active FRP thermal anomaly',
+      rgb: 'RGB(252, 61, 33)',
+      role: 'Supersonic Vector & FRP',
     },
     {
-      name: language === 'id' ? 'Cyan Vektor Orbit & Telemetri' : 'Luminous Orbital Cyan',
+      name: language === 'id' ? 'Cyan Bezel Atmosfer & Telemetri' : 'Atmosphere Cyan & Telemetry',
       hex: '#38bdf8',
-      desc: language === 'id' ? 'Mewakili vektor lintasan sensor, titik kardinal telemetri, dan garis khatulistiwa' : 'Represents sensor track vectors, cardinal telemetry nodes, and equatorial line',
+      desc: language === 'id' ? 'Mewakili lapisan terluar bezel kedirgantaraan, telemetri khatulistiwa, dan batas atmosfer' : 'Represents outer aerospace bezel collar, equatorial telemetry, and atmospheric boundary',
       rgb: 'RGB(56, 189, 248)',
-      role: 'Sensor Swath & Equator',
+      role: 'Aerospace Collar & Grid',
     },
   ];
 
@@ -410,23 +410,22 @@ export const TeamPage: React.FC<TeamPageProps> = ({ language }) => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             
-            {/* COMPONENT 1: Cincin Sentinel Kedirgantaraan (Outer Aerospace Sentinel Ring) */}
+            {/* COMPONENT 1: Bezel Presisi Kedirgantaraan & Telemetri Kardinal (Precision Aerospace Bezel) */}
             <div className="p-5 rounded-2xl border border-[#e5e5e7] dark:border-[#1f2937] bg-[#fbfbfd] dark:bg-[#151d2f] flex flex-col justify-between space-y-4 hover:border-blue-400 dark:hover:border-blue-700 transition-all">
               <div className="space-y-3">
-                {/* Visual Graphic: Isolated Concentric Aerospace Ring & Orbits */}
+                {/* Visual Graphic: Isolated Concentric Aerospace Bezel & Telemetry Ticks */}
                 <div className="w-full h-32 rounded-xl bg-white dark:bg-[#0b0f19] border border-[#e5e5e7] dark:border-[#1f2937] flex items-center justify-center p-3 relative overflow-hidden shadow-xs">
                   <svg viewBox="0 0 64 64" className="w-24 h-24">
-                    {/* Outer concentric aerospace ring */}
-                    <circle cx="32" cy="32" r="28" stroke="#0b3d91" strokeWidth="2.5" fill="none" className="dark:stroke-[#38bdf8]" />
-                    <circle cx="32" cy="32" r="24" stroke="#38bdf8" strokeWidth="0.8" strokeDasharray="3 2" fill="none" opacity="0.8" />
-                    {/* Polar telemetry tick marks */}
-                    <line x1="32" y1="2" x2="32" y2="7" stroke="#0b3d91" strokeWidth="2" className="dark:stroke-[#38bdf8]" />
-                    <line x1="32" y1="57" x2="32" y2="62" stroke="#0b3d91" strokeWidth="2" className="dark:stroke-[#38bdf8]" />
-                    <line x1="2" y1="32" x2="7" y2="32" stroke="#0b3d91" strokeWidth="2" className="dark:stroke-[#38bdf8]" />
-                    <line x1="57" y1="32" x2="62" y2="32" stroke="#0b3d91" strokeWidth="2" className="dark:stroke-[#38bdf8]" />
-                    {/* Polar satellite node */}
-                    <circle cx="32" cy="4" r="2.5" fill="#38bdf8" />
-                    <circle cx="32" cy="60" r="2.5" fill="#0b3d91" className="dark:fill-[#38bdf8]" />
+                    {/* Deep Blue Planetary Core Base */}
+                    <circle cx="32" cy="32" r="27" fill="#0b3d91" />
+                    {/* Outer concentric precision collars */}
+                    <circle cx="32" cy="32" r="27" stroke="#38bdf8" strokeWidth="1" fill="none" />
+                    <circle cx="32" cy="32" r="25" stroke="#0b3d91" strokeWidth="1.2" fill="none" />
+                    {/* 4 Cardinal Telemetry Ticks */}
+                    <line x1="32" y1="2" x2="32" y2="6" stroke="#fc3d21" strokeWidth="1.8" strokeLinecap="round" />
+                    <line x1="32" y1="58" x2="32" y2="62" stroke="#059669" strokeWidth="1.8" strokeLinecap="round" />
+                    <line x1="2" y1="32" x2="6" y2="32" stroke="#38bdf8" strokeWidth="1.8" strokeLinecap="round" />
+                    <line x1="58" y1="32" x2="62" y2="32" stroke="#38bdf8" strokeWidth="1.8" strokeLinecap="round" />
                   </svg>
                   <span className="absolute top-2 right-2 px-1.5 py-0.5 rounded bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 font-mono text-[9px] font-bold">
                     Layer 1
@@ -435,7 +434,7 @@ export const TeamPage: React.FC<TeamPageProps> = ({ language }) => {
 
                 <div>
                   <h4 className="font-bold text-sm text-[#1d1d1f] dark:text-white">
-                    {language === 'id' ? 'Cincin Sentinel Kedirgantaraan' : 'Outer Aerospace Sentinel Ring'}
+                    {language === 'id' ? 'Bezel Presisi Kedirgantaraan' : 'Precision Aerospace Bezel'}
                   </h4>
                   <span className="text-[11px] font-medium text-blue-600 dark:text-blue-400">
                     {language === 'id' ? 'Orbit Polar Sinkron-Matahari (705 & 824 km)' : 'Sun-Synchronous Polar Orbits'}
@@ -444,8 +443,8 @@ export const TeamPage: React.FC<TeamPageProps> = ({ language }) => {
 
                 <p className="text-xs text-[#6e6e73] dark:text-[#9ca3af] leading-relaxed">
                   {language === 'id'
-                    ? 'Melambangkan orbit satelit Terra MODIS (705 km) dan Suomi-NPP VIIRS (824 km) yang melintasi khatulistiwa setiap 99 menit untuk memindai tutupan kubah gambut Indonesia secara berkesinambungan.'
-                    : 'Symbolizes the Sun-synchronous polar orbits of Terra MODIS (705 km) and Suomi-NPP VIIRS (824 km) traversing the equator every 99 minutes to monitor Indonesian peat domes.'}
+                    ? 'Kolar konsentris ganda kedirgantaraan dengan 4 tanda telemetri mata angin Nusantara, menyimbolkan orbit satelit Terra MODIS (705 km) dan Suomi-NPP VIIRS (824 km) yang melintasi khatulistiwa secara presisi.'
+                    : 'Dual-concentric aerospace collar with four cardinal telemetry coordinates, symbolizing the Sun-synchronous polar orbits of Terra MODIS (705 km) and Suomi-NPP VIIRS (824 km) scanning across the equator.'}
                 </p>
               </div>
 
@@ -455,25 +454,18 @@ export const TeamPage: React.FC<TeamPageProps> = ({ language }) => {
               </div>
             </div>
 
-            {/* COMPONENT 2: Kelopak Rimba & Kubah Gambut (Wana) */}
+            {/* COMPONENT 2: Cakrawala Biosfer Kubah Gambut Indonesia (Peatland Biosphere Horizon) */}
             <div className="p-5 rounded-2xl border border-[#e5e5e7] dark:border-[#1f2937] bg-[#fbfbfd] dark:bg-[#151d2f] flex flex-col justify-between space-y-4 hover:border-emerald-400 dark:hover:border-emerald-700 transition-all">
               <div className="space-y-3">
-                {/* Visual Graphic: Isolated Vertical Kawung Petals (Zenith & Nadir) */}
+                {/* Visual Graphic: Isolated Biosphere Nadir Curve */}
                 <div className="w-full h-32 rounded-xl bg-white dark:bg-[#0b0f19] border border-[#e5e5e7] dark:border-[#1f2937] flex items-center justify-center p-3 relative overflow-hidden shadow-xs">
                   <svg viewBox="0 0 64 64" className="w-24 h-24">
-                    <defs>
-                      <linearGradient id="compPeatGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                        <stop offset="0%" stopColor="#10b981" />
-                        <stop offset="100%" stopColor="#059669" />
-                      </linearGradient>
-                    </defs>
-                    {/* North Petal */}
-                    <path d="M 32 8 C 37 15 41 21 38 27 C 36 30 34 31 32 31 C 30 31 28 30 26 27 C 23 21 27 15 32 8 Z" fill="url(#compPeatGrad)" />
-                    {/* South Petal */}
-                    <path d="M 32 56 C 27 49 23 43 26 37 C 28 34 30 33 32 33 C 34 33 36 34 38 37 C 41 43 37 49 32 56 Z" fill="url(#compPeatGrad)" />
-                    {/* Peat Moisture Contour rings */}
-                    <circle cx="32" cy="18" r="3" fill="#ffffff" fillOpacity="0.4" />
-                    <circle cx="32" cy="46" r="3" fill="#ffffff" fillOpacity="0.4" />
+                    {/* Deep Blue Disc Backdrop */}
+                    <circle cx="32" cy="32" r="27" fill="#0b3d91" opacity="0.25" />
+                    {/* Peatland Biosphere Horizon Arc */}
+                    <path d="M 7,37 A 27,27 0 0 0 57,37 C 45,46 19,46 7,37 Z" fill="#059669" />
+                    {/* Moisture Contour line */}
+                    <path d="M 12,39 C 24,45 40,45 52,39" stroke="#10b981" strokeWidth="0.8" fill="none" strokeDasharray="2 2" />
                   </svg>
                   <span className="absolute top-2 right-2 px-1.5 py-0.5 rounded bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 font-mono text-[9px] font-bold">
                     Layer 2
@@ -482,101 +474,90 @@ export const TeamPage: React.FC<TeamPageProps> = ({ language }) => {
 
                 <div>
                   <h4 className="font-bold text-sm text-[#1d1d1f] dark:text-white">
-                    {language === 'id' ? 'Kelopak Rimba & Kubah Gambut' : 'Peat Canopy & Biosphere Petals'}
+                    {language === 'id' ? 'Cakrawala Biosfer Kubah Gambut' : 'Peatland Biosphere Horizon'}
                   </h4>
                   <span className="text-[11px] font-medium text-emerald-600 dark:text-emerald-400">
-                    {language === 'id' ? 'Sumbu Vertikal Wana (Utara-Selatan)' : 'Vertical Wana Biosphere Axis'}
+                    {language === 'id' ? 'Nadir Biosfer Zamrud & Kubah Gambut' : 'Nadir Biosphere Horizon (Wana)'}
                   </span>
                 </div>
 
                 <p className="text-xs text-[#6e6e73] dark:text-[#9ca3af] leading-relaxed">
                   {language === 'id'
-                    ? 'Merepresentasikan 13.4 juta hektar lahan basah gambut tropis (Wana) penyimpan 57 gigaton karbon yang harus dilindungi dari penurunan muka air tanah dan bara bawah tanah (TMAG < -40 cm).'
-                    : "Represents Indonesia's 13.4 million hectares of carbon-dense tropical peatlands (Wana) storing 57 gigatons of carbon needing protection from groundwater drying (TMAG < -40 cm)."}
+                    ? 'Lengkungan biosfer hijau zamrud di kutub nadir melambangkan 13.4 juta hektar lahan basah gambut tropis (Wana) penyimpan 57 gigaton karbon yang dilindungi dari kekeringan muka air tanah (TMAG < -40 cm).'
+                    : "The emerald biosphere curvature at nadir represents Indonesia's 13.4 million hectares of carbon-dense tropical peatlands (Wana) storing 57 gigatons of carbon protected against groundwater drying."}
                 </p>
               </div>
 
               <div className="pt-2 border-t border-[#e5e5e7] dark:border-[#1f2937] text-[10px] text-[#86868b] dark:text-[#9ca3af] flex justify-between">
                 <span>TMAG Ambang Kritis -40 cm</span>
-                <span className="font-mono">#059669 / #10b981</span>
+                <span className="font-mono">#059669</span>
               </div>
             </div>
 
-            {/* COMPONENT 3: Irisan Sensor Swath & Node Kardinal (Reksa) */}
-            <div className="p-5 rounded-2xl border border-[#e5e5e7] dark:border-[#1f2937] bg-[#fbfbfd] dark:bg-[#151d2f] flex flex-col justify-between space-y-4 hover:border-sky-400 dark:hover:border-sky-700 transition-all">
+            {/* COMPONENT 3: Vektor Supersonik Chevron 'W' & Orbit Sinar Putih (Supersonic Chevron 'W') */}
+            <div className="p-5 rounded-2xl border border-[#e5e5e7] dark:border-[#1f2937] bg-[#fbfbfd] dark:bg-[#151d2f] flex flex-col justify-between space-y-4 hover:border-red-400 dark:hover:border-red-700 transition-all">
               <div className="space-y-3">
-                {/* Visual Graphic: Isolated Horizontal Swaths & 4 Cardinal Dots */}
+                {/* Visual Graphic: Isolated White Orbit & Chevron W */}
                 <div className="w-full h-32 rounded-xl bg-white dark:bg-[#0b0f19] border border-[#e5e5e7] dark:border-[#1f2937] flex items-center justify-center p-3 relative overflow-hidden shadow-xs">
                   <svg viewBox="0 0 64 64" className="w-24 h-24">
-                    <defs>
-                      <linearGradient id="compSwathGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                        <stop offset="0%" stopColor="#0284c7" />
-                        <stop offset="100%" stopColor="#2563eb" />
-                      </linearGradient>
-                    </defs>
-                    {/* West Petal */}
-                    <path d="M 8 32 C 15 27 21 23 27 26 C 30 28 31 30 31 32 C 31 34 30 36 27 38 C 21 41 15 37 8 32 Z" fill="url(#compSwathGrad)" />
-                    {/* East Petal */}
-                    <path d="M 56 32 C 49 37 43 41 37 38 C 34 36 33 34 33 32 C 33 30 34 28 37 26 C 43 23 49 27 56 32 Z" fill="url(#compSwathGrad)" />
-                    {/* 4 Cardinal Telemetry Dots */}
-                    <circle cx="20" cy="20" r="2.8" fill="#0284c7" />
-                    <circle cx="44" cy="20" r="2.8" fill="#2563eb" />
-                    <circle cx="20" cy="44" r="2.8" fill="#059669" />
-                    <circle cx="44" cy="44" r="2.8" fill="#10b981" />
-                    {/* Swath Scan lines */}
-                    <line x1="8" y1="32" x2="56" y2="32" stroke="#38bdf8" strokeWidth="0.8" strokeDasharray="2 2" opacity="0.6" />
+                    {/* Deep Blue Planetary Disc */}
+                    <circle cx="32" cy="32" r="27" fill="#0b3d91" />
+                    {/* Orbit Ellipse */}
+                    <ellipse cx="32" cy="32" rx="26" ry="8" fill="none" stroke="#ffffff" strokeWidth="1.4" strokeDasharray="30 5" transform="rotate(-28 32 32)" />
+                    {/* Chevron W Left Wing (White) */}
+                    <polygon points="14,41 24,16 32,34 27,36 24,28 19,41" fill="#ffffff" />
+                    {/* Chevron W Right Wing (NASA Supersonic Red) */}
+                    <polygon points="50,41 40,16 32,34 37,36 40,28 45,41" fill="#fc3d21" />
+                    {/* Chevron Apex Union */}
+                    <polygon points="32,20 35,30 32,34 29,30" fill="#ffffff" />
                   </svg>
-                  <span className="absolute top-2 right-2 px-1.5 py-0.5 rounded bg-sky-50 dark:bg-sky-950/60 text-sky-700 dark:text-sky-300 font-mono text-[9px] font-bold">
+                  <span className="absolute top-2 right-2 px-1.5 py-0.5 rounded bg-red-50 dark:bg-red-950/60 text-red-700 dark:text-red-300 font-mono text-[9px] font-bold">
                     Layer 3
                   </span>
                 </div>
 
                 <div>
                   <h4 className="font-bold text-sm text-[#1d1d1f] dark:text-white">
-                    {language === 'id' ? 'Irisan Sensor Swath & Node Kardinal' : 'Orbital Swath & Cardinal Nodes'}
+                    {language === 'id' ? 'Vektor Supersonik Chevron "W"' : 'Supersonic Chevron "W" & Orbit'}
                   </h4>
-                  <span className="text-[11px] font-medium text-sky-600 dark:text-sky-400">
-                    {language === 'id' ? 'Sumbu Horizontal Reksa (Barat-Timur)' : 'Horizontal Reksa Swath Axis'}
+                  <span className="text-[11px] font-medium text-red-600 dark:text-red-400">
+                    {language === 'id' ? 'Inisial Wanareksa & Sayap Vektor NASA' : 'Wanareksa Initial & NASA Delta'}
                   </span>
                 </div>
 
                 <p className="text-xs text-[#6e6e73] dark:text-[#9ca3af] leading-relaxed">
                   {language === 'id'
-                    ? 'Menggambarkan sapuan pemindaian sensor satelit (swath width 2330 km) yang menyatukan 4 penjuru mata angin Nusantara, merefleksikan peran penjaga (Reksa) di atas cakrawala maritim.'
-                    : 'Depicts the 2330 km satellite sensor scanning swath and the four cardinal directions of Nusantara, embodying the watchful guardian (Reksa) across the archipelagic horizon.'}
+                    ? 'Sayap delta ganda aerodinamis (putih presisi dan merah supersonik NASA) membentuk inisial "W" (Wanareksa) yang membelah elips orbit, merefleksikan kecepatan tanggap darurat dan fusi data MODIS-VIIRS.'
+                    : 'Aerodynamic dual delta wings (pristine white and NASA supersonic red) form the iconic "W" (Wanareksa) slicing through the orbit track, reflecting rapid emergency response and MODIS-VIIRS data fusion.'}
                 </p>
               </div>
 
               <div className="pt-2 border-t border-[#e5e5e7] dark:border-[#1f2937] text-[10px] text-[#86868b] dark:text-[#9ca3af] flex justify-between">
-                <span>Sensor Swath 2330 km</span>
-                <span className="font-mono">#0284c7 / #2563eb</span>
+                <span>Supersonic Chevron "W"</span>
+                <span className="font-mono">#ffffff / #fc3d21</span>
               </div>
             </div>
 
-            {/* COMPONENT 4: Lensa Kalibrasi Termal & Inti Radiasi FRP */}
+            {/* COMPONENT 4: Inti Sensor Termal FRP & Transponder (FRP Thermal Sensor Core) */}
             <div className="p-5 rounded-2xl border border-[#e5e5e7] dark:border-[#1f2937] bg-[#fbfbfd] dark:bg-[#151d2f] flex flex-col justify-between space-y-4 hover:border-amber-400 dark:hover:border-amber-700 transition-all">
               <div className="space-y-3">
-                {/* Visual Graphic: Isolated Center Aperture Collar & FRP Thermal Core */}
+                {/* Visual Graphic: Isolated FRP Thermal Core & Transponder */}
                 <div className="w-full h-32 rounded-xl bg-white dark:bg-[#0b0f19] border border-[#e5e5e7] dark:border-[#1f2937] flex items-center justify-center p-3 relative overflow-hidden shadow-xs">
                   <svg viewBox="0 0 64 64" className="w-24 h-24">
-                    <defs>
-                      <linearGradient id="compFRPGrad" x1="0%" y1="100%" x2="0%" y2="0%">
-                        <stop offset="0%" stopColor="#d97706" />
-                        <stop offset="60%" stopColor="#f59e0b" />
-                        <stop offset="100%" stopColor="#fde047" />
-                      </linearGradient>
-                    </defs>
-                    {/* Aperture Collar Ring */}
-                    <circle cx="32" cy="32" r="14" stroke="#0b3d91" strokeWidth="2.5" fill="none" className="dark:stroke-[#94a3b8]" />
-                    <circle cx="32" cy="32" r="9" stroke="#64748b" strokeWidth="0.8" strokeDasharray="2 1.5" fill="none" opacity="0.6" />
-                    {/* Stefan-Boltzmann Radiative Thermal Core */}
-                    <circle cx="32" cy="32" r="6" fill="url(#compFRPGrad)" />
-                    <circle cx="32" cy="32" r="2.5" fill="#ffffff" />
-                    {/* Radiative Heat Flare Rays */}
-                    <line x1="32" y1="14" x2="32" y2="10" stroke="#f59e0b" strokeWidth="1.5" strokeLinecap="round" />
-                    <line x1="32" y1="50" x2="32" y2="54" stroke="#f59e0b" strokeWidth="1.5" strokeLinecap="round" />
-                    <line x1="14" y1="32" x2="10" y2="32" stroke="#f59e0b" strokeWidth="1.5" strokeLinecap="round" />
-                    <line x1="50" y1="32" x2="54" y2="32" stroke="#f59e0b" strokeWidth="1.5" strokeLinecap="round" />
+                    {/* Deep Blue Planetary Disc */}
+                    <circle cx="32" cy="32" r="27" fill="#0b3d91" />
+                    {/* Orbit Ellipse faint track */}
+                    <ellipse cx="32" cy="32" rx="26" ry="8" fill="none" stroke="#ffffff" strokeWidth="0.8" strokeDasharray="4 3" opacity="0.4" transform="rotate(-28 32 32)" />
+                    {/* Thermal Core Node at Apex */}
+                    <circle cx="32" cy="20" r="4.5" fill="#fc3d21" stroke="#ffffff" strokeWidth="1" />
+                    <circle cx="32" cy="20" r="2" fill="#fde047" />
+                    {/* Thermal Radiative Flare Rings */}
+                    <circle cx="32" cy="20" r="8" stroke="#fc3d21" strokeWidth="0.6" strokeDasharray="2 1.5" fill="none" opacity="0.6" />
+                    {/* Satellite Sentinel Transponder at Orbit Apex */}
+                    <circle cx="53" cy="20" r="2.5" fill="#ffffff" />
+                    <circle cx="53" cy="20" r="1.2" fill="#0b3d91" />
+                    {/* Telemetry wave pulse */}
+                    <circle cx="53" cy="20" r="5" stroke="#38bdf8" strokeWidth="0.6" fill="none" opacity="0.7" />
                   </svg>
                   <span className="absolute top-2 right-2 px-1.5 py-0.5 rounded bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 font-mono text-[9px] font-bold">
                     Layer 4
@@ -585,7 +566,7 @@ export const TeamPage: React.FC<TeamPageProps> = ({ language }) => {
 
                 <div>
                   <h4 className="font-bold text-sm text-[#1d1d1f] dark:text-white">
-                    {language === 'id' ? 'Lensa Kalibrasi Termal & Inti FRP' : 'Thermal Aperture & FRP Core'}
+                    {language === 'id' ? 'Sensor Termal FRP & Transponder' : 'FRP Thermal Sensor & Transponder'}
                   </h4>
                   <span className="text-[11px] font-medium text-amber-600 dark:text-amber-400">
                     {language === 'id' ? 'Fusi Stefan-Boltzmann & Grid 5.5 km' : 'Stefan-Boltzmann Fusion Core'}
@@ -594,14 +575,14 @@ export const TeamPage: React.FC<TeamPageProps> = ({ language }) => {
 
                 <p className="text-xs text-[#6e6e73] dark:text-[#9ca3af] leading-relaxed">
                   {language === 'id'
-                    ? 'Pusat fusi radiometrik yang menyelaraskan energi Fire Radiative Power (Megawatt) antara sensor MODIS dan VIIRS ke dalam sel spasial 5.5 km, memulihkan kontinuitas ilmiah 26 tahun.'
-                    : 'The radiometric fusion locus normalizing Fire Radiative Power (MW) across MODIS and VIIRS into equal-area 5.5 km bins, restoring seamless 26-year multi-decadal continuity.'}
+                    ? 'Inti sensor FRP piroelektrik di puncak delta mengukur intensitas energi radiasi api (MW) yang diselaraskan ke dalam sel spasial 5.5 km, dilengkapi transponder satelit di apeks orbit pemantau.'
+                    : 'The pyroelectric FRP core at the delta apex quantifies active fire radiative power (MW) binned into 5.5 km spatial cells, accompanied by an orbital transponder node at the tracking apex.'}
                 </p>
               </div>
 
               <div className="pt-2 border-t border-[#e5e5e7] dark:border-[#1f2937] text-[10px] text-[#86868b] dark:text-[#9ca3af] flex justify-between">
                 <span>Stefan-Boltzmann FRP Eq</span>
-                <span className="font-mono">#d97706 / #fde047</span>
+                <span className="font-mono">#fc3d21 / #fde047</span>
               </div>
             </div>
 
