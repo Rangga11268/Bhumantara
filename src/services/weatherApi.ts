@@ -4,6 +4,7 @@ export interface LiveWeatherData {
   precipitation: number; // mm
   windSpeedKmH: number; // km/h
   windSpeedKnots: number; // knots
+  windDirectionDeg?: number; // degrees 0-360
   timestamp: string;
   dailyForecast: {
     date: string;
@@ -69,7 +70,7 @@ export async function fetchLiveWeather(
   }
 
   try {
-    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat.toFixed(4)}&longitude=${lon.toFixed(4)}&current=temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m&daily=temperature_2m_max,precipitation_sum,wind_speed_10m_max&forecast_days=14&timezone=auto`;
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat.toFixed(4)}&longitude=${lon.toFixed(4)}&current=temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m,wind_direction_10m&daily=temperature_2m_max,precipitation_sum,wind_speed_10m_max&forecast_days=14&timezone=auto`;
     const res = await fetch(url);
 
     if (res.ok) {
@@ -82,6 +83,7 @@ export async function fetchLiveWeather(
       const precip = typeof current.precipitation === 'number' ? Math.round(current.precipitation * 10) / 10 : 0;
       const windKmH = typeof current.wind_speed_10m === 'number' ? Math.round(current.wind_speed_10m * 10) / 10 : 10.5;
       const windKnots = Math.round(windKmH * 0.539957);
+      const windDir = typeof current.wind_direction_10m === 'number' ? current.wind_direction_10m : 115;
 
       // Estimate dry days from daily precipitation series
       let dryDays = 0;
@@ -121,6 +123,7 @@ export async function fetchLiveWeather(
         precipitation: precip,
         windSpeedKmH: windKmH,
         windSpeedKnots: windKnots,
+        windDirectionDeg: windDir,
         timestamp: current.time || new Date().toISOString(),
         dailyForecast,
         dryDaysCount: dryDays,
@@ -184,6 +187,7 @@ function generateFallbackWeather(aoiId: string, lat: number, lon: number): LiveW
     precipitation: 0.2,
     windSpeedKmH: base.wind,
     windSpeedKnots: Math.round(base.wind * 0.539957),
+    windDirectionDeg: 120,
     timestamp: new Date().toISOString(),
     dailyForecast,
     dryDaysCount: base.dryDays,

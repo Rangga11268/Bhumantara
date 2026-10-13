@@ -2,10 +2,11 @@ import React, { useEffect, useRef, useState, useMemo } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { AOIRegion, RawHotspot, HarmonizedWeekData } from '../engine/harmonizer';
-import { Layers, Maximize2, Satellite, Filter, Eye } from 'lucide-react';
+import { Layers, Maximize2, Satellite, Filter, Eye, Wind } from 'lucide-react';
 import { Language, translations } from '../data/translations';
 import { FullMapModal } from './FullMapModal';
 import { resolveHotspotLocation, toDMS, getIndonesianLocalTime } from '../utils/locationResolver';
+import { fetchLiveWeather, LiveWeatherData } from '../services/weatherApi';
 
 interface MapViewerProps {
   language: Language;
@@ -36,13 +37,15 @@ export const MapViewer: React.FC<MapViewerProps> = ({
   const tileLayerRef = useRef<L.TileLayer | null>(null);
 
   // Clean FIRMS-Grade Controls (Integrated in Toolbar)
-  const [basemap, setBasemap] = useState<'dark' | 'satellite' | 'nasa_gibs'>('satellite');
+  const [basemap, setBasemap] = useState<'satellite' | 'dark' | 'nasa_truecolor' | 'nasa_bands721'>('satellite');
   const [timeSpan, setTimeSpan] = useState<'today' | '24hrs' | '7days' | 'all'>('24hrs');
   const [showModis, setShowModis] = useState<boolean>(true);
   const [showViirs, setShowViirs] = useState<boolean>(true);
+  const [showWindCones, setShowWindCones] = useState<boolean>(true);
   const [frpThreshold, setFrpThreshold] = useState<number>(0);
   const [isFullMapOpen, setIsFullMapOpen] = useState<boolean>(false);
   const [cursorCoords, setCursorCoords] = useState<{ lat: number; lng: number } | null>(null);
+  const [liveWeather, setLiveWeather] = useState<LiveWeatherData | null>(null);
 
   // Init map with high-performance Canvas Renderer
   useEffect(() => {
@@ -94,16 +97,39 @@ export const MapViewer: React.FC<MapViewerProps> = ({
     };
   }, []);
 
-  // Basemap switcher
+  // Fetch live weather for wind spread calculations
+  useEffect(() => {
+    let isMounted = true;
+    fetchLiveWeather(selectedAOI.center[0], selectedAOI.center[1], selectedAOI.id)
+      .then((data) => {
+        if (isMounted) setLiveWeather(data);
+      })
+      .catch(() => {});
+    return () => {
+      isMounted = false;
+    };
+  }, [selectedAOI]);
+
+  // Basemap switcher with NASA GIBS TrueColor & FalseColor Bands 7-2-1
   useEffect(() => {
     const map = mapInstanceRef.current;
     if (!map) return;
     if (tileLayerRef.current) map.removeLayer(tileLayerRef.current);
 
-    if (basemap === 'nasa_gibs') {
+    // Compute active date for NASA GIBS (fallback to yesterday if today's composite is still processing)
+    const activeDate = hotspots[0]?.date;
+    const defaultYesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+    const gibsDate = activeDate && /^\d{4}-\d{2}-\d{2}$/.test(activeDate) ? activeDate : defaultYesterday;
+
+    if (basemap === 'nasa_truecolor') {
       tileLayerRef.current = L.tileLayer(
-        'https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/MODIS_Terra_CorrectedReflectance_TrueColor/default/2024-08-15/GoogleMapsCompatible_Level9/{z}/{y}/{x}.jpg',
-        { maxZoom: 9, minZoom: 4 }
+        `https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/MODIS_Terra_CorrectedReflectance_TrueColor/default/${gibsDate}/GoogleMapsCompatible_Level9/{z}/{y}/{x}.jpg`,
+        { maxZoom: 9, minZoom: 3, attribution: 'NASA EOSDIS GIBS TrueColor' }
+      ).addTo(map);
+    } else if (basemap === 'nasa_bands721') {
+      tileLayerRef.current = L.tileLayer(
+        `https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/MODIS_Terra_CorrectedReflectance_Bands721/default/${gibsDate}/GoogleMapsCompatible_Level9/{z}/{y}/{x}.jpg`,
+        { maxZoom: 9, minZoom: 3, attribution: 'NASA EOSDIS GIBS False-Color (Bands 7-2-1)' }
       ).addTo(map);
     } else if (basemap === 'satellite') {
       tileLayerRef.current = L.tileLayer(
@@ -116,7 +142,7 @@ export const MapViewer: React.FC<MapViewerProps> = ({
         { maxZoom: 18 }
       ).addTo(map);
     }
-  }, [basemap]);
+  }, [basemap, hotspots]);
 
   // Fly to new AOI
   useEffect(() => {
@@ -187,7 +213,7 @@ export const MapViewer: React.FC<MapViewerProps> = ({
       }).addTo(layerGroup);
     }
 
-    displayHotspots.forEach((spot) => {
+    displayHotspots.forEach((spot, index) => {
       const isVIIRS = spot.instrument === 'VIIRS';
       
       // NASA FIRMS true pixel scale: crisp solid points without bulky rings
@@ -290,8 +316,56 @@ export const MapViewer: React.FC<MapViewerProps> = ({
 
       circle.bindPopup(popupHtml, { maxWidth: 320 });
       circle.addTo(layerGroup);
+
+      // Render Wind-Driven Spread Threat Cones if enabled
+      if (showWindCones && liveWeather && (spot.frp >= 35 || index < 12)) {
+        const windDeg = liveWeather.windDirectionDeg || 90;
+        const targetDeg = (windDeg + 180) % 360;
+        const targetRad = (targetDeg * Math.PI) / 180;
+        const apertureRad = (25 * Math.PI) / 180;
+        const windSpeed = liveWeather.windSpeedKnots || 12;
+        const coneLength = Math.min(0.22, Math.max(0.04, (windSpeed / 30) * 0.15 + (spot.frp / 250) * 0.05));
+
+        const apex: [number, number] = [spot.lat, spot.lon];
+        const p1: [number, number] = [
+          spot.lat + coneLength * Math.cos(targetRad - apertureRad),
+          spot.lon + coneLength * Math.sin(targetRad - apertureRad),
+        ];
+        const pMid: [number, number] = [
+          spot.lat + coneLength * 1.15 * Math.cos(targetRad),
+          spot.lon + coneLength * 1.15 * Math.sin(targetRad),
+        ];
+        const p2: [number, number] = [
+          spot.lat + coneLength * Math.cos(targetRad + apertureRad),
+          spot.lon + coneLength * Math.sin(targetRad + apertureRad),
+        ];
+
+        const conePolygon = L.polygon([apex, p1, pMid, p2], {
+          color: '#ea580c',
+          fillColor: '#f97316',
+          fillOpacity: 0.16,
+          weight: 1.2,
+          dashArray: '3, 4',
+          renderer: canvas,
+        });
+
+        const conePopup = `
+          <div style="font-family:sans-serif;font-size:11px;min-width:180px;line-height:1.4;">
+            <div style="font-weight:bold;color:#c2410c;border-bottom:1px solid #fed7aa;padding-bottom:3px;margin-bottom:4px;">
+              ${language === 'id' ? 'Proyeksi Rambatan Angin (12-24 Jam)' : 'Wind Spread Threat Cone (12-24h)'}
+            </div>
+            <div><b>${language === 'id' ? 'Arah Angin' : 'Wind Direction'}:</b> ${windDeg}&deg; (&rarr; ${targetDeg.toFixed(0)}&deg;)</div>
+            <div><b>${language === 'id' ? 'Kecepatan Angin' : 'Wind Speed'}:</b> ${liveWeather.windSpeedKmH || 15} km/h</div>
+            <div><b>${language === 'id' ? 'Jarak Ancaman' : 'Threat Distance'}:</b> ~${(coneLength * 111).toFixed(1)} km</div>
+            <div><b>${language === 'id' ? 'Daya Radiasi' : 'Fire Power'}:</b> ${spot.frp} MW</div>
+            <div style="margin-top:4px;font-size:9.5px;color:#78716c;">Model Propagasi Rothermel &amp; FWI Open-Meteo</div>
+          </div>
+        `;
+        conePolygon.bindPopup(conePopup);
+        conePolygon.addTo(layerGroup);
+      }
     });
-  }, [selectedAOI, displayHotspots, rawMode, language]);
+  }, [selectedAOI, displayHotspots, rawMode, language, showWindCones, liveWeather]);
 
   const modisCount = displayHotspots.filter((h) => h.instrument === 'MODIS').length;
   const viirsCount = displayHotspots.filter((h) => h.instrument === 'VIIRS').length;
@@ -366,6 +440,21 @@ export const MapViewer: React.FC<MapViewerProps> = ({
             </button>
           </div>
 
+          {/* Wind Threat Cones Toggle */}
+          <button
+            onClick={() => setShowWindCones(!showWindCones)}
+            aria-label="Toggle Wind Spread Threat Cones"
+            className={`px-2.5 py-1 rounded-xl flex items-center gap-1.5 font-semibold transition cursor-pointer text-xs border ${
+              showWindCones
+                ? 'bg-amber-500/15 border-amber-500/40 text-amber-700 dark:text-amber-300'
+                : 'bg-slate-100 dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'
+            }`}
+            title={language === 'id' ? 'Proyeksi Kerucut Rambatan Angin (Rothermel)' : 'Wind Spread Threat Cones (Rothermel)'}
+          >
+            <Wind className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">{language === 'id' ? 'Proyeksi Angin' : 'Wind Cones'}</span>
+          </button>
+
           {/* FRP Intensity Filter */}
           <select
             id="map-frp-threshold"
@@ -381,12 +470,12 @@ export const MapViewer: React.FC<MapViewerProps> = ({
             <option value={100}>&ge; 100 MW (Severe)</option>
           </select>
 
-          {/* Basemap switch */}
+          {/* Basemap switch (Esri, Dark, NASA TrueColor, NASA FalseColor 7-2-1) */}
           <div className="flex items-center bg-slate-100 dark:bg-slate-900 rounded-xl p-0.5 font-medium border border-slate-200 dark:border-slate-800">
             <button
               onClick={() => setBasemap('dark')}
               aria-label={`${t.darkMap} - Basemap`}
-              className={`px-2.5 py-1 rounded-lg transition-all cursor-pointer ${
+              className={`px-2 py-1 rounded-lg transition-all cursor-pointer text-[11px] ${
                 basemap === 'dark'
                   ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-xs font-semibold'
                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
@@ -397,7 +486,7 @@ export const MapViewer: React.FC<MapViewerProps> = ({
             <button
               onClick={() => setBasemap('satellite')}
               aria-label="Sat HD - Basemap"
-              className={`px-2.5 py-1 rounded-lg transition-all cursor-pointer ${
+              className={`px-2 py-1 rounded-lg transition-all cursor-pointer text-[11px] ${
                 basemap === 'satellite'
                   ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-xs font-semibold'
                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
@@ -406,17 +495,30 @@ export const MapViewer: React.FC<MapViewerProps> = ({
               Sat HD
             </button>
             <button
-              onClick={() => setBasemap('nasa_gibs')}
-              aria-label="NASA GIBS - Basemap"
-              className={`px-2.5 py-1 rounded-lg transition-all cursor-pointer flex items-center gap-1 ${
-                basemap === 'nasa_gibs'
+              onClick={() => setBasemap('nasa_truecolor')}
+              aria-label="NASA TrueColor - Basemap"
+              className={`px-2 py-1 rounded-lg transition-all cursor-pointer flex items-center gap-1 text-[11px] ${
+                basemap === 'nasa_truecolor'
                   ? 'bg-sky-700 text-white shadow-xs font-bold'
                   : 'text-sky-700 dark:text-sky-400 hover:text-sky-900 dark:hover:text-sky-200'
               }`}
               title="NASA Global Imagery Browse Services (MODIS Corrected Reflectance True Color)"
             >
               <span className="w-1.5 h-1.5 rounded-full bg-sky-300 inline-block" />
-              <span>NASA GIBS</span>
+              <span>NASA True</span>
+            </button>
+            <button
+              onClick={() => setBasemap('nasa_bands721')}
+              aria-label="NASA 7-2-1 Smoke Penetrating - Basemap"
+              className={`px-2 py-1 rounded-lg transition-all cursor-pointer flex items-center gap-1 text-[11px] ${
+                basemap === 'nasa_bands721'
+                  ? 'bg-amber-700 text-white shadow-xs font-bold'
+                  : 'text-amber-700 dark:text-amber-400 hover:text-amber-900 dark:hover:text-amber-200'
+              }`}
+              title="NASA GIBS False-Color Bands 7-2-1 (Smoke Penetrating / Burn Scars)"
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-300 inline-block" />
+              <span>7-2-1</span>
             </button>
           </div>
 

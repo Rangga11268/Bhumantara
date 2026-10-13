@@ -21,7 +21,7 @@ export const DualMapComparison: React.FC<DualMapComparisonProps> = ({
   const [yearA, setYearA] = useState<number>(2015);
   const [yearB, setYearB] = useState<number>(2021);
   const [isSyncMove, setIsSyncMove] = useState<boolean>(true);
-  const [basemap, setBasemap] = useState<'satellite' | 'dark' | 'light'>('satellite');
+  const [basemap, setBasemap] = useState<'satellite' | 'dark' | 'nasa_truecolor' | 'nasa_bands721'>('satellite');
 
   const mapARef = useRef<HTMLDivElement>(null);
   const mapBRef = useRef<HTMLDivElement>(null);
@@ -34,14 +34,19 @@ export const DualMapComparison: React.FC<DualMapComparisonProps> = ({
   const layerGroupA = useRef<L.LayerGroup | null>(null);
   const layerGroupB = useRef<L.LayerGroup | null>(null);
 
-  const getTileUrl = (bm: 'satellite' | 'dark' | 'light') => {
-    if (bm === 'satellite') {
-      return 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
+  const getTileUrl = (bm: 'satellite' | 'dark' | 'nasa_truecolor' | 'nasa_bands721', yr: number) => {
+    if (bm === 'nasa_truecolor') {
+      const dStr = `${yr}-09-15`;
+      return `https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/MODIS_Terra_CorrectedReflectance_TrueColor/default/${dStr}/GoogleMapsCompatible_Level9/{z}/{y}/{x}.jpg`;
+    }
+    if (bm === 'nasa_bands721') {
+      const dStr = `${yr}-09-15`;
+      return `https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/MODIS_Terra_CorrectedReflectance_Bands721/default/${dStr}/GoogleMapsCompatible_Level9/{z}/{y}/{x}.jpg`;
     }
     if (bm === 'dark') {
       return 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}';
     }
-    return 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}';
+    return 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
   };
 
   // Filter hotspots for year A and year B
@@ -95,7 +100,7 @@ export const DualMapComparison: React.FC<DualMapComparisonProps> = ({
           renderer: canvasA,
         });
 
-        tileLayerARef.current = L.tileLayer(getTileUrl(basemap), {
+        tileLayerARef.current = L.tileLayer(getTileUrl(basemap, yearA), {
           maxZoom: 18,
         }).addTo(mapA);
 
@@ -120,7 +125,7 @@ export const DualMapComparison: React.FC<DualMapComparisonProps> = ({
           renderer: canvasB,
         });
 
-        tileLayerBRef.current = L.tileLayer(getTileUrl(basemap), {
+        tileLayerBRef.current = L.tileLayer(getTileUrl(basemap, yearB), {
           maxZoom: 18,
         }).addTo(mapB);
 
@@ -166,16 +171,15 @@ export const DualMapComparison: React.FC<DualMapComparisonProps> = ({
 
   // Synchronize dynamic basemap switches
   useEffect(() => {
-    const url = getTileUrl(basemap);
     if (leafletMapA.current) {
       if (tileLayerARef.current) leafletMapA.current.removeLayer(tileLayerARef.current);
-      tileLayerARef.current = L.tileLayer(url, { maxZoom: 18 }).addTo(leafletMapA.current);
+      tileLayerARef.current = L.tileLayer(getTileUrl(basemap, yearA), { maxZoom: 18 }).addTo(leafletMapA.current);
     }
     if (leafletMapB.current) {
       if (tileLayerBRef.current) leafletMapB.current.removeLayer(tileLayerBRef.current);
-      tileLayerBRef.current = L.tileLayer(url, { maxZoom: 18 }).addTo(leafletMapB.current);
+      tileLayerBRef.current = L.tileLayer(getTileUrl(basemap, yearB), { maxZoom: 18 }).addTo(leafletMapB.current);
     }
-  }, [basemap]);
+  }, [basemap, yearA, yearB]);
 
   // Re-center when AOI changes
   useEffect(() => {
@@ -317,15 +321,30 @@ export const DualMapComparison: React.FC<DualMapComparisonProps> = ({
               {language === 'id' ? 'Kanvas Gelap' : 'Dark'}
             </button>
             <button
-              onClick={() => setBasemap('light')}
-              aria-label="Basemap Kanvas Terang"
-              className={`px-2.5 py-1 rounded-lg transition cursor-pointer min-h-[30px] ${
-                basemap === 'light'
+              onClick={() => setBasemap('nasa_truecolor')}
+              aria-label="NASA GIBS TrueColor Basemap"
+              className={`px-2.5 py-1 rounded-lg transition cursor-pointer min-h-[30px] flex items-center gap-1 ${
+                basemap === 'nasa_truecolor'
                   ? 'bg-sky-700 text-white font-bold shadow-xs'
                   : 'text-[#6e6e73] dark:text-[#9ca3af] hover:text-[#1d1d1f] dark:hover:text-white'
               }`}
+              title="NASA Global Imagery Browse Services (MODIS TrueColor per Year)"
             >
-              {language === 'id' ? 'Kanvas Terang' : 'Light'}
+              <span className="w-1.5 h-1.5 rounded-full bg-sky-300 inline-block" />
+              <span>NASA True</span>
+            </button>
+            <button
+              onClick={() => setBasemap('nasa_bands721')}
+              aria-label="NASA GIBS FalseColor Bands 7-2-1"
+              className={`px-2.5 py-1 rounded-lg transition cursor-pointer min-h-[30px] flex items-center gap-1 ${
+                basemap === 'nasa_bands721'
+                  ? 'bg-amber-700 text-white font-bold shadow-xs'
+                  : 'text-[#6e6e73] dark:text-[#9ca3af] hover:text-[#1d1d1f] dark:hover:text-white'
+              }`}
+              title="NASA GIBS FalseColor Bands 7-2-1 (Smoke Cutter & Burn Scars)"
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-300 inline-block" />
+              <span>7-2-1</span>
             </button>
           </div>
 

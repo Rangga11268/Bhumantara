@@ -13,10 +13,13 @@ import {
   Calendar,
   ChevronRight,
   TrendingUp,
-  Radio
+  Radio,
+  CloudFog,
+  Leaf
 } from 'lucide-react';
 import { fetchLiveWeather, LiveWeatherData } from '../services/weatherApi';
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip } from 'recharts';
+import { calculatePeatCarbonEmissions } from '../data/carbonEmissionModel';
 
 interface RiskForecastProps {
   language: Language;
@@ -339,6 +342,56 @@ export const RiskForecast: React.FC<RiskForecastProps> = ({
             </div>
           </div>
         )}
+
+        {/* GFED4s Peat Carbon Emissions & Smoke Plume Impact (NASA Global Winner Standard) */}
+        {(() => {
+          const totalFrpEstimate = isLiveSync
+            ? Math.max(25, liveHotspotCount * 18.5)
+            : Math.max(50, baseline.mean * 12.0);
+          const emissionImpact = calculatePeatCarbonEmissions(totalFrpEstimate, 12);
+
+          return (
+            <div className="p-3.5 rounded-2xl bg-gradient-to-br from-[#f8fafc] to-[#f1f5f9] dark:from-[#151d2f] dark:to-[#0f172a] border border-[#e2e8f0] dark:border-[#1e293b] space-y-2.5">
+              <div className="flex items-center justify-between">
+                <span className="text-[11px] font-bold text-[#1d1d1f] dark:text-white flex items-center gap-1.5 uppercase tracking-wider">
+                  <CloudFog className="w-3.5 h-3.5 text-amber-500" />
+                  <span>{language === 'id' ? 'Emisi Karbon & Asap GFED4s' : 'GFED4s Carbon & Smoke Plume'}</span>
+                </span>
+                <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 font-bold">
+                  {emissionImpact.smokeHazardLevel} HAZARD
+                </span>
+              </div>
+
+              <div className="grid grid-cols-3 gap-2 text-center">
+                <div className="p-2 rounded-xl bg-white dark:bg-[#111827] border border-[#e5e5e7] dark:border-[#1f2937]">
+                  <span className="text-[10px] text-[#86868b] dark:text-[#9ca3af] block">CO₂e Released</span>
+                  <strong className="text-sm font-extrabold text-red-600 dark:text-red-400 block num mt-0.5">
+                    {emissionImpact.co2EmissionsTons.toLocaleString()} t
+                  </strong>
+                  <span className="text-[9px] text-[#86868b] dark:text-[#9ca3af]">
+                    ~{emissionImpact.passengerCarAnnualEquivalent.toLocaleString()} {language === 'id' ? 'mobil/th' : 'cars/yr'}
+                  </span>
+                </div>
+
+                <div className="p-2 rounded-xl bg-white dark:bg-[#111827] border border-[#e5e5e7] dark:border-[#1f2937]">
+                  <span className="text-[10px] text-[#86868b] dark:text-[#9ca3af] block">PM2.5 Aerosol</span>
+                  <strong className="text-sm font-extrabold text-amber-600 dark:text-amber-400 block num mt-0.5">
+                    {(emissionImpact.pm25EmissionsKg / 1000).toFixed(1)} t
+                  </strong>
+                  <span className="text-[9px] text-[#86868b] dark:text-[#9ca3af]">{language === 'id' ? 'Partikulat Toksik' : 'Toxic Plume'}</span>
+                </div>
+
+                <div className="p-2 rounded-xl bg-white dark:bg-[#111827] border border-[#e5e5e7] dark:border-[#1f2937]">
+                  <span className="text-[10px] text-[#86868b] dark:text-[#9ca3af] block">Radius Asap</span>
+                  <strong className="text-sm font-extrabold text-blue-600 dark:text-blue-400 block num mt-0.5">
+                    {emissionImpact.smokeRadiusKm} km
+                  </strong>
+                  <span className="text-[9px] text-[#86868b] dark:text-[#9ca3af]">Transboundary</span>
+                </div>
+              </div>
+            </div>
+          );
+        })()}
 
         {/* Operational Intelligence Note */}
         <p className="text-[11px] text-[#6e6e73] dark:text-[#9ca3af] leading-relaxed">

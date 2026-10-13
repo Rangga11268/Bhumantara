@@ -525,6 +525,169 @@ export const PeatlandSimulator: React.FC<PeatlandSimulatorProps> = ({
 
           </div>
 
+          {/* Interactive Peat Dome Cross-Section Diagram (NASA Global Winner Physics Model) */}
+          <div className="p-4 sm:p-5 rounded-2xl border border-[#e5e5e7] dark:border-[#1f2937] bg-white dark:bg-[#111827] shadow-xs space-y-3">
+            <div className="flex items-center justify-between">
+              <div>
+                <span className="text-[11px] font-bold text-[#86868b] dark:text-[#9ca3af] uppercase tracking-wider flex items-center gap-1.5">
+                  <Layers className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+                  <span>{language === 'id' ? 'Penampang Fisika Kubah Gambut & Smoldering' : 'Peat Dome Subsurface Smoldering Physics'}</span>
+                </span>
+                <span className="text-xs font-semibold text-[#1d1d1f] dark:text-white block mt-0.5">
+                  {language === 'id' ? 'Dinamika Muka Air Tanah (TMAG) vs Api Bawah Permukaan' : 'Groundwater Depth Dynamics vs Subterranean Zombie Fire'}
+                </span>
+              </div>
+
+              <span className={`px-2.5 py-1 rounded-full text-[10.5px] font-mono font-bold border ${
+                simResults.isCritical
+                  ? 'bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20'
+                  : 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20'
+              }`}>
+                {simResults.isCritical
+                  ? (language === 'id' ? 'KUBUS RAWAN BARA (KRITIS)' : 'HIGH SMOLDERING RISK')
+                  : (language === 'id' ? 'TERBASAHI AMAN (REWETTED)' : 'REWETTED / SAFE')}
+              </span>
+            </div>
+
+            {/* Cross-Section SVG Diagram */}
+            {(() => {
+              const waterY = Math.min(175, Math.max(50, 50 + (Math.abs(simResults.effectiveTmag) / 80) * 125));
+              const criticalThresholdY = 50 + (40 / 80) * 125; // 112.5px for -40cm
+
+              return (
+                <div className="w-full rounded-xl bg-[#090d16] border border-slate-800 p-2 overflow-hidden relative">
+                  <svg viewBox="0 0 540 190" className="w-full h-auto max-h-[220px]" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                      {/* Deep Peat Layer Gradient */}
+                      <linearGradient id="peatLayerGrad" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="#3d2314" />
+                        <stop offset="50%" stopColor="#251309" />
+                        <stop offset="100%" stopColor="#120804" />
+                      </linearGradient>
+
+                      {/* Smoldering Ember Glow Gradient */}
+                      <linearGradient id="smolderGrad" x1="0" y1="0" x2="1" y2="0">
+                        <stop offset="0%" stopColor="#ef4444" stopOpacity="0.8" />
+                        <stop offset="50%" stopColor="#f97316" stopOpacity="0.9" />
+                        <stop offset="100%" stopColor="#dc2626" stopOpacity="0.8" />
+                      </linearGradient>
+
+                      {/* Water Table Blue Gradient */}
+                      <linearGradient id="waterTableGrad" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="#0284c7" stopOpacity="0.85" />
+                        <stop offset="100%" stopColor="#0369a1" stopOpacity="0.95" />
+                      </linearGradient>
+                    </defs>
+
+                    {/* Sky / Atmosphere (y: 0 to 50) */}
+                    <rect x="0" y="0" width="540" height="50" fill="#0d1527" />
+
+                    {/* Ambient Wind Vector Arrow in Sky */}
+                    <g transform="translate(420, 24)">
+                      <line x1="0" y1="0" x2="45" y2="0" stroke="#38bdf8" strokeWidth="2" strokeDasharray="3 2" />
+                      <polygon points="45,0 38,-4 38,4" fill="#38bdf8" />
+                      <text x="22" y="-6" fill="#94a3b8" fontSize="9" fontFamily="monospace" textAnchor="middle">
+                        {windSpeedKnots} kts
+                      </text>
+                    </g>
+
+                    {/* Tropical Canopy Vegetation & Trees on Surface */}
+                    <g fill="#10b981">
+                      {/* Tree 1 */}
+                      <rect x="45" y="32" width="4" height="18" fill="#5c3818" />
+                      <circle cx="47" cy="26" r="10" fill="#059669" />
+                      {/* Tree 2 */}
+                      <rect x="110" y="30" width="5" height="20" fill="#5c3818" />
+                      <polygon points="112,14 100,32 124,32" fill="#047857" />
+                      {/* Tree 3 */}
+                      <rect x="360" y="34" width="4" height="16" fill="#5c3818" />
+                      <circle cx="362" cy="28" r="9" fill="#059669" />
+                      {/* Canal Blocking Structure (Sekat Kanal) */}
+                      <rect x="220" y="28" width="22" height="45" fill="#78350f" stroke="#b45309" strokeWidth="1" />
+                      <line x1="225" y1="35" x2="237" y2="35" stroke="#fbbf24" strokeWidth="1.5" />
+                      <line x1="225" y1="45" x2="237" y2="45" stroke="#fbbf24" strokeWidth="1.5" />
+                      <text x="231" y="24" fill="#fbbf24" fontSize="8" fontWeight="bold" textAnchor="middle">
+                        SEKAT KANAL
+                      </text>
+                    </g>
+
+                    {/* Peat Surface Ground Line (y: 50) */}
+                    <line x1="0" y1="50" x2="540" y2="50" stroke="#78350f" strokeWidth="2" />
+                    <text x="8" y="46" fill="#a8a29e" fontSize="9" fontFamily="monospace">Permukaan Lahan (0 cm)</text>
+
+                    {/* Deep Peat Layer Base (y: 50 to 190) */}
+                    <rect x="0" y="50" width="540" height="140" fill="url(#peatLayerGrad)" />
+
+                    {/* Subterranean Smoldering Fire Zone (If Critical TMAG <= -40 cm) */}
+                    {simResults.isCritical ? (
+                      <g>
+                        {/* Smoldering ember core */}
+                        <rect x="60" y="52" width="140" height={Math.max(12, waterY - 56)} fill="url(#smolderGrad)" opacity="0.6" rx="4" />
+                        <rect x="260" y="52" width="220" height={Math.max(14, waterY - 54)} fill="url(#smolderGrad)" opacity="0.65" rx="4" />
+                        
+                        {/* Subsurface ember particles */}
+                        <circle cx="100" cy="65" r="3" fill="#fef08a" />
+                        <circle cx="130" cy="72" r="2.5" fill="#fef08a" />
+                        <circle cx="310" cy="68" r="3.5" fill="#fef08a" />
+                        <circle cx="370" cy="74" r="2.5" fill="#fef08a" />
+                        <circle cx="430" cy="66" r="3" fill="#fef08a" />
+
+                        {/* Toxic Smoke rising through porous dry peat */}
+                        <path d="M 90,50 Q 85,35 95,20 T 92,5" stroke="#94a3b8" strokeWidth="1.5" opacity="0.5" fill="none" strokeDasharray="3 2" />
+                        <path d="M 330,50 Q 325,35 338,20 T 335,5" stroke="#94a3b8" strokeWidth="1.8" opacity="0.6" fill="none" strokeDasharray="3 2" />
+                        <path d="M 410,50 Q 405,35 418,22 T 415,8" stroke="#94a3b8" strokeWidth="1.4" opacity="0.5" fill="none" strokeDasharray="3 2" />
+
+                        <text x="370" y={Math.min(95, waterY - 8)} fill="#fef08a" fontSize="9.5" fontWeight="bold" textAnchor="middle">
+                          Bara Api Bawah Tanah (Smoldering Peat &bull; Kedalaman ~{simResults.burnDepthCm} cm)
+                        </text>
+                      </g>
+                    ) : (
+                      /* Rewetted / Extinguished Peat Notification */
+                      <g>
+                        <rect x="60" y="52" width="420" height={Math.max(10, waterY - 52)} fill="#059669" opacity="0.15" rx="4" />
+                        <text x="270" y={Math.max(70, waterY - 8)} fill="#34d399" fontSize="10" fontWeight="bold" textAnchor="middle">
+                          Lapisan Gambut Lembab Terjaga &bull; Bara Api Bawah Tanah Padam (Rewetted)
+                        </text>
+                      </g>
+                    )}
+
+                    {/* Saturated Groundwater Table (TMAG Layer from waterY to 190) */}
+                    <rect x="0" y={waterY} width="540" height={190 - waterY} fill="url(#waterTableGrad)" />
+
+                    {/* Dynamic Water Table Line */}
+                    <line x1="0" y1={waterY} x2="540" y2={waterY} stroke="#38bdf8" strokeWidth="2" strokeDasharray="6 3" />
+                    <text x="530" y={waterY - 4} fill="#38bdf8" fontSize="9.5" fontWeight="bold" textAnchor="end" fontFamily="monospace">
+                      MUKA AIR TANAH: {simResults.effectiveTmag} cm
+                    </text>
+
+                    {/* Statutory BRGM -40cm Critical Warning Line */}
+                    <line x1="0" y1={criticalThresholdY} x2="540" y2={criticalThresholdY} stroke="#ef4444" strokeWidth="1.2" strokeDasharray="4 4" opacity="0.8" />
+                    <text x="8" y={criticalThresholdY - 4} fill="#ef4444" fontSize="8.5" fontWeight="bold" fontFamily="monospace">
+                      AMBANG BATAS KRITIS BRGM / PP 57 (-40 cm)
+                    </text>
+                  </svg>
+
+                  {/* Diagram Legend / Metadata */}
+                  <div className="flex flex-wrap items-center justify-between text-[10px] text-slate-400 pt-1.5 border-t border-slate-800 px-1 font-mono">
+                    <span className="flex items-center gap-1.5">
+                      <span className="w-2 h-2 rounded-full bg-red-500 inline-block" />
+                      <span>Zona Smoldering Karbon ({simResults.co2eTonsPerHa} t CO₂e/ha)</span>
+                    </span>
+                    <span className="flex items-center gap-1.5">
+                      <span className="w-2 h-2 rounded-full bg-sky-400 inline-block" />
+                      <span>Akifer Air Jenuh ({simResults.effectiveTmag} cm)</span>
+                    </span>
+                    <span className="flex items-center gap-1.5">
+                      <span className="w-2 h-2 rounded-full bg-emerald-400 inline-block" />
+                      <span>Sekat Retensi (+{simResults.canalBoost} cm)</span>
+                    </span>
+                  </div>
+                </div>
+              );
+            })()}
+
+          </div>
+
           {/* Action Callout based on TMAG */}
           <div className={`p-4 rounded-2xl border text-xs flex items-start gap-3 ${
             simResults.isCritical
