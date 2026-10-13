@@ -37,6 +37,7 @@ import { MitigationCharts } from './MitigationCharts';
 import { LiveSyncResult } from '../services/nasaFirmsApi';
 import { fetchLiveWeather, LiveWeatherData } from '../services/weatherApi';
 import { resolveHotspotLocation } from '../utils/locationResolver';
+import { getRegionalPeatProfile, calculateFireTriage } from '../data/regionalPeatProfiles';
 
 interface MitigationHubProps {
   language: Language;
@@ -114,17 +115,10 @@ export const MitigationHub: React.FC<MitigationHubProps> = ({
     setCurrentPage(1);
   }, [selectedAOI, searchQuery, activeFilterPill, sortOrder]);
 
-  // Comprehensive Region Peatland Risk & Hydrology Database
-  const regionRisks: Record<string, { tmag: number; risk: 'extreme' | 'high' | 'moderate' | 'nominal'; canalBlocks: number; khgName: string; peatDepth: string; fwi: number }> = {
-    riau: { tmag: -48, risk: 'extreme', canalBlocks: 142, khgName: 'KHG Sungai Siak - Sungai Kampar', peatDepth: '4.8 – 7.0 m', fwi: 28.4 },
-    kalteng: { tmag: -55, risk: 'extreme', canalBlocks: 280, khgName: 'Kawasan Eks-PLG Blok A & C (Kahayan)', peatDepth: '5.5 – 9.0 m', fwi: 32.1 },
-    kalsel: { tmag: -38, risk: 'high', canalBlocks: 95, khgName: 'KHG Sungai Barito - Sungai Negara', peatDepth: '3.0 – 4.5 m', fwi: 22.0 },
-    sumsel: { tmag: -52, risk: 'extreme', canalBlocks: 210, khgName: 'KHG Sungai Sugihan - Sungai Saleh (OKI)', peatDepth: '3.5 – 5.8 m', fwi: 29.5 },
-    kaltim: { tmag: -30, risk: 'moderate', canalBlocks: 60, khgName: 'KHG Sungai Mahakam - Danau Semayang', peatDepth: '2.5 – 4.0 m', fwi: 16.8 },
-    indonesia: { tmag: -45, risk: 'extreme', canalBlocks: 787, khgName: 'Kubah Gambut Prioritas Restorasi Nasional (7 Provinsi BRGM)', peatDepth: '4.5 m (Rata-rata)', fwi: 26.5 },
-  };
-
-  const currentRegionRisk = regionRisks[selectedAOI.id] || regionRisks['riau'];
+  // Comprehensive Region Peatland Risk & Hydrology Profile (all 13 provinces)
+  const currentRegionRisk = useMemo(() => {
+    return getRegionalPeatProfile(selectedAOI.id);
+  }, [selectedAOI.id]);
 
   // Current active live hotspots in this region
   const regionLiveSpots = useMemo(() => {
@@ -208,10 +202,16 @@ export const MitigationHub: React.FC<MitigationHubProps> = ({
   };
 
   const handleDownloadDispatch = () => {
-    const topHotspots = regionLiveSpots.slice(0, 5).map((h, i) => {
+    const sortedSpots = [...regionLiveSpots].sort((a, b) => b.frp - a.frp);
+    const topHotspots = sortedSpots.slice(0, 5).map((h, i) => {
       const loc = resolveHotspotLocation(h.lat, h.lon, selectedAOI.id, language);
       return `  ${i + 1}. [${h.instrument} ${h.satellite}] ${loc.regency}, ${loc.district || 'Sektor Gambut'} | Lat/Lon: ${h.lat.toFixed(4)}, ${h.lon.toFixed(4)} | FRP: ${h.frp} MW | Waktu: ${loc.localTimeFormatted}`;
     }).join('\n');
+
+    const triage = calculateFireTriage(maxLiveFrp, currentRegionRisk.tmag, currentRegionRisk.isDeepPeat);
+    const estimatedWaterLiters = Math.max(1, sortedSpots.length) * 45000;
+
+    const directivesFormatted = currentRegionRisk.tacticalDirectives.map((d, idx) => `${idx + 1}. ${d}`).join('\n');
 
     const memo = `===============================================================
 ${language === 'id' ? 'MEMORANDUM PENUGASAN PATROLI LAPANGAN - WANAREKSA EARTH INTELLIGENCE' : 'FIELD PATROL DISPATCH MEMORANDUM - WANAREKSA EARTH INTELLIGENCE'}
@@ -220,22 +220,24 @@ NASA Space Apps Jakarta 2026 - ${language === 'id' ? 'Sistem Peringatan Dini Keb
 ${language === 'id' ? 'Tanggal Operasi' : 'Operation Date'}  : ${patrolDate}
 ${language === 'id' ? 'Wilayah Target' : 'Target Region'}   : ${selectedAOI.name} (${selectedAOI.country})
 ${language === 'id' ? 'Kesatuan Gambut' : 'Peat Landscape'}  : ${currentRegionRisk.khgName}
+${language === 'id' ? 'Kedalaman Gambut' : 'Peat Depth'}     : ${currentRegionRisk.peatDepth}
 ${language === 'id' ? 'Koordinat Acuan' : 'Reference Coords'}: ${selectedAOI.center[0].toFixed(4)}° N, ${selectedAOI.center[1].toFixed(4)}° E
 ${language === 'id' ? 'Kondisi Cuaca' : 'Live Weather'}    : ${liveWeather ? `${liveWeather.temperature}°C, RH ${liveWeather.relativeHumidity}%, Angin ${liveWeather.windSpeedKmH} km/h` : 'Tersinkronisasi'}
-${language === 'id' ? 'Status Ancaman' : 'Threat Level'}    : ${currentRegionRisk.risk.toUpperCase()} (Indeks FWI: ${effectiveFwi})
+${language === 'id' ? 'Status Triage' : 'Triage Status'}    : ${language === 'id' ? triage.labelId : triage.labelEn}
 ${language === 'id' ? 'Tinggi Air Tanah' : 'Groundwater Table'}: ${currentRegionRisk.tmag} cm (${language === 'id' ? 'Batas Kritis PP 57/2016' : 'National Limit'}: -40 cm)
+${language === 'id' ? 'Kadar Air Gambut' : 'Peat Moisture'}  : ${currentRegionRisk.kag}% (${currentRegionRisk.kag < 100 ? 'KRITIS: Titik Sulut Api Gambut' : 'Waspada Dehidrasi'})
 ${language === 'id' ? 'Sekat Kanal Aktif' : 'Canal Blockings'}: ${currentRegionRisk.canalBlocks} ${language === 'id' ? 'Unit Terpasang' : 'Units Installed'}
+${language === 'id' ? 'Sumber Air Terdekat' : 'Water Supply'} : ${currentRegionRisk.nearestWaterSource}
+${language === 'id' ? 'Estimasi Kebutuhan Air' : 'Water Demand'} : ± ${estimatedWaterLiters.toLocaleString('id-ID')} Liter (Metode Suntik Gambut)
 ${language === 'id' ? 'Titik Api Terdeteksi' : 'Active Hotspots'}: ${activeSpotCount} ${language === 'id' ? 'titik terdeteksi satelit NASA' : 'detections (NASA satellite feed)'}
 ${maxLiveFrp > 0 ? `${language === 'id' ? 'Daya Termal Tertinggi' : 'Max Radiative Power'}: ${maxLiveFrp} MW\n` : ''}
 ${topHotspots ? `\n${language === 'id' ? 'KOORDINAT ANOMALI PANAS PRIORITAS TINGGI' : 'HIGH-PRIORITY HOTSPOT TARGETS'}:\n${topHotspots}\n` : ''}
 ${language === 'id' ? 'SATUAN KERJA DITUGASKAN' : 'ASSIGNED PATROL TASKFORCE'}:
 - ${language === 'id' ? 'Unit Komando' : 'Command Unit'} : ${selectedTeamUnit === 'manggala_agni' ? (language === 'id' ? 'Brigade Manggala Agni Daops KLHK' : 'Manggala Agni Brigade (KLHK)') : selectedTeamUnit === 'mpa' ? (language === 'id' ? 'Masyarakat Peduli Api (MPA) Tingkat Desa' : 'Community Fire Patrol (MPA)') : (language === 'id' ? 'Satgas Karhutla BPBD / Damkar Daerah' : 'Disaster Management Agency (BPBD)')}
+- ${language === 'id' ? 'Rekomendasi Regu' : 'Squad Advice'} : ${currentRegionRisk.recommendationSquad}
 
-${language === 'id' ? 'INSTRUKSI TAKTIS LAPANGAN' : 'TACTICAL FIELD INSTRUCTIONS'}:
-1. ${language === 'id' ? 'Segera lakukan pengecekan suhu serasah gambut (TIR) dan kelembapan tanah di batas perimeter.' : 'Immediately verify peat surface thermal temperature (TIR) and litter moisture along perimeter.'}
-2. ${language === 'id' ? 'Pastikan seluruh pintu sekat kanal (canal blocking) tertutup rapat untuk mencegah dehidrasi kubah gambut.' : 'Verify all canal blocks remain sealed to prevent dome dewatering.'}
-3. ${language === 'id' ? 'Gunakan nozzle suntik gambut untuk memadamkan bara api bawah tanah (smoldering) sedalam 1–3 meter.' : 'Deploy peat injector nozzles to suppress subsurface smoldering fires down to 1–3m depth.'}
-4. ${language === 'id' ? 'Lakukan pendinginan lahan berkala (water bombing/ground cooling) pada titik koordinat anomali panas tinggi.' : 'Execute targeted ground cooling at high-FRP coordinate clusters.'}
+${language === 'id' ? 'INSTRUKSI TAKTIS LAPANGAN KHUSUS WILAYAH' : 'TACTICAL FIELD INSTRUCTIONS'}:
+${directivesFormatted}
 
 ${language === 'id' ? 'Sumber Data: NASA FIRMS (MODIS 1km / VIIRS 375m) & Open-Meteo Telemetry Engine' : 'Data Sources: NASA FIRMS (MODIS 1km / VIIRS 375m) & Open-Meteo Telemetry Engine'}
 ===============================================================`;
@@ -348,15 +350,8 @@ ${language === 'id' ? 'Sumber Data: NASA FIRMS (MODIS 1km / VIIRS 375m) & Open-M
             </span>
             {PRESET_AOIS.map((aoi) => {
               const isSelected = selectedAOI.id === aoi.id;
-              const shortLabels: Record<string, { id: string; en: string }> = {
-                indonesia: { id: 'Seluruh Indonesia', en: 'National' },
-                riau: { id: 'Riau & Sumatera', en: 'Riau & Sumatra' },
-                kalteng: { id: 'Kalteng (Ex-PLG)', en: 'C. Kalimantan' },
-                sumsel: { id: 'Sumsel (OKI)', en: 'S. Sumatra' },
-                kalsel: { id: 'Kalsel (Barito)', en: 'S. Kalimantan' },
-                kaltim: { id: 'Kaltim (IKN)', en: 'E. Kalimantan' },
-              };
-              const label = shortLabels[aoi.id] ? (language === 'id' ? shortLabels[aoi.id].id : shortLabels[aoi.id].en) : aoi.name;
+              const aoiProfile = getRegionalPeatProfile(aoi.id);
+              const label = language === 'id' ? aoiProfile.shortLabelId : aoiProfile.shortLabelEn;
               return (
                 <button
                   key={aoi.id}
@@ -364,7 +359,7 @@ ${language === 'id' ? 'Sumber Data: NASA FIRMS (MODIS 1km / VIIRS 375m) & Open-M
                   title={aoi.name}
                   className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer whitespace-nowrap min-h-[34px] ${
                     isSelected
-                      ? 'bg-[#1d1d1f] dark:bg-white text-white dark:text-[#111827] shadow-xs'
+                      ? 'bg-emerald-600 dark:bg-emerald-500 text-white shadow-xs font-bold'
                       : 'bg-[#f5f5f7] dark:bg-[#151d2f] text-[#6e6e73] dark:text-[#9ca3af] hover:text-[#1d1d1f] dark:hover:text-white border border-[#e5e5e7] dark:border-[#1f2937]'
                   }`}
                 >
@@ -824,6 +819,7 @@ ${language === 'id' ? 'Sumber Data: NASA FIRMS (MODIS 1km / VIIRS 375m) & Open-M
           <ExecutiveReport
             language={language}
             selectedAOI={selectedAOI}
+            onSelectAOI={onSelectAOI}
             calendarMatrix={calendarMatrix}
             totalHotspots={activeSpotCount}
             liveWeather={liveWeather}

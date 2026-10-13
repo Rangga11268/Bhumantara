@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
-import { AOIRegion, HarmonizedWeekData, RawHotspot } from '../engine/harmonizer';
+import { AOIRegion, HarmonizedWeekData, RawHotspot, PRESET_AOIS } from '../engine/harmonizer';
 import { Language } from '../data/translations';
-import { Printer, FileText, Download, Loader2, Moon, Sun } from 'lucide-react';
+import { Printer, FileText, Download, Loader2, Moon, Sun, MapPin } from 'lucide-react';
 import { LiveWeatherData } from '../services/weatherApi';
 import { resolveHotspotLocation } from '../utils/locationResolver';
+import { getRegionalPeatProfile, calculateFireTriage } from '../data/regionalPeatProfiles';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 
 interface ExecutiveReportProps {
   language: Language;
   selectedAOI: AOIRegion;
+  onSelectAOI?: (aoi: AOIRegion) => void;
   calendarMatrix?: Record<string, HarmonizedWeekData>;
   totalHotspots?: number;
   liveWeather?: LiveWeatherData | null;
@@ -19,6 +21,7 @@ interface ExecutiveReportProps {
 export const ExecutiveReport: React.FC<ExecutiveReportProps> = ({
   language,
   selectedAOI,
+  onSelectAOI,
   calendarMatrix = {},
   totalHotspots = 0,
   liveWeather = null,
@@ -43,20 +46,17 @@ export const ExecutiveReport: React.FC<ExecutiveReportProps> = ({
   });
   const docRegNumber = `WNR/KLHK-BRGM/SITREP/${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}/${String(today.getDate()).padStart(2, '0')}-${selectedAOI.id.toUpperCase()}`;
 
-  const aoiTmatMap: Record<string, number> = {
-    riau: -48,
-    kalteng: -55,
-    sumsel: -52,
-    kalsel: -38,
-    kaltim: -30,
-    indonesia: -44,
-  };
-  const currentTmat = aoiTmatMap[selectedAOI.id] || -42;
+  // Dynamic regional peatland intelligence & triage
+  const profile = getRegionalPeatProfile(selectedAOI.id);
+  const currentTmat = profile.tmag;
   const effectiveFwi = liveWeather ? liveWeather.fwiScore : 28;
-  const threatLevel = effectiveFwi >= 70 ? 'SIAGA DARURAT / EXTREME' : effectiveFwi >= 48 ? 'SIAGA TINGGI / HIGH' : effectiveFwi >= 26 ? 'WASPADA / MODERATE' : 'TERKENDALI / NOMINAL';
 
-  // Top 5 active hotspots
-  const topSpots = liveHotspots.slice(0, 5);
+  // Sort hotspots descending by FRP for prioritized triage targeting
+  const sortedSpots = [...liveHotspots].sort((a, b) => (b.frp || 0) - (a.frp || 0));
+  const topSpots = sortedSpots.slice(0, 5);
+  const maxLiveFrp = topSpots.length > 0 ? topSpots[0].frp : 0;
+  const triage = calculateFireTriage(maxLiveFrp, currentTmat, profile.isDeepPeat);
+  const threatLevel = language === 'id' ? triage.labelId : triage.labelEn;
 
   /**
    * Direct PDF Generator: Renders document to crisp high-res canvas and saves directly as a PDF file
@@ -207,6 +207,36 @@ export const ExecutiveReport: React.FC<ExecutiveReportProps> = ({
         </div>
       </div>
 
+      {/* Sector Quick-Switch Selector Bar (Print:hidden) */}
+      {onSelectAOI && (
+        <div className="print:hidden px-6 py-2.5 bg-slate-50 dark:bg-[#0b101d] border-b border-slate-200 dark:border-slate-800 flex items-center gap-2 overflow-x-auto text-xs">
+          <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 shrink-0 flex items-center gap-1">
+            <MapPin className="w-3.5 h-3.5 text-emerald-500" />
+            {language === 'id' ? 'Pilih Sektor Provinsi:' : 'Select Province Sector:'}
+          </span>
+          <div className="flex items-center gap-1.5 flex-nowrap shrink-0">
+            {PRESET_AOIS.map((aoi) => {
+              const aoiProf = getRegionalPeatProfile(aoi.id);
+              const isSelected = selectedAOI.id === aoi.id;
+              return (
+                <button
+                  key={aoi.id}
+                  onClick={() => onSelectAOI(aoi)}
+                  className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition-all whitespace-nowrap cursor-pointer ${
+                    isSelected
+                      ? 'bg-emerald-600 text-white shadow-xs font-bold'
+                      : 'bg-white dark:bg-[#1a2333] text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700/60'
+                  }`}
+                  title={`${aoi.name} - ${aoiProf.khgName}`}
+                >
+                  {language === 'id' ? aoiProf.shortLabelId : aoiProf.shortLabelEn}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
       {/* Official Printable Document Container (Desk Background) */}
       <div className="p-4 sm:p-10 bg-slate-100 dark:bg-[#060913] text-slate-900 dark:text-slate-100 max-w-4xl mx-auto print:p-0 print:m-0 print:max-w-full transition-colors">
         
@@ -298,7 +328,7 @@ export const ExecutiveReport: React.FC<ExecutiveReportProps> = ({
             <div>
               <span style={{ fontSize: '9px', fontWeight: 700, color: isDarkDoc ? '#94a3b8' : '#6b7280', textTransform: 'uppercase', display: 'block' }}>Wilayah Sasaran</span>
               <strong style={{ fontSize: '12px', fontWeight: 800, color: isDarkDoc ? '#ffffff' : '#111827', display: 'block', marginTop: '2px' }}>{selectedAOI.name}</strong>
-              <span style={{ fontSize: '9.5px', color: isDarkDoc ? '#cbd5e1' : '#4b5563' }}>{selectedAOI.country}</span>
+              <span style={{ fontSize: '9.5px', color: isDarkDoc ? '#cbd5e1' : '#4b5563', display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={profile.khgName}>{profile.khgName}</span>
             </div>
 
             <div>
@@ -306,21 +336,21 @@ export const ExecutiveReport: React.FC<ExecutiveReportProps> = ({
               <strong style={{ fontSize: '11px', fontFamily: 'monospace', fontWeight: 700, color: isDarkDoc ? '#ffffff' : '#111827', display: 'block', marginTop: '2px' }}>
                 {selectedAOI.center[0].toFixed(4)}° N, {selectedAOI.center[1].toFixed(4)}° E
               </strong>
-              <span style={{ fontSize: '9.5px', color: isDarkDoc ? '#cbd5e1' : '#4b5563' }}>{selectedAOI.biome}</span>
+              <span style={{ fontSize: '9.5px', color: isDarkDoc ? '#cbd5e1' : '#4b5563' }}>Gambut: {profile.peatDepth}</span>
             </div>
 
             <div>
               <span style={{ fontSize: '9px', fontWeight: 700, color: isDarkDoc ? '#94a3b8' : '#6b7280', textTransform: 'uppercase', display: 'block' }}>Tanggal Observasi</span>
               <strong style={{ fontSize: '11px', fontWeight: 700, color: isDarkDoc ? '#ffffff' : '#111827', display: 'block', marginTop: '2px' }}>{reportDateFormatted}</strong>
-              <span style={{ fontSize: '9.5px', color: '#10b981', fontWeight: 600 }}>Satelit 24H Feed Synced</span>
+              <span style={{ fontSize: '9.5px', color: '#10b981', fontWeight: 600 }}>Triage: Level {triage.level} ({triage.labelId.split(':')[0]})</span>
             </div>
 
             <div>
               <span style={{ fontSize: '9px', fontWeight: 700, color: isDarkDoc ? '#94a3b8' : '#6b7280', textTransform: 'uppercase', display: 'block' }}>Status Bahaya Karhutla</span>
-              <strong style={{ fontSize: '11px', fontWeight: 900, color: effectiveFwi >= 50 ? '#f43f5e' : '#f59e0b', display: 'block', marginTop: '2px' }}>
+              <strong style={{ fontSize: '11px', fontWeight: 900, color: effectiveFwi >= 50 || currentTmat <= -40 ? '#f43f5e' : '#f59e0b', display: 'block', marginTop: '2px' }}>
                 {threatLevel}
               </strong>
-              <span style={{ fontSize: '9.5px', color: isDarkDoc ? '#cbd5e1' : '#4b5563' }}>Indeks FWI: {effectiveFwi}/100</span>
+              <span style={{ fontSize: '9.5px', color: isDarkDoc ? '#cbd5e1' : '#4b5563' }}>FWI: {effectiveFwi}/100 &bull; TMAG: {currentTmat} cm</span>
             </div>
           </div>
 
@@ -342,7 +372,7 @@ export const ExecutiveReport: React.FC<ExecutiveReportProps> = ({
               <span style={{ fontSize: '9px', fontFamily: 'monospace', color: isDarkDoc ? '#94a3b8' : '#6b7280' }}>MODIS/VIIRS 5.5KM HARMONIZATION</span>
             </div>
             <p style={{ fontSize: '11px', color: isDarkDoc ? '#cbd5e1' : '#374151', textAlign: 'justify', lineHeight: 1.55 }}>
-              Berdasarkan harmonisasi komputasi 26 tahun rekaman satelit NASA Terra, Aqua, Suomi-NPP, dan NOAA-20 yang dikompilasikan ke dalam grid klaster 5.5 km dengan faktor kalibrasi energi (MODIS 1.04 / VIIRS 0.88), wilayah <strong>{selectedAOI.name}</strong> saat ini berada pada status <strong>{threatLevel}</strong>. Parameter Muka Air Tanah Gambut (TMAT) terpantau di angka <strong>{currentTmat} cm</strong>, yang mana telah melampaui ambang batas kritis nasional PP No. 57/2016 (-40 cm), mengindikasikan tingginya ancaman kebakaran bawah permukaan (*subsurface peat smoldering*).
+              Berdasarkan harmonisasi komputasi 26 tahun rekaman satelit NASA Terra, Aqua, Suomi-NPP, dan NOAA-20 yang dikompilasikan ke dalam grid klaster 5.5 km dengan faktor kalibrasi energi (MODIS 1.04 / VIIRS 0.88), sektor pertahanan <strong>{selectedAOI.name}</strong> ({profile.khgName}) saat ini berada pada status <strong>{threatLevel}</strong>. Karakteristik bentang lahan memiliki ketebalan gambut <strong>{profile.peatDepth}</strong> dengan parameter Muka Air Tanah Gambut (TMAT) terpantau di angka <strong>{currentTmat} cm</strong> (ambang batas kritis nasional PP No. 57/2016: -40 cm). Kondisi hidrologis ini mengindikasikan <strong>{currentTmat <= -40 ? 'tingginya risiko kebakaran bara api bawah permukaan (subsurface peat smoldering)' : 'potensi rambatan terkendali namun membutuhkan patroli preventif'}</strong>, dengan estimasi kebutuhan air pemadaman <strong>± {(triage.level === 1 ? 95000 : triage.level === 2 ? 65000 : triage.level === 3 ? 35000 : 15000).toLocaleString('id-ID')} Liter/hektar</strong> ({triage.actionId}).
             </p>
           </div>
 
@@ -363,33 +393,53 @@ export const ExecutiveReport: React.FC<ExecutiveReportProps> = ({
               <tbody>
                 <tr style={{ backgroundColor: isDarkDoc ? '#0f172a' : '#ffffff' }}>
                   <td style={{ border: isDarkDoc ? '1px solid #334155' : '1px solid #d1d5db', padding: '5px 8px', fontWeight: 600 }}>Tinggi Muka Air Tanah (TMAT)</td>
-                  <td style={{ border: isDarkDoc ? '1px solid #334155' : '1px solid #d1d5db', padding: '5px 8px', fontFamily: 'monospace', fontWeight: 800, color: '#f43f5e' }}>{currentTmat} cm</td>
+                  <td style={{ border: isDarkDoc ? '1px solid #334155' : '1px solid #d1d5db', padding: '5px 8px', fontFamily: 'monospace', fontWeight: 800, color: currentTmat <= -40 ? '#f43f5e' : '#10b981' }}>{currentTmat} cm</td>
                   <td style={{ border: isDarkDoc ? '1px solid #334155' : '1px solid #d1d5db', padding: '5px 8px', color: isDarkDoc ? '#94a3b8' : '#6b7280' }}>-40 cm (PP No. 57/2016 &amp; BRGM)</td>
-                  <td style={{ border: isDarkDoc ? '1px solid #334155' : '1px solid #d1d5db', padding: '5px 8px', fontWeight: 800, color: '#f43f5e' }}>KRITIS &bull; MELEWATI BATAS</td>
+                  <td style={{ border: isDarkDoc ? '1px solid #334155' : '1px solid #d1d5db', padding: '5px 8px', fontWeight: 800, color: currentTmat <= -40 ? '#f43f5e' : '#10b981' }}>
+                    {currentTmat <= -40 ? 'KRITIS • MELEWATI BATAS (-40CM)' : 'TERJAGA • DI ATAS AMBANG BATAS'}
+                  </td>
                 </tr>
                 <tr style={{ backgroundColor: isDarkDoc ? '#141e33' : '#fafafa' }}>
                   <td style={{ border: isDarkDoc ? '1px solid #334155' : '1px solid #d1d5db', padding: '5px 8px', fontWeight: 600 }}>Indeks Bahaya Cuaca Api (FWI)</td>
-                  <td style={{ border: isDarkDoc ? '1px solid #334155' : '1px solid #d1d5db', padding: '5px 8px', fontFamily: 'monospace', fontWeight: 800, color: '#f59e0b' }}>{effectiveFwi}</td>
+                  <td style={{ border: isDarkDoc ? '1px solid #334155' : '1px solid #d1d5db', padding: '5px 8px', fontFamily: 'monospace', fontWeight: 800, color: effectiveFwi >= 48 ? '#f43f5e' : effectiveFwi >= 26 ? '#f59e0b' : '#10b981' }}>{effectiveFwi}</td>
                   <td style={{ border: isDarkDoc ? '1px solid #334155' : '1px solid #d1d5db', padding: '5px 8px', color: isDarkDoc ? '#94a3b8' : '#6b7280' }}>Ambang Siaga: &ge; 48</td>
-                  <td style={{ border: isDarkDoc ? '1px solid #334155' : '1px solid #d1d5db', padding: '5px 8px', fontWeight: 700, color: '#f59e0b' }}>POTENSI PERAMBATAN TINGGI</td>
+                  <td style={{ border: isDarkDoc ? '1px solid #334155' : '1px solid #d1d5db', padding: '5px 8px', fontWeight: 700, color: effectiveFwi >= 48 ? '#f43f5e' : effectiveFwi >= 26 ? '#f59e0b' : '#10b981' }}>
+                    {effectiveFwi >= 48 ? 'POTENSI PERAMBATAN TINGGI' : effectiveFwi >= 26 ? 'WASPADA SEDANG' : 'NOMINAL / TERKENDALI'}
+                  </td>
                 </tr>
                 <tr style={{ backgroundColor: isDarkDoc ? '#0f172a' : '#ffffff' }}>
                   <td style={{ border: isDarkDoc ? '1px solid #334155' : '1px solid #d1d5db', padding: '5px 8px', fontWeight: 600 }}>Suhu Udara &amp; Kelembapan (RH)</td>
                   <td style={{ border: isDarkDoc ? '1px solid #334155' : '1px solid #d1d5db', padding: '5px 8px', fontFamily: 'monospace' }}>{liveWeather?.temperature ?? 32}°C &bull; RH {liveWeather?.relativeHumidity ?? 62}%</td>
                   <td style={{ border: isDarkDoc ? '1px solid #334155' : '1px solid #d1d5db', padding: '5px 8px', color: isDarkDoc ? '#94a3b8' : '#6b7280' }}>RH Kering: &lt; 65%</td>
-                  <td style={{ border: isDarkDoc ? '1px solid #334155' : '1px solid #d1d5db', padding: '5px 8px', fontWeight: 600, color: isDarkDoc ? '#cbd5e1' : '#374151' }}>Serasah Cepat Mengering</td>
+                  <td style={{ border: isDarkDoc ? '1px solid #334155' : '1px solid #d1d5db', padding: '5px 8px', fontWeight: 600, color: isDarkDoc ? '#cbd5e1' : '#374151' }}>
+                    {(liveWeather?.relativeHumidity ?? 62) < 65 ? 'Serasah Cepat Mengering' : 'Kelembaban Udara Cukup'}
+                  </td>
                 </tr>
                 <tr style={{ backgroundColor: isDarkDoc ? '#141e33' : '#fafafa' }}>
                   <td style={{ border: isDarkDoc ? '1px solid #334155' : '1px solid #d1d5db', padding: '5px 8px', fontWeight: 600 }}>Hari Tanpa Hujan (HTH)</td>
                   <td style={{ border: isDarkDoc ? '1px solid #334155' : '1px solid #d1d5db', padding: '5px 8px', fontFamily: 'monospace' }}>{liveWeather?.dryDaysCount ?? 9} Hari</td>
                   <td style={{ border: isDarkDoc ? '1px solid #334155' : '1px solid #d1d5db', padding: '5px 8px', color: isDarkDoc ? '#94a3b8' : '#6b7280' }}>&gt; 7 Hari (Drought Watch)</td>
-                  <td style={{ border: isDarkDoc ? '1px solid #334155' : '1px solid #d1d5db', padding: '5px 8px', fontWeight: 700, color: '#f59e0b' }}>WASPADA DEHIDRASI KUBAH</td>
+                  <td style={{ border: isDarkDoc ? '1px solid #334155' : '1px solid #d1d5db', padding: '5px 8px', fontWeight: 700, color: (liveWeather?.dryDaysCount ?? 9) > 7 ? '#f59e0b' : '#10b981' }}>
+                    {(liveWeather?.dryDaysCount ?? 9) > 7 ? 'WASPADA DEHIDRASI KUBAH' : 'HIDRASI GAMBUT NORMAL'}
+                  </td>
                 </tr>
                 <tr style={{ backgroundColor: isDarkDoc ? '#0f172a' : '#ffffff' }}>
                   <td style={{ border: isDarkDoc ? '1px solid #334155' : '1px solid #d1d5db', padding: '5px 8px', fontWeight: 600 }}>Kadar Air Gambut (KAG) Bawah Permukaan</td>
-                  <td style={{ border: isDarkDoc ? '1px solid #334155' : '1px solid #d1d5db', padding: '5px 8px', fontFamily: 'monospace' }}>115%</td>
+                  <td style={{ border: isDarkDoc ? '1px solid #334155' : '1px solid #d1d5db', padding: '5px 8px', fontFamily: 'monospace', fontWeight: 700, color: profile.kag < 100 ? '#f43f5e' : '#f59e0b' }}>{profile.kag}%</td>
                   <td style={{ border: isDarkDoc ? '1px solid #334155' : '1px solid #d1d5db', padding: '5px 8px', color: isDarkDoc ? '#94a3b8' : '#6b7280' }}>&lt; 100% (Titik Sulut Api Gambut)</td>
-                  <td style={{ border: isDarkDoc ? '1px solid #334155' : '1px solid #d1d5db', padding: '5px 8px', fontWeight: 700, color: '#f43f5e' }}>Rentan Bara Api Bawah Tanah</td>
+                  <td style={{ border: isDarkDoc ? '1px solid #334155' : '1px solid #d1d5db', padding: '5px 8px', fontWeight: 700, color: profile.kag < 100 ? '#f43f5e' : '#f59e0b' }}>
+                    {profile.kag < 100 ? 'KRITIS: Titik Sulut Api Gambut Terlampaui' : 'Rentan Bara Api Bawah Tanah (Smoldering)'}
+                  </td>
+                </tr>
+                <tr style={{ backgroundColor: isDarkDoc ? '#141e33' : '#fafafa' }}>
+                  <td style={{ border: isDarkDoc ? '1px solid #334155' : '1px solid #d1d5db', padding: '5px 8px', fontWeight: 600 }}>Infrastruktur Pembasahan &amp; Sekat Kanal</td>
+                  <td style={{ border: isDarkDoc ? '1px solid #334155' : '1px solid #d1d5db', padding: '5px 8px', fontFamily: 'monospace', fontWeight: 700 }}>
+                    {profile.canalBlocks} Unit Terpasang
+                  </td>
+                  <td style={{ border: isDarkDoc ? '1px solid #334155' : '1px solid #d1d5db', padding: '5px 8px', color: isDarkDoc ? '#94a3b8' : '#6b7280' }}>Sumber Air: {profile.nearestWaterSource}</td>
+                  <td style={{ border: isDarkDoc ? '1px solid #334155' : '1px solid #d1d5db', padding: '5px 8px', fontWeight: 600, color: profile.canalBlocks > 0 ? '#10b981' : '#f59e0b' }}>
+                    {profile.canalBlocks > 0 ? 'Optimalisasi Penutupan Pintu Sekat Kanal' : 'Pasokan Air Alami / Embung Terbatas'}
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -398,58 +448,72 @@ export const ExecutiveReport: React.FC<ExecutiveReportProps> = ({
           {/* 5. Active Hotspot Surveillance Targets */}
           <div className="space-y-2" style={{ marginTop: '12px' }}>
             <div style={{ fontSize: '11px', fontWeight: 800, textTransform: 'uppercase', borderBottom: isDarkDoc ? '1px solid #1e293b' : '1px solid #e5e7eb', paddingBottom: '3px', display: 'flex', justifyContent: 'space-between', color: isDarkDoc ? '#f8fafc' : '#111827' }}>
-              <span>III. Koordinat Sasaran Penugasan Anomali Panas Satelit</span>
+              <span>III. Koordinat Sasaran Penugasan Anomali Panas Satelit Prioritas</span>
               <span style={{ fontSize: '9px', color: isDarkDoc ? '#94a3b8' : '#6b7280' }}>FIRMS NRT ACTIVE DETECTIONS</span>
             </div>
             
             {topSpots.length === 0 ? (
               <div style={{ padding: '8px', border: isDarkDoc ? '1px solid #1e293b' : '1px solid #e5e7eb', backgroundColor: isDarkDoc ? '#151f33' : '#f9fafb', textAlign: 'center', fontSize: '10.5px', color: isDarkDoc ? '#94a3b8' : '#6b7280', borderRadius: '6px' }}>
-                Tidak terdapat titik panas berdaya tinggi yang terdeteksi pada jendela satelit 24 jam terakhir di sektor ini.
+                Tidak terdapat anomali titik panas berdaya tinggi yang terdeteksi pada jendela satelit 24 jam terakhir di sektor {selectedAOI.name}.
               </div>
             ) : (
-              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '10px' }}>
-                <thead>
-                  <tr style={{ backgroundColor: isDarkDoc ? '#1e293b' : '#f3f4f6', textTransform: 'uppercase', fontSize: '9px', color: isDarkDoc ? '#e2e8f0' : '#374151' }}>
-                    <th style={{ border: isDarkDoc ? '1px solid #334155' : '1px solid #d1d5db', padding: '5px 6px', textAlign: 'left', width: '28px' }}>No</th>
-                    <th style={{ border: isDarkDoc ? '1px solid #334155' : '1px solid #d1d5db', padding: '5px 6px', textAlign: 'left' }}>Wilayah &amp; Lanskap KHG</th>
-                    <th style={{ border: isDarkDoc ? '1px solid #334155' : '1px solid #d1d5db', padding: '5px 6px', textAlign: 'left' }}>Koordinat (Lat, Lon)</th>
-                    <th style={{ border: isDarkDoc ? '1px solid #334155' : '1px solid #d1d5db', padding: '5px 6px', textAlign: 'left' }}>Sensor Satelit</th>
-                    <th style={{ border: isDarkDoc ? '1px solid #334155' : '1px solid #d1d5db', padding: '5px 6px', textAlign: 'left' }}>FRP (MW)</th>
-                    <th style={{ border: isDarkDoc ? '1px solid #334155' : '1px solid #d1d5db', padding: '5px 6px', textAlign: 'left' }}>Waktu Akuisisi</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {topSpots.map((spot, idx) => {
-                    const loc = resolveHotspotLocation(spot.lat, spot.lon, selectedAOI.id, language);
-                    return (
-                      <tr key={spot.id} style={{ backgroundColor: idx % 2 === 1 ? (isDarkDoc ? '#141e33' : '#fafafa') : (isDarkDoc ? '#0f172a' : '#ffffff') }}>
-                        <td style={{ border: isDarkDoc ? '1px solid #334155' : '1px solid #d1d5db', padding: '5px 6px', fontWeight: 800 }}>{idx + 1}</td>
-                        <td style={{ border: isDarkDoc ? '1px solid #334155' : '1px solid #d1d5db', padding: '5px 6px', fontWeight: 600 }}>
-                          {loc.regency}{loc.district ? `, ${loc.district}` : ''}
-                          <div style={{ fontSize: '8.5px', color: isDarkDoc ? '#94a3b8' : '#6b7280', fontWeight: 'normal' }}>{loc.landscape}</div>
-                        </td>
-                        <td style={{ border: isDarkDoc ? '1px solid #334155' : '1px solid #d1d5db', padding: '5px 6px', fontFamily: 'monospace' }}>{spot.lat.toFixed(4)}°, {spot.lon.toFixed(4)}°</td>
-                        <td style={{ border: isDarkDoc ? '1px solid #334155' : '1px solid #d1d5db', padding: '5px 6px', fontFamily: 'monospace' }}>{spot.instrument} ({spot.satellite})</td>
-                        <td style={{ border: isDarkDoc ? '1px solid #334155' : '1px solid #d1d5db', padding: '5px 6px', fontFamily: 'monospace', fontWeight: 800, color: '#f43f5e' }}>{spot.frp} MW</td>
-                        <td style={{ border: isDarkDoc ? '1px solid #334155' : '1px solid #d1d5db', padding: '5px 6px', fontFamily: 'monospace' }}>{loc.localTimeFormatted}</td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
+              <>
+                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '10px' }}>
+                  <thead>
+                    <tr style={{ backgroundColor: isDarkDoc ? '#1e293b' : '#f3f4f6', textTransform: 'uppercase', fontSize: '9px', color: isDarkDoc ? '#e2e8f0' : '#374151' }}>
+                      <th style={{ border: isDarkDoc ? '1px solid #334155' : '1px solid #d1d5db', padding: '5px 6px', textAlign: 'left', width: '28px' }}>No</th>
+                      <th style={{ border: isDarkDoc ? '1px solid #334155' : '1px solid #d1d5db', padding: '5px 6px', textAlign: 'left' }}>Wilayah &amp; Lanskap KHG</th>
+                      <th style={{ border: isDarkDoc ? '1px solid #334155' : '1px solid #d1d5db', padding: '5px 6px', textAlign: 'left' }}>Koordinat (Lat, Lon)</th>
+                      <th style={{ border: isDarkDoc ? '1px solid #334155' : '1px solid #d1d5db', padding: '5px 6px', textAlign: 'left' }}>Sensor Satelit</th>
+                      <th style={{ border: isDarkDoc ? '1px solid #334155' : '1px solid #d1d5db', padding: '5px 6px', textAlign: 'left' }}>FRP (MW)</th>
+                      <th style={{ border: isDarkDoc ? '1px solid #334155' : '1px solid #d1d5db', padding: '5px 6px', textAlign: 'left' }}>Waktu Akuisisi</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {topSpots.map((spot, idx) => {
+                      const loc = resolveHotspotLocation(spot.lat, spot.lon, selectedAOI.id, language);
+                      return (
+                        <tr key={spot.id} style={{ backgroundColor: idx % 2 === 1 ? (isDarkDoc ? '#141e33' : '#fafafa') : (isDarkDoc ? '#0f172a' : '#ffffff') }}>
+                          <td style={{ border: isDarkDoc ? '1px solid #334155' : '1px solid #d1d5db', padding: '5px 6px', fontWeight: 800 }}>{idx + 1}</td>
+                          <td style={{ border: isDarkDoc ? '1px solid #334155' : '1px solid #d1d5db', padding: '5px 6px', fontWeight: 600 }}>
+                            {loc.regency}{loc.district ? `, ${loc.district}` : ''}
+                            <div style={{ fontSize: '8.5px', color: isDarkDoc ? '#94a3b8' : '#6b7280', fontWeight: 'normal' }}>{loc.landscape || profile.khgName}</div>
+                          </td>
+                          <td style={{ border: isDarkDoc ? '1px solid #334155' : '1px solid #d1d5db', padding: '5px 6px', fontFamily: 'monospace' }}>{spot.lat.toFixed(4)}°, {spot.lon.toFixed(4)}°</td>
+                          <td style={{ border: isDarkDoc ? '1px solid #334155' : '1px solid #d1d5db', padding: '5px 6px', fontFamily: 'monospace' }}>{spot.instrument} ({spot.satellite})</td>
+                          <td style={{ border: isDarkDoc ? '1px solid #334155' : '1px solid #d1d5db', padding: '5px 6px', fontFamily: 'monospace', fontWeight: 800, color: spot.frp >= 20 ? '#f43f5e' : '#f59e0b' }}>{spot.frp} MW</td>
+                          <td style={{ border: isDarkDoc ? '1px solid #334155' : '1px solid #d1d5db', padding: '5px 6px', fontFamily: 'monospace' }}>{loc.localTimeFormatted}</td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+
+                {/* Tactical Ground Demand Footnote */}
+                <div style={{ marginTop: '6px', padding: '6px 10px', backgroundColor: isDarkDoc ? '#151f33' : '#f0fdf4', border: isDarkDoc ? '1px solid #1e293b' : '1px solid #bbf7d0', borderRadius: '4px', display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', gap: '6px', fontSize: '9.5px', color: isDarkDoc ? '#cbd5e1' : '#166534' }}>
+                  <span><strong>Kebutuhan Taktis Pemadaman:</strong> Estimasi ± {((topSpots.length || 1) * 45000).toLocaleString('id-ID')} Liter air via <em>peat injector lance</em> (nozzle suntik gambut).</span>
+                  <span><strong>Pasokan Air Lapangan:</strong> {profile.nearestWaterSource}</span>
+                </div>
+              </>
             )}
           </div>
 
-          {/* 6. Tactical Directives for Brigade & Taskforces */}
+          {/* 6. Tactical Directives for Brigade & Taskforces (Province-Specific) */}
           <div className="space-y-1.5" style={{ marginTop: '12px' }}>
             <div style={{ fontSize: '11px', fontWeight: 800, textTransform: 'uppercase', borderBottom: isDarkDoc ? '1px solid #1e293b' : '1px solid #e5e7eb', paddingBottom: '3px', color: isDarkDoc ? '#f8fafc' : '#111827' }}>
-              IV. Instruksi Taktis Operasional (SOP Brigade Manggala Agni / BPBD / MPA)
+              IV. Instruksi Taktis Operasional Lapangan ({profile.name} &bull; SOP Manggala Agni / BPBD / MPA)
             </div>
-            <ol style={{ fontSize: '10.5px', color: isDarkDoc ? '#cbd5e1' : '#374151', paddingLeft: '16px', lineHeight: 1.5 }}>
-              <li><strong>Penutupan Sekat Kanal:</strong> Lakukan inspeksi menyeluruh pada pintu sekat kanal BRGM di sekitar KHG terdampak untuk menahan air dan menaikkan kembali muka air tanah &gt; -40 cm.</li>
-              <li><strong>Patroli Darat &amp; Nozzle Gambut:</strong> Kerahkan regu pemadaman darat Manggala Agni Daops menggunakan *peat injector nozzle* untuk menyuntikkan air ke lapisan organik sedalam 1–3 meter.</li>
-              <li><strong>Pemantauan Malam Hari (Night Passes):</strong> Pantau lintasan satelit malam hari NOAA-20 / Suomi-NPP untuk mendeteksi *smoldering combustion* tanpa gangguan pantulan sinar matahari.</li>
-              <li><strong>Water Bombing Standby:</strong> Siagakan helikopter pemadam water bombing apabila klaster titik panas memiliki FRP kumulatif &gt; 120 MW di zona non-aksesibilitas darat.</li>
+            <ol style={{ fontSize: '10.5px', color: isDarkDoc ? '#cbd5e1' : '#374151', paddingLeft: '16px', lineHeight: 1.55 }}>
+              {profile.tacticalDirectives.map((dir, idx) => {
+                const colonIdx = dir.indexOf(':');
+                const title = colonIdx > -1 ? dir.substring(0, colonIdx) : `Instruksi ${idx + 1}`;
+                const desc = colonIdx > -1 ? dir.substring(colonIdx + 1) : dir;
+                return (
+                  <li key={idx} style={{ marginBottom: '3px' }}>
+                    <strong>{title}:</strong>{desc}
+                  </li>
+                );
+              })}
             </ol>
           </div>
 
