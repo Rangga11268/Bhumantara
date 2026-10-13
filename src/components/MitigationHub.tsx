@@ -132,7 +132,7 @@ export const MitigationHub: React.FC<MitigationHubProps> = ({
   }, [liveHotspots, selectedAOI]);
 
   const activeSpotCount = isLiveSync ? regionLiveSpots.length : totalHotspots;
-  const maxLiveFrp = regionLiveSpots.length > 0 ? Math.max(...regionLiveSpots.map(h => h.frp)) : 0;
+  const maxLiveFrp = regionLiveSpots.reduce((max, h) => (h.frp > max ? h.frp : max), 0);
   const effectiveFwi = liveWeather ? liveWeather.fwiScore : currentRegionRisk.fwi;
 
   // Streamlined filtering and sorting

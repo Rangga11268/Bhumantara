@@ -289,9 +289,7 @@ export const MapViewer: React.FC<MapViewerProps> = ({
 
   const modisCount = displayHotspots.filter((h) => h.instrument === 'MODIS').length;
   const viirsCount = displayHotspots.filter((h) => h.instrument === 'VIIRS').length;
-  const maxFrp = displayHotspots.length > 0
-    ? Math.max(...displayHotspots.map((h) => h.frp))
-    : 0;
+  const maxFrp = displayHotspots.reduce((max, h) => (h.frp > max ? h.frp : max), 0);
 
   return (
     <div className="relative z-0 bg-white dark:bg-[#0c121e] border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm flex flex-col [isolation:isolate] transition-colors">
