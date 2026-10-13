@@ -18,14 +18,47 @@ import { fetchLiveNASAHotspots, LiveSyncResult } from './services/nasaFirmsApi';
 import { Language, translations } from './data/translations';
 import { RefreshCw, Loader2 } from 'lucide-react';
 
-// Lazy-loaded heavy modules for blazing initial load time
-const LandingStory = lazy(() => import('./components/LandingStory').then(m => ({ default: m.LandingStory })));
-const HarmonizationLab = lazy(() => import('./components/HarmonizationLab').then(m => ({ default: m.HarmonizationLab })));
-const MitigationHub = lazy(() => import('./components/MitigationHub').then(m => ({ default: m.MitigationHub })));
-const DataHub = lazy(() => import('./components/DataHub').then(m => ({ default: m.DataHub })));
-const TeamPage = lazy(() => import('./components/TeamPage').then(m => ({ default: m.TeamPage })));
-const DualMapComparison = lazy(() => import('./components/DualMapComparison').then(m => ({ default: m.DualMapComparison })));
-const PolygonInspector = lazy(() => import('./components/PolygonInspector').then(m => ({ default: m.PolygonInspector })));
+// Helper to retry dynamic imports if browser cache misses or server reconnected
+function lazyWithRetry<T extends React.ComponentType<any>>(
+  factory: () => Promise<{ default: T }>,
+  retries = 2,
+  interval = 800
+): React.LazyExoticComponent<T> {
+  return lazy(() =>
+    new Promise<{ default: T }>((resolve, reject) => {
+      const attempt = (remaining: number) => {
+        factory()
+          .then(resolve)
+          .catch((error) => {
+            if (remaining > 0) {
+              setTimeout(() => attempt(remaining - 1), interval);
+            } else {
+              // Attempt a clean page refresh once if chunk signature mismatch happens
+              const key = 'wanareksa_chunk_retry_ts';
+              const lastRetry = sessionStorage.getItem(key);
+              const now = Date.now();
+              if (!lastRetry || now - parseInt(lastRetry, 10) > 10000) {
+                sessionStorage.setItem(key, now.toString());
+                window.location.reload();
+                return;
+              }
+              reject(error);
+            }
+          });
+      };
+      attempt(retries);
+    })
+  );
+}
+
+// Lazy-loaded heavy modules with automatic retry
+const LandingStory = lazyWithRetry(() => import('./components/LandingStory').then(m => ({ default: m.LandingStory })));
+const HarmonizationLab = lazyWithRetry(() => import('./components/HarmonizationLab').then(m => ({ default: m.HarmonizationLab })));
+const MitigationHub = lazyWithRetry(() => import('./components/MitigationHub').then(m => ({ default: m.MitigationHub })));
+const DataHub = lazyWithRetry(() => import('./components/DataHub').then(m => ({ default: m.DataHub })));
+const TeamPage = lazyWithRetry(() => import('./components/TeamPage').then(m => ({ default: m.TeamPage })));
+const DualMapComparison = lazyWithRetry(() => import('./components/DualMapComparison').then(m => ({ default: m.DualMapComparison })));
+const PolygonInspector = lazyWithRetry(() => import('./components/PolygonInspector').then(m => ({ default: m.PolygonInspector })));
 
 // Sleek minimal fallback skeleton
 const TabLoadingFallback: React.FC<{ label?: string }> = ({ label = 'Loading Module...' }) => (
@@ -36,6 +69,65 @@ const TabLoadingFallback: React.FC<{ label?: string }> = ({ label = 'Loading Mod
     <span className="text-xs font-medium tracking-tight animate-pulse">{label}</span>
   </div>
 );
+
+// Tab Error Boundary to prevent white screen crashes on module load failures
+interface TabErrorBoundaryProps {
+  children: React.ReactNode;
+  fallbackLabel?: string;
+}
+
+interface TabErrorBoundaryState {
+  hasError: boolean;
+  error?: Error;
+}
+
+class TabErrorBoundary extends React.Component<TabErrorBoundaryProps, TabErrorBoundaryState> {
+  constructor(props: TabErrorBoundaryProps) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(error: Error): TabErrorBoundaryState {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    console.error('[Wanareksa] Component failed to render:', error, errorInfo);
+  }
+
+  handleRetry = () => {
+    this.setState({ hasError: false, error: undefined });
+    window.location.reload();
+  };
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="w-full min-h-[380px] flex flex-col items-center justify-center gap-4 py-16 px-4 text-center rounded-3xl bg-white dark:bg-[#111827] border border-[#e5e5e7] dark:border-[#1f2937] my-6">
+          <div className="w-12 h-12 rounded-2xl bg-amber-50 dark:bg-amber-950/50 border border-amber-200 dark:border-amber-800 text-amber-600 dark:text-amber-400 flex items-center justify-center">
+            <RefreshCw className="w-6 h-6 animate-spin" />
+          </div>
+          <div className="space-y-1">
+            <h3 className="text-base font-bold text-[#1d1d1f] dark:text-white">
+              {this.props.fallbackLabel || 'Koneksi Modul Sedang Disinkronkan'}
+            </h3>
+            <p className="text-xs text-[#6e6e73] dark:text-[#9ca3af] max-w-md">
+              Server atau modul baru saja diperbarui. Klik tombol di bawah untuk menyegarkan tampilan.
+            </p>
+          </div>
+          <button
+            onClick={this.handleRetry}
+            className="px-4 py-2 rounded-xl bg-[#0b3d91] hover:bg-[#093276] text-white text-xs font-semibold shadow-xs flex items-center gap-2 cursor-pointer transition-all active:scale-95"
+          >
+            <RefreshCw className="w-3.5 h-3.5" />
+            <span>Segarkan Tampilan</span>
+          </button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
 
 export function App() {
   const [language, setLanguage] = useState<Language>('en');
@@ -339,6 +431,7 @@ export function App() {
 
       {/* Main Canvas */}
       <main className="flex-1 w-full px-4 sm:px-6 lg:px-8 py-6">
+        <TabErrorBoundary>
 
         {/* Tab 0: Mission Story & Executive Overview */}
         {activeTab === 'story' && (
@@ -625,6 +718,7 @@ export function App() {
             </div>
           </Suspense>
         )}
+        </TabErrorBoundary>
       </main>
 
       {/* Immersive Orbital & NASA Terra Satellite Footer */}
