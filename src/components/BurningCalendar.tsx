@@ -303,19 +303,21 @@ export const BurningCalendar: React.FC<BurningCalendarProps> = ({
                       }`}
                     >
                       {/* Year Header Label */}
-                      <button
-                        onClick={() => {
-                          setFocusYear(year);
-                          setViewMode('monthly');
-                        }}
-                        className="text-[11px] font-bold text-[#1d1d1f] dark:text-white flex items-center justify-between pr-2.5 num cursor-pointer hover:text-[#0071e3] dark:hover:text-blue-400"
-                        title={language === 'id' ? `Klik untuk melihat rincian bulanan tahun ${year}` : `Click to view monthly details for ${year}`}
-                      >
-                        <span className={isCurrentPlayback ? 'text-[#0071e3] dark:text-blue-400' : ''}>{year}</span>
-                        <span className="text-[9px] text-[#4b5563] dark:text-[#94a3b8] font-medium">
-                          {isDual ? 'V+M' : 'MOD'}
-                        </span>
-                      </button>
+                      <div className="pr-2.5">
+                        <button
+                          onClick={() => {
+                            setFocusYear(year);
+                            setViewMode('monthly');
+                          }}
+                          className="text-[11px] font-bold text-[#1d1d1f] dark:text-white flex items-center justify-between w-full num cursor-pointer hover:text-[#0071e3] dark:hover:text-blue-400 min-h-[24px]"
+                          title={language === 'id' ? `Klik untuk melihat rincian bulanan tahun ${year}` : `Click to view monthly details for ${year}`}
+                        >
+                          <span className={isCurrentPlayback ? 'text-[#0071e3] dark:text-blue-400' : ''}>{year}</span>
+                          <span className="text-[9px] text-[#4b5563] dark:text-[#94a3b8] font-medium">
+                            {isDual ? 'V+M' : 'MOD'}
+                          </span>
+                        </button>
+                      </div>
 
                       {/* 52 Week Heatmap Cells */}
                       {Array.from({ length: 52 }, (_, i) => {
@@ -325,7 +327,7 @@ export const BurningCalendar: React.FC<BurningCalendarProps> = ({
                         const isSelected = selectedKey === key;
 
                         return (
-                          <button
+                          <div
                             key={key}
                             onClick={() => {
                               if (item) {
@@ -343,7 +345,7 @@ export const BurningCalendar: React.FC<BurningCalendarProps> = ({
                                 ? 'ring-2 ring-[#1d1d1f] dark:ring-white scale-110 z-10 relative shadow-xs'
                                 : ''
                             }`}
-                            aria-label={`${t.year} ${year}, ${t.weekLabel} ${week}`}
+                            title={`${t.year} ${year}, ${t.weekLabel} ${week}`}
                           />
                         );
                       })}

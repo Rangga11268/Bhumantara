@@ -16,6 +16,12 @@ const isDevEnv = typeof window !== 'undefined' && (
   Boolean((import.meta as unknown as { env?: { DEV?: boolean } }).env?.DEV)
 );
 
+export const DEFAULT_NASA_MAP_KEY = 'c5570b98a3bfc36460c13bfce01742f3';
+
+export function getFirmsWmsUrl(layer: 'fires_modis_24' | 'fires_viirs_24' = 'fires_viirs_24', mapKey = DEFAULT_NASA_MAP_KEY) {
+  return `https://firms.modaps.eosdis.nasa.gov/mapserver/wms/fires/${mapKey}/${layer}/`;
+}
+
 // In-memory cache for live feed
 let liveCache: {
   timestamp: number;
@@ -30,16 +36,17 @@ export async function fetchLiveNASAHotspots(
   userMapKey?: string
 ): Promise<LiveSyncResult> {
   const [minLat, minLon, maxLat, maxLon] = aoi.bbox;
+  const activeKey = (userMapKey && userMapKey.trim().length >= 10) ? userMapKey.trim() : DEFAULT_NASA_MAP_KEY;
 
-  // Option A: If user provided their own official NASA FIRMS MAP_KEY
-  if (userMapKey && userMapKey.trim().length >= 10) {
+  // Option A: If authorized NASA FIRMS MAP_KEY is available (default or user provided)
+  if (activeKey) {
     try {
       const bboxStr = `${minLon},${minLat},${maxLon},${maxLat}`;
       const prefix = isDevEnv ? '/firms-api' : 'https://firms.modaps.eosdis.nasa.gov/api';
       
       const [modisRes, viirsRes] = await Promise.all([
-        fetch(`${prefix}/area/csv/${userMapKey.trim()}/MODIS_NRT/${bboxStr}/1`),
-        fetch(`${prefix}/area/csv/${userMapKey.trim()}/VIIRS_SNPP_NRT/${bboxStr}/1`)
+        fetch(`${prefix}/area/csv/${activeKey}/MODIS_NRT/${bboxStr}/1`),
+        fetch(`${prefix}/area/csv/${activeKey}/VIIRS_SNPP_NRT/${bboxStr}/1`)
       ]);
 
       if (modisRes.ok && viirsRes.ok) {

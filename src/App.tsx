@@ -103,7 +103,18 @@ export function App() {
     });
   };
 
-  const [activeTab, setActiveTab] = useState<NavTab>('overview');
+  const [activeTab, setActiveTab] = useState<NavTab>(() => {
+    try {
+      if (typeof window !== 'undefined') {
+        const params = new URLSearchParams(window.location.search);
+        const tabParam = params.get('tab') as NavTab;
+        if (tabParam && ['story', 'overview', 'lab', 'mitigation', 'data-hub', 'team'].includes(tabParam)) {
+          return tabParam;
+        }
+      }
+    } catch (e) {}
+    return 'overview';
+  });
   const [overviewView, setOverviewView] = useState<OverviewViewMode>('main');
   const [selectedAOI, setSelectedAOI] = useState<AOIRegion>(() => {
     try {
@@ -118,6 +129,18 @@ export function App() {
     } catch (e) {}
     return PRESET_AOIS[0];
   });
+
+  // Synchronize URL query params with active tab & selected AOI without reload
+  useEffect(() => {
+    try {
+      if (typeof window !== 'undefined') {
+        const url = new URL(window.location.href);
+        url.searchParams.set('tab', activeTab);
+        url.searchParams.set('aoi', selectedAOI.id);
+        window.history.replaceState({}, '', url.toString());
+      }
+    } catch (e) {}
+  }, [activeTab, selectedAOI.id]);
 
   const [rawMode, setRawMode] = useState<boolean>(false);
   const [selectedKey, setSelectedKey] = useState<string | null>('2015-38');
@@ -140,7 +163,7 @@ export function App() {
   const [isLoadingLive, setIsLoadingLive] = useState<boolean>(false);
   const [liveResult, setLiveResult] = useState<LiveSyncResult | null>(null);
   const [userMapKey, setUserMapKey] = useState<string>(() =>
-    localStorage.getItem('wanareksa_map_key') || localStorage.getItem('terra_harmonia_map_key') || ''
+    localStorage.getItem('wanareksa_map_key') || 'c5570b98a3bfc36460c13bfce01742f3'
   );
 
   const t = translations[language];

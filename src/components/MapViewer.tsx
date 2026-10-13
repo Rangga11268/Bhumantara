@@ -328,7 +328,7 @@ export const MapViewer: React.FC<MapViewerProps> = ({
                 onClick={() => setTimeSpan(tab.id as any)}
                 className={`px-2.5 py-1 rounded-lg transition cursor-pointer ${
                   timeSpan === tab.id
-                    ? 'bg-sky-600 text-white font-bold shadow-xs'
+                    ? 'bg-sky-700 text-white font-bold shadow-xs'
                     : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                 }`}
               >
@@ -344,7 +344,7 @@ export const MapViewer: React.FC<MapViewerProps> = ({
               aria-label="Toggle VIIRS 375m Satellite Layer"
               className={`px-2 py-0.5 rounded-lg flex items-center gap-1 font-semibold transition cursor-pointer text-[11px] ${
                 showViirs
-                  ? 'bg-red-500 text-white shadow-xs'
+                  ? 'bg-red-600 text-white shadow-xs'
                   : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-200'
               }`}
             >
@@ -410,8 +410,8 @@ export const MapViewer: React.FC<MapViewerProps> = ({
               aria-label="NASA GIBS - Basemap"
               className={`px-2.5 py-1 rounded-lg transition-all cursor-pointer flex items-center gap-1 ${
                 basemap === 'nasa_gibs'
-                  ? 'bg-sky-600 text-white shadow-xs font-bold'
-                  : 'text-sky-600 dark:text-sky-400 hover:text-sky-800 dark:hover:text-sky-200'
+                  ? 'bg-sky-700 text-white shadow-xs font-bold'
+                  : 'text-sky-700 dark:text-sky-400 hover:text-sky-900 dark:hover:text-sky-200'
               }`}
               title="NASA Global Imagery Browse Services (MODIS Corrected Reflectance True Color)"
             >
@@ -423,7 +423,7 @@ export const MapViewer: React.FC<MapViewerProps> = ({
           {/* Full Screen Map Explorer Button */}
           <button
             onClick={() => setIsFullMapOpen(true)}
-            aria-label={language === 'id' ? 'Buka Peta Layar Penuh' : 'Open Full Screen Map Explorer'}
+            aria-label={language === 'id' ? 'Peta Penuh - Layar Penuh' : 'Full Map - Full Screen Explorer'}
             className="flex items-center gap-1.5 px-3 py-1 bg-slate-900 dark:bg-white text-white dark:text-slate-900 hover:bg-slate-800 dark:hover:bg-slate-100 rounded-xl font-medium transition-all shadow-xs shrink-0 cursor-pointer min-h-[32px]"
             title={language === 'id' ? 'Buka Peta Penuh' : 'Open Full Screen Map'}
           >
