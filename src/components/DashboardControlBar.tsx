@@ -64,14 +64,18 @@ export const DashboardControlBar: React.FC<DashboardControlBarProps> = ({
     <div className="bg-white dark:bg-[#111827] border border-[#e5e5e7] dark:border-[#1f2937] rounded-2xl shadow-xs overflow-hidden space-y-0 transition-colors">
       
       {/* Primary Toolbar Controls */}
-      <div className="px-4 sm:px-5 py-3.5 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3.5">
+      <div className="px-4 sm:px-5 py-3.5 flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3.5 bg-white dark:bg-[#0f172a] border-b border-slate-200 dark:border-slate-800">
 
-        {/* Region Selector (Full width on mobile, max-w-md on desktop) */}
+        {/* Region Selector & Quick AOI Pills */}
         <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 flex-1 min-w-0">
-          <label htmlFor="aoi-select" className="text-[11px] font-bold text-[#86868b] dark:text-[#9ca3af] uppercase tracking-wider shrink-0">
-            {t.region}
-          </label>
-          <div className="relative flex-1 w-full max-w-full md:max-w-md">
+          <div className="flex items-center gap-2 shrink-0">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <label htmlFor="aoi-select" className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+              {t.region}:
+            </label>
+          </div>
+
+          <div className="relative w-full sm:w-56 shrink-0">
             <select
               id="aoi-select"
               name="aoi"
@@ -81,29 +85,59 @@ export const DashboardControlBar: React.FC<DashboardControlBarProps> = ({
                 const aoi = PRESET_AOIS.find((a) => a.id === e.target.value);
                 if (aoi) onSelectAOI(aoi);
               }}
-              className="w-full appearance-none bg-[#f5f5f7] dark:bg-[#1f2937] border border-[#e5e5e7] dark:border-[#374151] rounded-xl pl-3.5 pr-9 py-2.5 text-xs sm:text-sm font-semibold text-[#1d1d1f] dark:text-white focus:outline-none focus:border-[#1d1d1f] dark:focus:border-white cursor-pointer min-h-[44px]"
+              className="w-full appearance-none bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl pl-3 pr-8 py-2 text-xs font-semibold text-slate-900 dark:text-white focus:outline-none focus:border-sky-500 dark:focus:border-sky-400 cursor-pointer min-h-[40px] shadow-2xs"
             >
               {PRESET_AOIS.map((aoi) => (
-                <option key={aoi.id} value={aoi.id} className="bg-white dark:bg-[#1f2937] text-[#1d1d1f] dark:text-white">
+                <option key={aoi.id} value={aoi.id} className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">
                   {aoi.name}
                 </option>
               ))}
             </select>
-            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#86868b] dark:text-[#9ca3af] pointer-events-none" />
+            <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
+          </div>
+
+          {/* Quick AOI Tactile Pills */}
+          <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
+            {[
+              { id: 'riau', short: '🔥 Riau', biome: 'Gambut' },
+              { id: 'kalteng', short: '🌿 Kalteng', biome: 'Biosfer' },
+              { id: 'sumsel', short: '🌾 Sumsel', biome: 'Basin' },
+              { id: 'indonesia', short: '🗺️ Indonesia', biome: 'Nasional' },
+            ].map((item) => {
+              const isSelected = selectedAOI.id === item.id;
+              const aoiObj = PRESET_AOIS.find((a) => a.id === item.id);
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => aoiObj && onSelectAOI(aoiObj)}
+                  className={`px-2.5 py-1.5 rounded-lg text-xs font-medium transition cursor-pointer shrink-0 flex items-center gap-1 border min-h-[36px] ${
+                    isSelected
+                      ? 'bg-sky-600 text-white border-sky-600 shadow-xs font-bold'
+                      : 'bg-slate-50 dark:bg-slate-900/60 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                  }`}
+                  title={`${item.short} (${item.biome})`}
+                >
+                  <span>{item.short}</span>
+                  <span className={`text-[10px] ${isSelected ? 'text-sky-100' : 'text-slate-400'}`}>
+                    {item.biome}
+                  </span>
+                </button>
+              );
+            })}
           </div>
         </div>
 
         {/* Space-Saving Aerospace Control Bar: Segmented Switch, Live Sync & Quick Toolbelt */}
-        <div className="flex flex-wrap items-center gap-2 w-full md:w-auto justify-end">
+        <div className="flex flex-wrap items-center gap-2 justify-end shrink-0">
           
-          {/* Mode Toggle (Apple style segmented switch) */}
-          <div className="flex rounded-xl bg-[#e5e5ea] dark:bg-[#1f2937] p-0.5 text-xs font-medium h-9 items-center">
+          {/* Mode Toggle (Aerospace Segmented Capsule) */}
+          <div className="flex rounded-xl bg-slate-100 dark:bg-slate-900 p-1 text-xs font-medium h-9 items-center border border-slate-200 dark:border-slate-800 shadow-2xs">
             <button
               onClick={() => setRawMode(false)}
               className={`px-3 py-1 rounded-lg transition-all cursor-pointer h-7 flex items-center justify-center text-xs ${
                 !rawMode
-                  ? 'bg-white dark:bg-[#374151] text-[#1d1d1f] dark:text-white shadow-xs font-bold'
-                  : 'text-[#6e6e73] dark:text-[#9ca3af] hover:text-[#1d1d1f] dark:hover:text-white'
+                  ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-xs font-bold border border-slate-200/60 dark:border-slate-700'
+                  : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
               {t.harmonized}
@@ -112,8 +146,8 @@ export const DashboardControlBar: React.FC<DashboardControlBarProps> = ({
               onClick={() => setRawMode(true)}
               className={`px-3 py-1 rounded-lg transition-all cursor-pointer h-7 flex items-center justify-center text-xs ${
                 rawMode
-                  ? 'bg-white dark:bg-[#374151] text-[#1d1d1f] dark:text-white shadow-xs font-bold'
-                  : 'text-[#6e6e73] dark:text-[#9ca3af] hover:text-[#1d1d1f] dark:hover:text-white'
+                  ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-xs font-bold border border-slate-200/60 dark:border-slate-700'
+                  : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
               {t.rawSensors}
@@ -121,13 +155,13 @@ export const DashboardControlBar: React.FC<DashboardControlBarProps> = ({
           </div>
 
           {/* NASA Live Sync Button */}
-          <div className="flex rounded-xl border border-[#e5e5e7] dark:border-[#374151] overflow-hidden text-xs h-9">
+          <div className="flex rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden text-xs h-9 shadow-2xs">
             <button
               onClick={onToggleLiveSync}
               className={`flex items-center justify-center gap-1.5 px-3 py-1 font-medium transition-all cursor-pointer h-9 ${
                 isLiveSync
-                  ? 'bg-[#1d1d1f] dark:bg-white text-white dark:text-[#111827] font-semibold'
-                  : 'bg-white dark:bg-[#111827] text-[#6e6e73] dark:text-[#9ca3af] hover:text-[#1d1d1f] dark:hover:text-white hover:bg-[#f5f5f7] dark:hover:bg-[#1f2937]'
+                  ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-semibold'
+                  : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800'
               }`}
             >
               {isLoadingLive ? (
@@ -140,14 +174,14 @@ export const DashboardControlBar: React.FC<DashboardControlBarProps> = ({
             <button
               onClick={onOpenApiKeyModal}
               title={t.apiKeySettings}
-              className="px-2 bg-[#f5f5f7] dark:bg-[#1f2937] border-l border-[#e5e5e7] dark:border-[#374151] text-[#86868b] dark:text-[#9ca3af] hover:text-[#1d1d1f] dark:hover:text-white transition-colors cursor-pointer h-9 flex items-center justify-center"
+              className="px-2 bg-slate-50 dark:bg-slate-900 border-l border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer h-9 flex items-center justify-center"
             >
               <Settings2 className="w-3.5 h-3.5" />
             </button>
           </div>
 
-          {/* Compact Quick Action Toolbelt (Icon-Driven with Tooltips to Eliminate Button Bloat) */}
-          <div className="flex items-center gap-1 bg-[#f5f5f7] dark:bg-[#151d2f] p-0.5 rounded-xl border border-[#e5e5e7] dark:border-[#1f2937]">
+          {/* Compact Quick Action Toolbelt */}
+          <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-900 p-0.5 rounded-xl border border-slate-200 dark:border-slate-800">
             {/* Voice Audio Briefing */}
             <button
               onClick={handleToggleVoice}
@@ -196,9 +230,9 @@ export const DashboardControlBar: React.FC<DashboardControlBarProps> = ({
 
       {/* Historic Disaster Benchmark Case Studies Strip (Space-Efficient Compact Pills) */}
       {onSelectScenario && (
-        <div className="px-4 sm:px-5 py-2 bg-[#f8fafc] dark:bg-[#0f172a] border-t border-[#e5e5e7] dark:border-[#1f2937] flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
-          <div className="flex items-center gap-1.5 text-[#86868b] dark:text-[#9ca3af] font-bold text-[10px] uppercase tracking-wider shrink-0">
-            <History className="w-3.5 h-3.5 text-blue-500" />
+        <div className="px-4 sm:px-5 py-2.5 bg-slate-50/70 dark:bg-[#0c121e] border-t border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+          <div className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400 font-bold text-[10px] uppercase tracking-wider shrink-0">
+            <History className="w-3.5 h-3.5 text-sky-500" />
             <span>{t.scenariosTitle}:</span>
           </div>
 
@@ -228,16 +262,16 @@ export const DashboardControlBar: React.FC<DashboardControlBarProps> = ({
                 <button
                   key={sc.id}
                   onClick={() => onSelectScenario(isSelected ? null : sc.id)}
-                  className={`px-2.5 py-1 rounded-lg border text-xs transition cursor-pointer flex items-center gap-1 whitespace-nowrap ${
+                  className={`px-2.5 py-1 rounded-lg border text-xs transition cursor-pointer flex items-center gap-1.5 whitespace-nowrap min-h-[32px] ${
                     isSelected
                       ? `${sc.activeBg} border-transparent shadow-xs`
-                      : 'bg-white dark:bg-[#151d2f] border-[#e5e5e7] dark:border-[#1f2937] text-slate-700 dark:text-slate-300 hover:border-slate-400'
+                      : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:border-slate-400'
                   }`}
                   title={`${sc.title} (${sc.subtitle})`}
                 >
-                  <Sparkles className="w-3 h-3 shrink-0 opacity-70" />
+                  <Sparkles className="w-3 h-3 shrink-0 opacity-80" />
                   <span className="font-semibold">{sc.title}</span>
-                  <span className="text-[10px] opacity-60">({sc.subtitle})</span>
+                  <span className="text-[10px] opacity-70">({sc.subtitle})</span>
                 </button>
               );
             })}
@@ -245,14 +279,14 @@ export const DashboardControlBar: React.FC<DashboardControlBarProps> = ({
         </div>
       )}
 
-      {/* Segmented View Mode Switcher (Clean, fast, uncluttered) */}
-      <div className="px-4 sm:px-5 py-3 bg-[#fbfbfd] dark:bg-[#0f172a] border-t border-[#e5e5e7] dark:border-[#1f2937] flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 text-xs">
+      {/* Segmented View Mode Switcher */}
+      <div className="px-4 sm:px-5 py-3 bg-slate-50/50 dark:bg-[#0c121e]/80 border-t border-slate-200 dark:border-slate-800 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 text-xs">
         
         {/* Left: Biome Info & Client-Side Engine Badge */}
-        <div className="flex items-center gap-2 text-[#6e6e73] dark:text-[#9ca3af] flex-wrap">
-          <span className="font-semibold text-[#1d1d1f] dark:text-white">{selectedAOI.biome}</span>
-          <span className="text-[#86868b] dark:text-[#6b7280] hidden sm:inline">&bull;</span>
-          <span className="hidden sm:inline text-[#86868b] dark:text-[#9ca3af]">{selectedAOI.description}</span>
+        <div className="flex items-center gap-2 text-slate-600 dark:text-slate-400 flex-wrap">
+          <span className="font-semibold text-slate-900 dark:text-white">{selectedAOI.biome}</span>
+          <span className="text-slate-300 dark:text-slate-700 hidden sm:inline">&bull;</span>
+          <span className="hidden sm:inline text-slate-500 dark:text-slate-400">{selectedAOI.description}</span>
           
           <span
             title={t.offlineEngineTooltip}
@@ -264,40 +298,40 @@ export const DashboardControlBar: React.FC<DashboardControlBarProps> = ({
         </div>
 
         {/* Right: Segmented Tool Switcher - 100% Equal Width on Mobile */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 bg-[#e5e5ea] dark:bg-[#1f2937] rounded-xl p-1 gap-1 w-full md:w-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-3 bg-slate-100 dark:bg-slate-900 rounded-xl p-1 gap-1 w-full md:w-auto border border-slate-200/80 dark:border-slate-800/80 shadow-2xs">
           <button
             onClick={() => onSelectView('main')}
-            className={`px-3 py-2 rounded-lg text-xs font-semibold transition-all flex items-center justify-center gap-1.5 cursor-pointer min-h-[40px] ${
+            className={`px-3 py-2 rounded-lg text-xs font-semibold transition-all flex items-center justify-center gap-1.5 cursor-pointer min-h-[38px] ${
               activeView === 'main'
-                ? 'bg-white dark:bg-[#374151] text-[#1d1d1f] dark:text-white shadow-xs font-bold'
-                : 'text-[#6e6e73] dark:text-[#9ca3af] hover:text-[#1d1d1f] dark:hover:text-white'
+                ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-xs font-bold border border-slate-200/60 dark:border-slate-700'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
             }`}
           >
-            <Calendar className="w-4 h-4 shrink-0" />
+            <Calendar className="w-4 h-4 shrink-0 text-sky-600 dark:text-sky-400" />
             <span className="truncate">{t.mainIntelCalendar}</span>
           </button>
 
           <button
             onClick={() => onSelectView('dual_map')}
-            className={`px-3 py-2 rounded-lg text-xs font-semibold transition-all flex items-center justify-center gap-1.5 cursor-pointer min-h-[40px] ${
+            className={`px-3 py-2 rounded-lg text-xs font-semibold transition-all flex items-center justify-center gap-1.5 cursor-pointer min-h-[38px] ${
               activeView === 'dual_map'
-                ? 'bg-white dark:bg-[#374151] text-[#1d1d1f] dark:text-white shadow-xs font-bold'
-                : 'text-[#6e6e73] dark:text-[#9ca3af] hover:text-[#1d1d1f] dark:hover:text-white'
+                ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-xs font-bold border border-slate-200/60 dark:border-slate-700'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
             }`}
           >
-            <Split className="w-4 h-4 shrink-0" />
+            <Split className="w-4 h-4 shrink-0 text-sky-600 dark:text-sky-400" />
             <span className="truncate">{t.dualMapCompare}</span>
           </button>
 
           <button
             onClick={() => onSelectView('polygon')}
-            className={`px-3 py-2 rounded-lg text-xs font-semibold transition-all flex items-center justify-center gap-1.5 cursor-pointer min-h-[40px] ${
+            className={`px-3 py-2 rounded-lg text-xs font-semibold transition-all flex items-center justify-center gap-1.5 cursor-pointer min-h-[38px] ${
               activeView === 'polygon'
-                ? 'bg-white dark:bg-[#374151] text-[#1d1d1f] dark:text-white shadow-xs font-bold'
-                : 'text-[#6e6e73] dark:text-[#9ca3af] hover:text-[#1d1d1f] dark:hover:text-white'
+                ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-xs font-bold border border-slate-200/60 dark:border-slate-700'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
             }`}
           >
-            <MapPin className="w-4 h-4 shrink-0" />
+            <MapPin className="w-4 h-4 shrink-0 text-sky-600 dark:text-sky-400" />
             <span className="truncate">{t.polygonInspector}</span>
           </button>
         </div>

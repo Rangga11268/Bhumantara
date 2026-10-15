@@ -16,7 +16,8 @@ import { PRESET_AOIS, AOIRegion, RawHotspot, HarmonizedWeekData, harmonizeHotspo
 import { generateHistoricalFireData } from './data/generator';
 import { fetchLiveNASAHotspots, LiveSyncResult } from './services/nasaFirmsApi';
 import { Language, translations } from './data/translations';
-import { RefreshCw, Loader2 } from 'lucide-react';
+import { RefreshCw, Loader2, Sparkles, TrendingUp, ShieldCheck } from 'lucide-react';
+import { OrbitalTelemetryTicker } from './components/OrbitalTelemetryTicker';
 
 // Helper to retry dynamic imports if browser cache misses or server reconnected
 function lazyWithRetry<T extends React.ComponentType<any>>(
@@ -413,8 +414,24 @@ export function App() {
   const peakYear = highestYear ? highestYear[0] : '2015';
   const peakFRP = highestYear ? Math.round(highestYear[1].frp).toLocaleString() : '0';
 
+  const sparklinePoints = useMemo(() => {
+    const years = Object.keys(yearlyAverages).sort();
+    if (years.length < 2) return '';
+    const frps = years.map((y) => yearlyAverages[y]?.frp || 0);
+    const max = Math.max(...frps, 1);
+    const width = 120;
+    const height = 28;
+    return frps
+      .map((val, idx) => {
+        const x = (idx / (frps.length - 1)) * width;
+        const y = height - (val / max) * (height - 6) - 3;
+        return `${x.toFixed(1)},${y.toFixed(1)}`;
+      })
+      .join(' ');
+  }, [yearlyAverages]);
+
   return (
-    <div className="min-h-screen bg-[#f5f5f7] dark:bg-[#0b0f19] text-[#1d1d1f] dark:text-[#f3f4f6] flex flex-col font-sans transition-colors duration-200">
+    <div className="min-h-screen bg-slate-50 dark:bg-[#070b14] text-slate-900 dark:text-slate-100 flex flex-col font-sans transition-colors duration-200">
       
       {/* Apple-style Navigation */}
       <Navbar
@@ -428,6 +445,9 @@ export function App() {
         onOpenTour={() => setIsTourModalOpen(true)}
         isLiveSync={isLiveSync}
       />
+
+      {/* Live NASA Orbital Telemetry Strip */}
+      <OrbitalTelemetryTicker language={language} isLiveSync={isLiveSync} />
 
       {/* Main Canvas */}
       <main className="flex-1 w-full px-4 sm:px-6 lg:px-8 py-6">
@@ -522,54 +542,134 @@ export function App() {
                   onOpenTour={() => setIsTourModalOpen(true)}
                 />
 
-                {/* 2. Metric Strip (Clean Apple Design) */}
-                <div className="grid grid-cols-1 sm:grid-cols-4 gap-0 bg-white dark:bg-[#111827] border border-[#e5e5e7] dark:border-[#1f2937] rounded-2xl shadow-xs overflow-hidden">
+                {/* 2. Metric Strip: Tactile Cards with SVG Micro-Sparklines & Tabular Numbers */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                   
-                  <div className="sm:col-span-1 px-5 py-5 flex flex-col justify-between border-b sm:border-b-0 sm:border-r border-[#e5e5e7] dark:border-[#1f2937] bg-[#fbfbfd] dark:bg-[#151d2f]">
-                    <span className="text-xs font-semibold text-[#86868b] dark:text-[#9ca3af] tracking-wider uppercase">{t.rawDetections}</span>
+                  {/* Card 1: Raw Detections */}
+                  <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-slate-800 shadow-2xs flex flex-col justify-between space-y-3 transition-all hover:border-slate-300 dark:hover:border-slate-700">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 tracking-wider uppercase">
+                        {t.rawDetections}
+                      </span>
+                      <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-sky-50 dark:bg-sky-950/80 text-sky-700 dark:text-sky-300 border border-sky-200 dark:border-sky-800">
+                        {isLiveSync ? 'NASA FIRMS' : 'MODIS + VIIRS'}
+                      </span>
+                    </div>
+
                     <div>
-                      <div className="text-3xl sm:text-4xl font-bold text-[#1d1d1f] dark:text-white num tracking-tight leading-none mt-2">
+                      <div className="text-3xl sm:text-4xl font-black font-mono tracking-tight tabular-nums text-slate-900 dark:text-white leading-none">
                         {totalEvents.toLocaleString()}
                       </div>
-                      <p className="text-xs text-[#86868b] dark:text-[#9ca3af] mt-1.5 font-medium">
-                        {isLiveSync ? `${selectedAOI.name} (Live)` : t.rawDetectionsDesc}
+                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-2 font-medium">
+                        {isLiveSync ? `${selectedAOI.name} (Live Sync)` : t.rawDetectionsDesc}
                       </p>
+                    </div>
+
+                    <div className="pt-2 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-[10px] font-mono text-slate-500">
+                      <span>Terra/Aqua 1km</span>
+                      <span className="font-semibold text-slate-700 dark:text-slate-300">VIIRS 375m</span>
                     </div>
                   </div>
 
-                  {[
-                    {
-                      label: t.historicPeakYear,
-                      value: peakYear,
-                      sub: `${t.energyTotal}: ${peakFRP} MW`,
-                      valueClass: 'text-[#1d1d1f] dark:text-white',
-                    },
-                    {
-                      label: t.spatialResolution,
-                      value: '5.5 km',
-                      sub: t.spatialResolutionDesc,
-                      valueClass: 'text-[#1d1d1f] dark:text-white',
-                    },
-                    {
-                      label: t.unusualAnomalies,
-                      value: `${anomalyCount}`,
-                      sub: t.unusualAnomaliesDesc,
-                      valueClass: anomalyCount > 10 ? 'text-red-600 dark:text-red-400' : 'text-[#1d1d1f] dark:text-white',
-                    },
-                  ].map((kpi) => (
-                    <div
-                      key={kpi.label}
-                      className="px-5 py-5 flex flex-col justify-between border-b sm:border-b-0 sm:border-r last:border-r-0 border-[#e5e5e7] dark:border-[#1f2937]"
-                    >
-                      <span className="text-xs font-semibold text-[#86868b] dark:text-[#9ca3af] uppercase tracking-wider">{kpi.label}</span>
-                      <div>
-                        <div className={`text-3xl sm:text-4xl font-bold num tracking-tight leading-none mt-2 ${kpi.valueClass}`}>
-                          {kpi.value}
-                        </div>
-                        <p className="text-[11px] text-[#86868b] dark:text-[#9ca3af] mt-1.5 leading-snug">{kpi.sub}</p>
-                      </div>
+                  {/* Card 2: Historic Peak FRP */}
+                  <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-slate-800 shadow-2xs flex flex-col justify-between space-y-3 transition-all hover:border-slate-300 dark:hover:border-slate-700">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 tracking-wider uppercase">
+                        {t.historicPeakYear}
+                      </span>
+                      <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-amber-50 dark:bg-amber-950/80 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800 flex items-center gap-1">
+                        <TrendingUp className="w-2.5 h-2.5" />
+                        <span>El Niño Peak</span>
+                      </span>
                     </div>
-                  ))}
+
+                    <div className="flex items-baseline justify-between gap-2">
+                      <div className="text-3xl sm:text-4xl font-black font-mono tracking-tight tabular-nums text-slate-900 dark:text-white leading-none">
+                        {peakYear}
+                      </div>
+
+                      {/* Micro-sparkline of 26-year FRP trajectory */}
+                      {sparklinePoints && (
+                        <div className="shrink-0" title="2000-2026 FRP Trajectory">
+                          <svg className="w-24 h-7 overflow-visible" viewBox="0 0 120 28">
+                            <polyline
+                              fill="none"
+                              stroke="#f97316"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              points={sparklinePoints}
+                            />
+                          </svg>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="pt-2 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-[11px] font-mono text-slate-500">
+                      <span>{t.energyTotal}:</span>
+                      <span className="font-bold text-amber-600 dark:text-amber-400">{peakFRP} MW</span>
+                    </div>
+                  </div>
+
+                  {/* Card 3: Equal-Area Resolution */}
+                  <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-slate-800 shadow-2xs flex flex-col justify-between space-y-3 transition-all hover:border-slate-300 dark:hover:border-slate-700">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 tracking-wider uppercase">
+                        {t.spatialResolution}
+                      </span>
+                      <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-emerald-50 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 flex items-center gap-1">
+                        <ShieldCheck className="w-2.5 h-2.5" />
+                        <span>RFC 7946 Grid</span>
+                      </span>
+                    </div>
+
+                    <div>
+                      <div className="text-3xl sm:text-4xl font-black font-mono tracking-tight tabular-nums text-sky-600 dark:text-sky-400 leading-none">
+                        5.5 km
+                      </div>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-2 font-medium">
+                        {t.spatialResolutionDesc}
+                      </p>
+                    </div>
+
+                    <div className="pt-2 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-[10px] font-mono text-slate-500">
+                      <span>Reduksi Overcount:</span>
+                      <span className="font-bold text-emerald-600 dark:text-emerald-400">0.63x Fusi Spasial</span>
+                    </div>
+                  </div>
+
+                  {/* Card 4: Unusual Climate Anomalies */}
+                  <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-slate-800 shadow-2xs flex flex-col justify-between space-y-3 transition-all hover:border-slate-300 dark:hover:border-slate-700">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 tracking-wider uppercase">
+                        {t.unusualAnomalies}
+                      </span>
+                      <span className={`px-2 py-0.5 rounded-md text-[10px] font-mono font-bold border ${
+                        anomalyCount > 10
+                          ? 'bg-rose-50 dark:bg-rose-950/80 text-rose-700 dark:text-rose-300 border-rose-200 dark:border-rose-900'
+                          : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700'
+                      }`}>
+                        {anomalyCount > 10 ? 'IKLIM EKSTREM' : 'BASELINE NORMAL'}
+                      </span>
+                    </div>
+
+                    <div>
+                      <div className={`text-3xl sm:text-4xl font-black font-mono tracking-tight tabular-nums leading-none ${
+                        anomalyCount > 10 ? 'text-rose-600 dark:text-rose-400' : 'text-slate-900 dark:text-white'
+                      }`}>
+                        {anomalyCount}
+                      </div>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-2 font-medium">
+                        {t.unusualAnomaliesDesc}
+                      </p>
+                    </div>
+
+                    <div className="pt-2 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-[10px] font-mono text-slate-500">
+                      <span>Batas Z-Score:</span>
+                      <span className="font-bold text-slate-700 dark:text-slate-300">&gt; +2.0 Sigma</span>
+                    </div>
+                  </div>
+
                 </div>
 
                 {/* 3. Interactive 26-Year Burning Calendar */}
