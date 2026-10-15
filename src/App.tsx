@@ -551,7 +551,7 @@ export function App() {
                       <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 tracking-wider uppercase">
                         {t.rawDetections}
                       </span>
-                      <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-sky-50 dark:bg-sky-950/80 text-sky-700 dark:text-sky-300 border border-sky-200 dark:border-sky-800">
+                      <span className="text-[10px] font-mono text-slate-400 dark:text-slate-500 uppercase tracking-wider">
                         {isLiveSync ? 'NASA FIRMS' : 'MODIS + VIIRS'}
                       </span>
                     </div>
@@ -577,9 +577,8 @@ export function App() {
                       <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 tracking-wider uppercase">
                         {t.historicPeakYear}
                       </span>
-                      <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-amber-50 dark:bg-amber-950/80 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800 flex items-center gap-1">
-                        <TrendingUp className="w-2.5 h-2.5" />
-                        <span>El Niño Peak</span>
+                      <span className="text-[10px] font-mono text-slate-400 dark:text-slate-500 uppercase tracking-wider">
+                        26-YR TRAJECTORY
                       </span>
                     </div>
 
@@ -594,7 +593,7 @@ export function App() {
                           <svg className="w-24 h-7 overflow-visible" viewBox="0 0 120 28">
                             <polyline
                               fill="none"
-                              stroke="#f97316"
+                              stroke="#0284c7"
                               strokeWidth="2"
                               strokeLinecap="round"
                               strokeLinejoin="round"
@@ -607,7 +606,7 @@ export function App() {
 
                     <div className="pt-2 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-[11px] font-mono text-slate-500">
                       <span>{t.energyTotal}:</span>
-                      <span className="font-bold text-amber-600 dark:text-amber-400">{peakFRP} MW</span>
+                      <span className="font-bold text-slate-900 dark:text-white">{peakFRP} MW</span>
                     </div>
                   </div>
 
@@ -617,14 +616,13 @@ export function App() {
                       <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 tracking-wider uppercase">
                         {t.spatialResolution}
                       </span>
-                      <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-emerald-50 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 flex items-center gap-1">
-                        <ShieldCheck className="w-2.5 h-2.5" />
-                        <span>RFC 7946 Grid</span>
+                      <span className="text-[10px] font-mono text-slate-400 dark:text-slate-500 uppercase tracking-wider">
+                        RFC 7946 EQUAL-AREA
                       </span>
                     </div>
 
                     <div>
-                      <div className="text-3xl sm:text-4xl font-black font-mono tracking-tight tabular-nums text-sky-600 dark:text-sky-400 leading-none">
+                      <div className="text-3xl sm:text-4xl font-black font-mono tracking-tight tabular-nums text-slate-900 dark:text-white leading-none">
                         5.5 km
                       </div>
                       <p className="text-xs text-slate-500 dark:text-slate-400 mt-2 font-medium">
@@ -634,7 +632,7 @@ export function App() {
 
                     <div className="pt-2 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-[10px] font-mono text-slate-500">
                       <span>Reduksi Overcount:</span>
-                      <span className="font-bold text-emerald-600 dark:text-emerald-400">0.63x Fusi Spasial</span>
+                      <span className="font-semibold text-sky-600 dark:text-sky-400">0.63x Fusi Spasial</span>
                     </div>
                   </div>
 
@@ -644,12 +642,10 @@ export function App() {
                       <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 tracking-wider uppercase">
                         {t.unusualAnomalies}
                       </span>
-                      <span className={`px-2 py-0.5 rounded-md text-[10px] font-mono font-bold border ${
-                        anomalyCount > 10
-                          ? 'bg-rose-50 dark:bg-rose-950/80 text-rose-700 dark:text-rose-300 border-rose-200 dark:border-rose-900'
-                          : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700'
+                      <span className={`text-[10px] font-mono uppercase tracking-wider ${
+                        anomalyCount > 10 ? 'text-rose-500 font-bold' : 'text-slate-400 dark:text-slate-500'
                       }`}>
-                        {anomalyCount > 10 ? 'IKLIM EKSTREM' : 'BASELINE NORMAL'}
+                        {anomalyCount > 10 ? '● IKLIM EKSTREM' : '● NORMAL'}
                       </span>
                     </div>
 

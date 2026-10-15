@@ -99,10 +99,10 @@ export const DashboardControlBar: React.FC<DashboardControlBarProps> = ({
           {/* Quick AOI Tactile Pills */}
           <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
             {[
-              { id: 'riau', short: '🔥 Riau', biome: 'Gambut' },
-              { id: 'kalteng', short: '🌿 Kalteng', biome: 'Biosfer' },
-              { id: 'sumsel', short: '🌾 Sumsel', biome: 'Basin' },
-              { id: 'indonesia', short: '🗺️ Indonesia', biome: 'Nasional' },
+              { id: 'riau', name: 'Riau', biome: 'Gambut' },
+              { id: 'kalteng', name: 'Kalteng', biome: 'Biosfer' },
+              { id: 'sumsel', name: 'Sumsel', biome: 'Basin' },
+              { id: 'indonesia', name: 'Indonesia', biome: 'Nasional' },
             ].map((item) => {
               const isSelected = selectedAOI.id === item.id;
               const aoiObj = PRESET_AOIS.find((a) => a.id === item.id);
@@ -110,15 +110,15 @@ export const DashboardControlBar: React.FC<DashboardControlBarProps> = ({
                 <button
                   key={item.id}
                   onClick={() => aoiObj && onSelectAOI(aoiObj)}
-                  className={`px-2.5 py-1.5 rounded-lg text-xs font-medium transition cursor-pointer shrink-0 flex items-center gap-1 border min-h-[36px] ${
+                  className={`px-2.5 py-1.5 rounded-lg text-xs font-medium transition cursor-pointer shrink-0 flex items-center gap-1.5 border min-h-[36px] ${
                     isSelected
-                      ? 'bg-sky-600 text-white border-sky-600 shadow-xs font-bold'
+                      ? 'bg-sky-600 text-white border-sky-600 shadow-xs font-semibold'
                       : 'bg-slate-50 dark:bg-slate-900/60 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
                   }`}
-                  title={`${item.short} (${item.biome})`}
+                  title={`${item.name} (${item.biome})`}
                 >
-                  <span>{item.short}</span>
-                  <span className={`text-[10px] ${isSelected ? 'text-sky-100' : 'text-slate-400'}`}>
+                  <span>{item.name}</span>
+                  <span className={`text-[10px] ${isSelected ? 'text-sky-200' : 'text-slate-400 font-mono'}`}>
                     {item.biome}
                   </span>
                 </button>
@@ -269,7 +269,7 @@ export const DashboardControlBar: React.FC<DashboardControlBarProps> = ({
                   }`}
                   title={`${sc.title} (${sc.subtitle})`}
                 >
-                  <Sparkles className="w-3 h-3 shrink-0 opacity-80" />
+                  <History className="w-3 h-3 shrink-0 opacity-80" />
                   <span className="font-semibold">{sc.title}</span>
                   <span className="text-[10px] opacity-70">({sc.subtitle})</span>
                 </button>

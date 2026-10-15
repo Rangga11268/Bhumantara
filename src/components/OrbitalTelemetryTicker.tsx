@@ -29,36 +29,32 @@ export const OrbitalTelemetryTicker: React.FC<OrbitalTelemetryTickerProps> = ({
       icon: Satellite,
       name: 'TERRA (EOS AM-1)',
       sensor: 'MODIS 1km',
-      spec: 'Orbit 705 km • 10:30 LT',
+      spec: 'Orbit 705 km · 10:30 LT',
       status: language === 'id' ? 'AKTIF' : 'ACTIVE',
-      statusClass: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30',
     },
     {
       id: 'aqua',
       icon: Satellite,
       name: 'AQUA (EOS PM-1)',
       sensor: 'MODIS 1km',
-      spec: 'Orbit 705 km • 13:30 LT',
+      spec: 'Orbit 705 km · 13:30 LT',
       status: language === 'id' ? 'AKTIF' : 'ACTIVE',
-      statusClass: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30',
     },
     {
       id: 'snpp',
       icon: Satellite,
       name: 'SUOMI-NPP',
       sensor: 'VIIRS 375m',
-      spec: 'Orbit 824 km • 13:30 LT',
+      spec: 'Orbit 824 km · 13:30 LT',
       status: language === 'id' ? 'TERKALIBRASI' : 'CALIBRATED',
-      statusClass: 'bg-sky-500/15 text-sky-400 border-sky-500/30',
     },
     {
       id: 'noaa20',
       icon: Satellite,
       name: 'NOAA-20 (JPSS-1)',
       sensor: 'VIIRS 375m',
-      spec: 'I-Bands 3.9 μm • 01:30 LT',
+      spec: 'I-Bands 3.9 μm · 01:30 LT',
       status: language === 'id' ? 'TERFUSI' : 'IN SYNC',
-      statusClass: 'bg-sky-500/15 text-sky-400 border-sky-500/30',
     },
     {
       id: 'firms',
@@ -67,7 +63,6 @@ export const OrbitalTelemetryTicker: React.FC<OrbitalTelemetryTickerProps> = ({
       sensor: 'NRT Data Stream',
       spec: language === 'id' ? 'Latensi ~3.2 Jam' : 'Latency ~3.2 hrs',
       status: 'VERIFIED',
-      statusClass: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30',
     },
     {
       id: 'fusion',
@@ -76,7 +71,6 @@ export const OrbitalTelemetryTicker: React.FC<OrbitalTelemetryTickerProps> = ({
       sensor: 'Equal-Area Grid',
       spec: '5.5 km Resolution',
       status: 'BIAS FIXED',
-      statusClass: 'bg-blue-500/15 text-blue-300 border-blue-500/30',
     },
     {
       id: 'peatland',
@@ -85,7 +79,6 @@ export const OrbitalTelemetryTicker: React.FC<OrbitalTelemetryTickerProps> = ({
       sensor: 'PP 71/2014 & PP 57/2016',
       spec: '-40 cm Water Table Limit',
       status: 'MONITORING',
-      statusClass: 'bg-amber-500/15 text-amber-300 border-amber-500/30',
     },
   ];
 
@@ -110,31 +103,27 @@ export const OrbitalTelemetryTicker: React.FC<OrbitalTelemetryTickerProps> = ({
         </div>
       </div>
 
-      {/* Infinite Scrolling Marquee Track ("Berjalan") with Left/Right Edge Gradient Fade */}
+      {/* Infinite Scrolling Marquee Track with Edge Fade */}
       <div
         className="relative flex-1 overflow-hidden h-full flex items-center"
         style={{
-          maskImage: 'linear-gradient(to right, transparent 0, black 20px, black calc(100% - 20px), transparent 100%)',
-          WebkitMaskImage: 'linear-gradient(to right, transparent 0, black 20px, black calc(100% - 20px), transparent 100%)',
+          maskImage: 'linear-gradient(to right, transparent 0, black 24px, black calc(100% - 24px), transparent 100%)',
+          WebkitMaskImage: 'linear-gradient(to right, transparent 0, black 24px, black calc(100% - 24px), transparent 100%)',
         }}
       >
-        <div className="animate-marquee flex items-center gap-6 sm:gap-8 whitespace-nowrap pl-4 cursor-default">
+        <div className="animate-marquee flex items-center whitespace-nowrap pl-4 cursor-default">
           {TELEMETRY_FEED.concat(TELEMETRY_FEED).map((item, idx) => {
             const Icon = item.icon;
             return (
-              <div key={`${item.id}-${idx}`} className="flex items-center gap-2 text-[11px] font-mono shrink-0">
-                <Icon className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                <span className="font-bold text-slate-100 font-sans">{item.name}</span>
-                <span className="px-1.5 py-0.2 rounded text-[10px] font-medium bg-slate-800/80 text-slate-300 border border-slate-700/60">
-                  {item.sensor}
-                </span>
-                <span className="text-slate-400 text-[10px] hidden md:inline">
-                  {item.spec}
-                </span>
-                <span className={`px-1.5 py-0.2 rounded text-[9px] font-bold tracking-wider uppercase border ${item.statusClass}`}>
-                  {item.status}
-                </span>
-                <span className="text-slate-700 ml-2 select-none">&bull;</span>
+              <div key={`${item.id}-${idx}`} className="flex items-center gap-2 text-[11px] font-mono shrink-0 text-slate-400 mr-8">
+                <Icon className="w-3.5 h-3.5 text-slate-500 shrink-0" />
+                <span className="font-semibold text-slate-200 tracking-wide">{item.name}</span>
+                <span className="text-slate-600">//</span>
+                <span className="text-slate-300">{item.sensor}</span>
+                <span className="text-slate-500 hidden md:inline">({item.spec})</span>
+                <span className="text-slate-600">//</span>
+                <span className="text-emerald-400 font-semibold tracking-wider text-[10px]">{item.status}</span>
+                <span className="text-slate-800 ml-4 select-none">|</span>
               </div>
             );
           })}

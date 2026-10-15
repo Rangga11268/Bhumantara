@@ -540,8 +540,8 @@ export const MapViewer: React.FC<MapViewerProps> = ({
         <div ref={mapContainerRef} className="w-full h-[540px] lg:h-[620px] z-0" />
 
         {/* Floating Mini Legend HUD (Top Left inside Map) */}
-        <div className="absolute top-3 left-3 z-[1000] pointer-events-auto bg-slate-900/90 text-white backdrop-blur-md border border-slate-700/70 rounded-xl px-3 py-1.5 text-[10px] font-mono flex items-center gap-2.5 shadow-xl">
-          <span className="text-slate-400 font-bold uppercase text-[9px] tracking-wider">Daya Radiatif (MW):</span>
+        <div className="absolute top-3 left-3 z-[1000] pointer-events-auto bg-[#070b14] text-white border border-slate-800 rounded-lg px-3 py-1.5 text-[10px] font-mono flex items-center gap-2.5 shadow-md">
+          <span className="text-slate-400 font-semibold uppercase text-[9px] tracking-wider">FRP (MW):</span>
           <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-[#10b981]" />&lt;15</span>
           <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-[#f59e0b]" />15-50</span>
           <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-[#f97316]" />50-150</span>
@@ -549,16 +549,16 @@ export const MapViewer: React.FC<MapViewerProps> = ({
         </div>
 
         {/* Minimal Floating Telemetry Status (Bottom Left inside Map) */}
-        <div className="absolute bottom-3 left-3 z-[1000] pointer-events-auto bg-slate-900/90 text-white backdrop-blur-md border border-slate-700/70 rounded-xl px-3.5 py-2 text-[11px] flex items-center gap-3 shadow-xl">
-          <div className="flex items-center gap-1.5 text-sky-400 font-bold uppercase tracking-wider text-[10px]">
+        <div className="absolute bottom-3 left-3 z-[1000] pointer-events-auto bg-[#070b14] text-white border border-slate-800 rounded-lg px-3.5 py-2 text-[11px] flex items-center gap-3 shadow-md">
+          <div className="flex items-center gap-1.5 text-sky-400 font-semibold uppercase tracking-wider text-[10px]">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
             <span>NASA FIRMS NRT</span>
           </div>
-          <span className="text-slate-300 font-mono text-[10px] border-l border-slate-700 pl-2.5">
-            MODIS: <b className="text-red-400">{modisCount}</b> &bull; VIIRS: <b className="text-amber-400">{viirsCount}</b> &bull; Puncak: <b className="text-emerald-400">{maxFrp} MW</b>
+          <span className="text-slate-300 font-mono text-[10px] border-l border-slate-800 pl-2.5">
+            MODIS: <b className="text-slate-100">{modisCount}</b> // VIIRS: <b className="text-slate-100">{viirsCount}</b> // MAX: <b className="text-emerald-400">{maxFrp} MW</b>
           </span>
           {cursorCoords && (
-            <span className="hidden md:inline text-slate-400 font-mono text-[10px] border-l border-slate-700 pl-2.5">
+            <span className="hidden md:inline text-slate-400 font-mono text-[10px] border-l border-slate-800 pl-2.5">
               {cursorCoords.lat.toFixed(4)}°, {cursorCoords.lng.toFixed(4)}°
             </span>
           )}

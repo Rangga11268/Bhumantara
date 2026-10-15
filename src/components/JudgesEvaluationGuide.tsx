@@ -48,9 +48,9 @@ export const JudgesEvaluationGuide: React.FC<JudgesEvaluationGuideProps> = ({
     {
       num: 1,
       id: 'paradox',
-      title: language === 'id' ? '1. Paradoks Sensor (Raw vs Harmonisasi)' : '1. Sensor Paradox (Raw vs Harmonized)',
-      badge: rawMode ? (language === 'id' ? 'Mode Mentah' : 'Raw Mode') : (language === 'id' ? 'Terkalibrasi' : 'Harmonized'),
-      badgeColor: rawMode ? 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/30' : 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30',
+      phase: 'PHASE 01',
+      title: language === 'id' ? 'Paradoks Sensor (Raw vs Harmonisasi)' : 'Sensor Paradox (Raw vs Harmonized)',
+      status: rawMode ? (language === 'id' ? 'MODE MENTAH' : 'RAW MODE') : (language === 'id' ? 'TERKALIBRASI' : 'HARMONIZED'),
       desc: language === 'id'
         ? 'Perhatikan lonjakan semu 300% pada data mentah pasca-2012 akibat masuknya VIIRS (375m). Aktifkan saklar kalibrasi untuk melihat data sebenarnya.'
         : 'Observe the artificial 300% surge in raw post-2012 data when VIIRS (375m) launched. Toggle the calibration switch to see equalized truth.',
@@ -67,9 +67,9 @@ export const JudgesEvaluationGuide: React.FC<JudgesEvaluationGuideProps> = ({
     {
       num: 2,
       id: 'scenarios',
-      title: language === 'id' ? '2. Simulasi 3 Skenario Karhutla Nyata' : '2. Simulate 3 Historic Fire Crises',
-      badge: activeScenario ? (language === 'id' ? 'Kasus Aktif' : 'Active Case') : (language === 'id' ? 'Pilih Kasus' : 'Select Case'),
-      badgeColor: 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700',
+      phase: 'PHASE 02',
+      title: language === 'id' ? 'Simulasi 3 Skenario Karhutla Nyata' : 'Simulate 3 Historic Fire Crises',
+      status: activeScenario ? (language === 'id' ? 'KASUS AKTIF' : 'ACTIVE CASE') : (language === 'id' ? 'PILIH KASUS' : 'SELECT CASE'),
       desc: language === 'id'
         ? 'Bandingkan krisis asap El Niño 2015, anomali IOD+ 2019, dan efektivitas restorasi sekat kanal BRGM (2022–2026) secara instan.'
         : 'Instantly benchmark the 2015 El Niño smoke crisis, 2019 IOD+ anomaly, and 2022–2026 BRGM canal-blocking restoration impact.',
@@ -81,9 +81,9 @@ export const JudgesEvaluationGuide: React.FC<JudgesEvaluationGuideProps> = ({
     {
       num: 3,
       id: 'lab',
-      title: language === 'id' ? '3. Uji Rumus Fisika & Simulasi Monte Carlo' : '3. Test Physics Engine & Monte Carlo Lab',
-      badge: language === 'id' ? 'Lab Ilmiah' : 'Science Lab',
-      badgeColor: 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700',
+      phase: 'PHASE 03',
+      title: language === 'id' ? 'Uji Rumus Fisika & Monte Carlo' : 'Test Physics Engine & Monte Carlo',
+      status: language === 'id' ? 'LAB ILMIAH' : 'SCIENCE LAB',
       desc: language === 'id'
         ? 'Jelajahi kalibrasi energi Stefan-Boltzmann, kurva Muka Air Tanah Gambut (TMAG < -40 cm), dan simulasi ketidakpastian 500 iterasi Monte Carlo.'
         : 'Explore Stefan-Boltzmann thermal energy models, BRGM Peat Water Table curves (TMAG < -40 cm), and 500-run Monte Carlo uncertainty simulations.',
@@ -95,9 +95,9 @@ export const JudgesEvaluationGuide: React.FC<JudgesEvaluationGuideProps> = ({
     {
       num: 4,
       id: 'mitigation',
-      title: language === 'id' ? '4. Disposisi WhatsApp & Ekspor GIS (QGIS)' : '4. WhatsApp SitRep & GeoJSON GIS Export',
-      badge: language === 'id' ? 'Aksi Nyata' : 'Field Action',
-      badgeColor: 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700',
+      phase: 'PHASE 04',
+      title: language === 'id' ? 'Disposisi WhatsApp & Ekspor GIS' : 'WhatsApp SitRep & GIS Export',
+      status: language === 'id' ? 'AKSI LAPANGAN' : 'FIELD ACTION',
       desc: language === 'id'
         ? 'Kirim format pesan tanggap darurat Manggala Agni via WhatsApp, salin koordinat GPS, dan unduh layer GeoJSON poligon 5.5 km (RFC 7946).'
         : 'Generate instant WhatsApp field sitreps for Manggala Agni brigades, copy GPS coordinates, and export RFC 7946 GeoJSON polygons for QGIS/ArcGIS.',
@@ -120,16 +120,13 @@ export const JudgesEvaluationGuide: React.FC<JudgesEvaluationGuideProps> = ({
           <div>
             <div className="flex items-center gap-2">
               <h2 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white tracking-tight">
-                {language === 'id' ? 'Panduan Cepat & Alur Eksplorasi Interaktif' : 'Quick-Start Interactive Exploration Guide'}
+                {language === 'id' ? 'Protokol Evaluasi & Alur Pengujian Juri' : 'Evaluation Protocol & Interactive Testing Steps'}
               </h2>
-              <span className="hidden sm:inline-block px-2 py-0.5 rounded-full text-[10px] font-bold bg-sky-600 text-white">
-                {language === 'id' ? 'Panduan Cepat' : 'Quick Guide'}
-              </span>
             </div>
             <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">
               {language === 'id'
-                ? 'Jelajahi inovasi sains, peta satelit multi-sensor, dan sistem mitigasi karhutla Wanareksa melalui 4 alur langkah berikut:'
-                : "Explore Wanareksa's multi-sensor science, satellite intelligence, and field mitigation across 4 guided steps:"}
+                ? 'Jelajahi inovasi sains, peta satelit multi-sensor, dan sistem mitigasi karhutla Wanareksa melalui 4 fase pengujian berikut:'
+                : "Explore Wanareksa's multi-sensor science, satellite intelligence, and field mitigation across 4 testing phases:"}
             </p>
           </div>
         </div>
@@ -158,14 +155,17 @@ export const JudgesEvaluationGuide: React.FC<JudgesEvaluationGuideProps> = ({
               onClick={() => setActiveStep(step.num)}
             >
               <div>
-                <div className="flex items-center justify-between gap-2 mb-1.5">
-                  <span className="font-bold text-xs text-slate-900 dark:text-white truncate">
-                    {step.title}
+                <div className="flex items-center justify-between gap-2 mb-1.5 font-mono text-[10px]">
+                  <span className="font-bold text-sky-600 dark:text-sky-400 tracking-wider">
+                    {step.phase}
                   </span>
-                  <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-md border shrink-0 ${step.badgeColor}`}>
-                    {step.badge}
+                  <span className="text-slate-400 dark:text-slate-500 uppercase tracking-wider">
+                    {step.status}
                   </span>
                 </div>
+                <h3 className="font-bold text-xs text-slate-900 dark:text-white mb-1.5 leading-snug">
+                  {step.title}
+                </h3>
                 <p className="text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed line-clamp-3">
                   {step.desc}
                 </p>
@@ -178,10 +178,9 @@ export const JudgesEvaluationGuide: React.FC<JudgesEvaluationGuideProps> = ({
                     e.stopPropagation();
                     step.onAction();
                   }}
-                  className="w-full py-1.5 px-2.5 bg-sky-600 hover:bg-sky-500 text-white rounded-lg text-xs font-semibold transition-all shadow-xs flex items-center justify-center gap-1.5 cursor-pointer min-h-[34px]"
+                  className="w-full py-1.5 px-2.5 bg-sky-600 hover:bg-sky-500 text-white rounded-lg text-xs font-semibold transition-all shadow-xs flex items-center justify-center cursor-pointer min-h-[34px]"
                 >
                   <span>{step.actionLabel}</span>
-                  <ArrowRight className="w-3 h-3 shrink-0" />
                 </button>
 
                 {step.secondaryAction && (
