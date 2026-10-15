@@ -3,6 +3,8 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { AOIRegion, PRESET_AOIS, RawHotspot } from '../engine/harmonizer';
 import { Language } from '../data/translations';
+import { resolveHotspotLocation, getIndonesianLocalTime, DetailedLocationInfo } from '../utils/locationResolver';
+import { fetchLiveWeather, LiveWeatherData } from '../services/weatherApi';
 import {
   ShieldAlert,
   Wind,
@@ -27,7 +29,12 @@ import {
   Compass,
   ThermometerSun,
   ShieldCheck,
-  Maximize2
+  Maximize2,
+  Navigation,
+  Crosshair,
+  ExternalLink,
+  Locate,
+  X
 } from 'lucide-react';
 
 interface CitizenPortalProps {
@@ -179,23 +186,113 @@ export const CitizenPortal: React.FC<CitizenPortalProps> = ({
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
   const layerGroupRef = useRef<L.LayerGroup | null>(null);
+  const baseTileRef = useRef<L.TileLayer | null>(null);
+  const labelsTileRef = useRef<L.TileLayer | null>(null);
+  const canvasRendererRef = useRef<L.Canvas | null>(null);
+
+  // Basemap & Weather State
+  const [mapBasemap, setMapBasemap] = useState<'satellite_labeled' | 'streets' | 'dark'>('satellite_labeled');
+  const [hotspotFilter, setHotspotFilter] = useState<'all' | 'severe' | 'moderate'>('all');
+  const [selectedHotspot, setSelectedHotspot] = useState<{
+    spot: RawHotspot;
+    loc: DetailedLocationInfo;
+    localTime: { timeFormatted: string; tz: string };
+  } | null>(null);
+  const [liveWeather, setLiveWeather] = useState<LiveWeatherData | null>(null);
+
+  // Fetch real-time weather & wind for selected region
+  useEffect(() => {
+    let isMounted = true;
+    fetchLiveWeather(selectedAOI.center[0], selectedAOI.center[1], selectedAOI.id)
+      .then((data) => {
+        if (isMounted) setLiveWeather(data);
+      })
+      .catch(() => {});
+    return () => {
+      isMounted = false;
+    };
+  }, [selectedAOI]);
+
+  // Highest FRP hotspot in active region
+  const highestHotspot = useMemo(() => {
+    if (regionalHotspots.length === 0) return null;
+    return [...regionalHotspots].sort((a, b) => b.frp - a.frp)[0];
+  }, [regionalHotspots]);
+
+  // Filtered hotspots for high-density canvas rendering (up to 1,000 points)
+  const mapHotspots = useMemo(() => {
+    let list = regionalHotspots;
+    if (hotspotFilter === 'severe') {
+      list = list.filter((h) => h.frp >= 35 || h.brightness >= 335);
+    } else if (hotspotFilter === 'moderate') {
+      list = list.filter((h) => h.frp >= 15);
+    }
+    const sorted = [...list].sort((a, b) => b.frp - a.frp);
+    return sorted.slice(0, 1000);
+  }, [regionalHotspots, hotspotFilter]);
+
+  // Quick jump helper
+  const handleFlyTo = (lat: number, lng: number, zoom = 9) => {
+    if (mapInstanceRef.current) {
+      mapInstanceRef.current.flyTo([lat, lng], zoom, { duration: 1.2 });
+    }
+  };
+
+  // Populate citizen report from selected hotspot
+  const handleUseHotspotForReport = (spot: RawHotspot, loc: DetailedLocationInfo) => {
+    setCoords({ lat: spot.lat, lng: spot.lon });
+    setUserLocationNote(`${loc.regency}, ${loc.district ? `Kec. ${loc.district}` : ''} (${loc.landscape})`);
+    const reportSection = document.getElementById('citizen-whatsapp-report');
+    if (reportSection) {
+      reportSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  // Dynamic quick-jump chips per region
+  const quickChips = useMemo(() => {
+    if (selectedAOI.id === 'riau') {
+      return [
+        { label: 'Bengkalis & Siak', lat: 1.25, lng: 102.10, zoom: 9 },
+        { label: 'Dumai & Rokan Hilir', lat: 1.68, lng: 101.44, zoom: 9 },
+        { label: 'Pelalawan & Kampar', lat: 0.35, lng: 101.85, zoom: 9 },
+      ];
+    }
+    if (selectedAOI.id === 'kalteng') {
+      return [
+        { label: 'Pulang Pisau (Sebangau)', lat: -2.75, lng: 114.05, zoom: 9 },
+        { label: 'Palangka Raya', lat: -2.21, lng: 113.92, zoom: 9 },
+        { label: 'Kotawaringin Timur (Sampit)', lat: -2.53, lng: 112.95, zoom: 9 },
+      ];
+    }
+    if (selectedAOI.id === 'sumsel') {
+      return [
+        { label: 'Ogan Komering Ilir (OKI)', lat: -3.40, lng: 105.00, zoom: 9 },
+        { label: 'Banyuasin & Sembilang', lat: -2.50, lng: 104.75, zoom: 9 },
+        { label: 'Musi Banyuasin', lat: -2.89, lng: 103.81, zoom: 9 },
+      ];
+    }
+    return [
+      { label: 'Riau (Gambut Sumatera)', lat: 0.50, lng: 101.50, zoom: 7 },
+      { label: 'Kalteng (Gambut Biosfer)', lat: -2.20, lng: 113.80, zoom: 7 },
+      { label: 'Sumsel (Basin OKI)', lat: -3.00, lng: 104.50, zoom: 7 },
+      { label: 'Kalbar (Ketapang)', lat: -1.50, lng: 110.30, zoom: 7 },
+    ];
+  }, [selectedAOI]);
 
   // Initialize Citizen Friendly Leaflet Map
   useEffect(() => {
     if (!mapContainerRef.current) return;
 
     if (!mapInstanceRef.current) {
+      canvasRendererRef.current = L.canvas({ padding: 0.5 });
+
       const map = L.map(mapContainerRef.current, {
         center: selectedAOI.center,
         zoom: Math.max(selectedAOI.zoom - 1, 6),
         zoomControl: false,
         attributionControl: false,
-        scrollWheelZoom: false,
+        scrollWheelZoom: true,
       });
-
-      L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-        maxZoom: 18,
-      }).addTo(map);
 
       L.control.zoom({ position: 'bottomright' }).addTo(map);
       layerGroupRef.current = L.layerGroup().addTo(map);
@@ -203,58 +300,168 @@ export const CitizenPortal: React.FC<CitizenPortalProps> = ({
     } else {
       mapInstanceRef.current.setView(selectedAOI.center, Math.max(selectedAOI.zoom - 1, 6));
     }
+  }, [selectedAOI]);
 
-    // Render Fire Hotspots as high-visibility pulsing radar markers
-    if (layerGroupRef.current && mapInstanceRef.current) {
-      layerGroupRef.current.clearLayers();
+  // Switch basemap tiles with explicit reference labels
+  useEffect(() => {
+    const map = mapInstanceRef.current;
+    if (!map) return;
 
-      regionalHotspots.slice(0, 80).forEach((h) => {
-        const isSevere = h.frp > 30 || h.brightness > 330;
-        const color = isSevere ? '#ef4444' : '#f97316';
+    if (baseTileRef.current) {
+      map.removeLayer(baseTileRef.current);
+      baseTileRef.current = null;
+    }
+    if (labelsTileRef.current) {
+      map.removeLayer(labelsTileRef.current);
+      labelsTileRef.current = null;
+    }
 
-        // Outer glow circle
-        const glowMarker = L.circleMarker([h.lat, h.lon], {
-          radius: isSevere ? 12 : 8,
-          fillColor: color,
-          color: color,
+    if (mapBasemap === 'satellite_labeled') {
+      baseTileRef.current = L.tileLayer(
+        'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+        { maxZoom: 18, attribution: 'Esri World Imagery' }
+      ).addTo(map);
+
+      labelsTileRef.current = L.tileLayer(
+        'https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',
+        { maxZoom: 18, pane: 'overlayPane' }
+      ).addTo(map);
+    } else if (mapBasemap === 'streets') {
+      baseTileRef.current = L.tileLayer(
+        'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+        { maxZoom: 19, attribution: '&copy; OpenStreetMap' }
+      ).addTo(map);
+    } else {
+      baseTileRef.current = L.tileLayer(
+        'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}',
+        { maxZoom: 18, attribution: 'Esri Dark' }
+      ).addTo(map);
+
+      labelsTileRef.current = L.tileLayer(
+        'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}',
+        { maxZoom: 18, pane: 'overlayPane' }
+      ).addTo(map);
+    }
+  }, [mapBasemap]);
+
+  // Render Hotspots & Wind Spread Cones onto Canvas
+  useEffect(() => {
+    const map = mapInstanceRef.current;
+    const layerGroup = layerGroupRef.current;
+    const canvas = canvasRendererRef.current;
+    if (!map || !layerGroup || !canvas) return;
+
+    layerGroup.clearLayers();
+
+    // Render wind spread threat cones from severe fire clusters
+    if (liveWeather && liveWeather.windDirectionDeg !== undefined) {
+      const windDeg = liveWeather.windDirectionDeg;
+      const targetDeg = (windDeg + 180) % 360;
+      const targetRad = (targetDeg * Math.PI) / 180;
+      const apertureRad = (28 * Math.PI) / 180;
+      const coneLength = 0.16;
+
+      mapHotspots.slice(0, 6).forEach((spot) => {
+        if (spot.frp < 30) return;
+        const apex: [number, number] = [spot.lat, spot.lon];
+        const p1: [number, number] = [
+          spot.lat + coneLength * Math.cos(targetRad - apertureRad),
+          spot.lon + coneLength * Math.sin(targetRad - apertureRad),
+        ];
+        const pMid: [number, number] = [
+          spot.lat + coneLength * 1.2 * Math.cos(targetRad),
+          spot.lon + coneLength * 1.2 * Math.sin(targetRad),
+        ];
+        const p2: [number, number] = [
+          spot.lat + coneLength * Math.cos(targetRad + apertureRad),
+          spot.lon + coneLength * Math.sin(targetRad + apertureRad),
+        ];
+
+        L.polygon([apex, p1, pMid, p2], {
+          color: '#f97316',
+          fillColor: '#ea580c',
+          fillOpacity: 0.16,
           weight: 1,
-          opacity: 0.8,
-          fillOpacity: 0.35,
-        });
-
-        // Inner solid core
-        const coreMarker = L.circleMarker([h.lat, h.lon], {
-          radius: isSevere ? 5 : 3.5,
-          fillColor: '#ffffff',
-          color: color,
-          weight: 2,
-          opacity: 1,
-          fillOpacity: 0.9,
-        });
-
-        const popupContent = `
-          <div style="font-family: system-ui, sans-serif; font-size: 11px; padding: 2px;">
-            <div style="font-weight: bold; color: ${color}; margin-bottom: 3px;">
-              ${isSevere ? '🔥 Titik Bara Panas Kuat' : '⚠️ Titik Hangat Terdeteksi'}
-            </div>
-            <div>Satelit: <b>${h.instrument} (${h.satellite})</b></div>
-            <div>Daya Pancar: <b>${Math.round(h.frp)} MW</b></div>
-            <div>Waktu Deteksi: <b>${h.date} ${h.time} UTC</b></div>
-          </div>
-        `;
-
-        glowMarker.bindPopup(popupContent);
-        coreMarker.bindPopup(popupContent);
-
-        glowMarker.addTo(layerGroupRef.current!);
-        coreMarker.addTo(layerGroupRef.current!);
+          dashArray: '3, 4',
+          renderer: canvas,
+        }).addTo(layerGroup);
       });
     }
 
-    return () => {
-      // Map stays until unmount
-    };
-  }, [selectedAOI, regionalHotspots]);
+    // Render Markers with High-Contrast Canvas
+    mapHotspots.forEach((h) => {
+      const isSevere = h.frp >= 40 || h.brightness >= 335;
+      const isModerate = h.frp >= 15;
+      const color = isSevere ? '#ef4444' : isModerate ? '#f97316' : '#eab308';
+      const radius = isSevere ? 5.5 : isModerate ? 3.8 : 2.5;
+
+      const marker = L.circleMarker([h.lat, h.lon], {
+        radius,
+        fillColor: color,
+        color: '#ffffff',
+        weight: isSevere ? 1.5 : 0.6,
+        opacity: 0.95,
+        fillOpacity: 0.92,
+        renderer: canvas,
+      });
+
+      const loc = resolveHotspotLocation(h.lat, h.lon, selectedAOI.id, language);
+      const localTime = getIndonesianLocalTime(h.date, h.time, h.lon);
+      const tempC = (h.brightness - 273.15).toFixed(1);
+
+      marker.on('click', () => {
+        setSelectedHotspot({ spot: h, loc, localTime });
+      });
+
+      const popupHtml = `
+        <div style="font-family: system-ui, -apple-system, sans-serif; font-size: 12px; min-width: 250px; line-height: 1.45; color: #1e293b; padding: 2px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #e2e8f0; padding-bottom: 6px; margin-bottom: 8px;">
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <span style="display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: ${color}; box-shadow: 0 0 6px ${color};"></span>
+              <strong style="color: ${color}; font-size: 12px;">
+                ${isSevere ? (isIndo ? '🔥 Bara Gambut Ekstrem' : '🔥 Severe Peat Fire') : isModerate ? (isIndo ? '⚠️ Api Permukaan' : '⚠️ Surface Fire') : (isIndo ? '🟡 Titik Hangat Awal' : '🟡 Warm Thermal Anomaly')}
+              </strong>
+            </div>
+            <span style="font-size: 10px; font-weight: 700; background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-family: monospace;">
+              ${Math.round(h.frp)} MW
+            </span>
+          </div>
+
+          <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 8px; margin-bottom: 8px;">
+            <div style="font-weight: 700; font-size: 13px; color: #0f172a;">${loc.regency}</div>
+            ${loc.district ? `<div style="font-size: 11px; color: #475569; margin-top: 1px;">Kecamatan: <b>${loc.district}</b></div>` : ''}
+            <div style="font-size: 11px; color: #0284c7; margin-top: 3px; font-weight: 600;">${loc.landscape}</div>
+            ${loc.isPeatland ? `<div style="font-size: 10px; color: #b45309; margin-top: 2px; font-weight: 500;">🌱 ${loc.peatDepthEstimate}</div>` : ''}
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; font-size: 11px; margin-bottom: 8px;">
+            <div style="background: #f1f5f9; padding: 6px; border-radius: 6px;">
+              <span style="font-size: 9px; color: #64748b; text-transform: uppercase; font-weight: 700; display: block;">Suhu Permukaan</span>
+              <strong style="font-size: 12px; color: #0f172a;">${tempC}&deg;C</strong>
+            </div>
+            <div style="background: #f1f5f9; padding: 6px; border-radius: 6px;">
+              <span style="font-size: 9px; color: #64748b; text-transform: uppercase; font-weight: 700; display: block;">Waktu Deteksi</span>
+              <strong style="font-size: 12px; color: #0f172a;">${localTime.timeFormatted}</strong>
+            </div>
+          </div>
+
+          <div style="font-size: 10px; color: #64748b; margin-bottom: 8px; display: flex; justify-content: space-between;">
+            <span>Satelit: <b>${h.instrument} (${h.satellite})</b></span>
+            <span>Keyakinan: <b>${h.confidence}%</b></span>
+          </div>
+
+          <div style="display: flex; gap: 6px; padding-top: 6px; border-top: 1px solid #e2e8f0;">
+            <a href="${loc.googleMapsUrl}" target="_blank" rel="noopener noreferrer" style="flex: 1; text-align: center; background: #0284c7; color: #ffffff; padding: 6px 8px; border-radius: 6px; text-decoration: none; font-size: 11px; font-weight: 600;">
+              📍 Buka Google Maps
+            </a>
+          </div>
+        </div>
+      `;
+
+      marker.bindPopup(popupHtml, { maxWidth: 300 });
+      marker.addTo(layerGroup);
+    });
+  }, [mapHotspots, liveWeather, language, selectedAOI, isIndo]);
 
   // Clean up map on unmount
   useEffect(() => {
@@ -406,60 +613,269 @@ export const CitizenPortal: React.FC<CitizenPortalProps> = ({
         </div>
       </div>
 
-      {/* 2.5 INTERACTIVE VISUAL RADAR MAP (Peta Titik Api Nyata Ramah Warga) */}
+      {/* 2.5 INTERACTIVE VISUAL RADAR MAP (Peta Titik Api Nyata Ramah Warga & Akurat) */}
       <div className="bg-white dark:bg-[#0c121e] border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-xs">
-        <div className="p-4 border-b border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        {/* Map Header with Basemap & Filter Controls */}
+        <div className="p-4 border-b border-slate-100 dark:border-slate-800 flex flex-col lg:flex-row lg:items-center justify-between gap-3">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-xl bg-orange-100 dark:bg-orange-950/60 text-orange-600 dark:text-orange-400 flex items-center justify-center shrink-0">
               <Flame className="w-4 h-4" />
             </div>
             <div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 flex-wrap">
                 <h3 className="text-sm font-bold text-slate-900 dark:text-white">
-                  {isIndo ? 'Radar Satelit: Lokasi Titik Panas & Asap di Wilayah Anda' : 'Live Satellite Radar: Fire & Hotspot Map'}
+                  {isIndo ? 'Peta Satelit Real-Time: Titik Api, Bara Gambut & Sebaran Asap' : 'Live Satellite Map: Peat Fires, Smoldering & Smoke Drift'}
                 </h3>
                 <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-400 font-bold border border-emerald-200 dark:border-emerald-800">
                   {selectedAOI.name}
                 </span>
+                <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 font-bold">
+                  {mapHotspots.length} {isIndo ? 'Titik Ditampilkan' : 'Points Displayed'}
+                </span>
               </div>
-              <p className="text-[11px] text-slate-500">
+              <p className="text-[11px] text-slate-500 mt-0.5">
                 {isIndo
-                  ? 'Titik merah berkedip menunjukkan koordinat bara gambut aktif terdeteksi sensor NASA Terra/Aqua/VIIRS.'
-                  : 'Glowing red points indicate thermal hot spots and smoldering fires detected by NASA polar satellites.'}
+                  ? 'Citra satelit NASA beresolusi tinggi dilengkapi nama kota, jalan, batas kabupaten, dan estimasi kedalaman gambut.'
+                  : 'High-resolution NASA observations with city names, roads, district boundaries, and peat depth data.'}
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-2 text-xs font-mono text-slate-500 shrink-0">
-            <span className="inline-flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-full bg-rose-500 animate-ping inline-block" />
-              <span className="font-semibold text-slate-800 dark:text-slate-200">{regionalHotspots.length} Titik Api</span>
-            </span>
+          {/* Map Controls: Basemap & Hotspot Filter */}
+          <div className="flex flex-wrap items-center gap-2 text-xs">
+            {/* Basemap Switcher */}
+            <div className="flex items-center bg-slate-100 dark:bg-slate-900 p-0.5 rounded-xl border border-slate-200 dark:border-slate-800">
+              <button
+                onClick={() => setMapBasemap('satellite_labeled')}
+                className={`px-2.5 py-1 rounded-lg text-[11px] font-semibold transition cursor-pointer flex items-center gap-1 ${
+                  mapBasemap === 'satellite_labeled'
+                    ? 'bg-white dark:bg-slate-800 text-sky-600 dark:text-sky-400 shadow-2xs'
+                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                }`}
+                title="Citra Satelit Resolusi Tinggi dengan Nama Kota & Jalan"
+              >
+                <span>🛰️</span>
+                <span>{isIndo ? 'Satelit + Label' : 'Satellite + Places'}</span>
+              </button>
+              <button
+                onClick={() => setMapBasemap('streets')}
+                className={`px-2.5 py-1 rounded-lg text-[11px] font-semibold transition cursor-pointer flex items-center gap-1 ${
+                  mapBasemap === 'streets'
+                    ? 'bg-white dark:bg-slate-800 text-sky-600 dark:text-sky-400 shadow-2xs'
+                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                }`}
+                title="Peta Jalan, Desa, Parit & Sungai OpenStreetMap"
+              >
+                <span>🗺️</span>
+                <span>{isIndo ? 'Jalan & Desa' : 'Streets & Towns'}</span>
+              </button>
+              <button
+                onClick={() => setMapBasemap('dark')}
+                className={`px-2.5 py-1 rounded-lg text-[11px] font-semibold transition cursor-pointer flex items-center gap-1 ${
+                  mapBasemap === 'dark'
+                    ? 'bg-white dark:bg-slate-800 text-sky-600 dark:text-sky-400 shadow-2xs'
+                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                }`}
+                title="Peta Gelap untuk Kontras Titik Panas Maksimal"
+              >
+                <span>🌑</span>
+                <span>{isIndo ? 'Kontras Malam' : 'Dark'}</span>
+              </button>
+            </div>
+
+            {/* Severity Filter */}
+            <div className="flex items-center bg-slate-100 dark:bg-slate-900 p-0.5 rounded-xl border border-slate-200 dark:border-slate-800">
+              <button
+                onClick={() => setHotspotFilter('all')}
+                className={`px-2 py-1 rounded-lg text-[11px] font-semibold transition cursor-pointer ${
+                  hotspotFilter === 'all'
+                    ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-2xs'
+                    : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
+                }`}
+              >
+                {isIndo ? 'Semua' : 'All'}
+              </button>
+              <button
+                onClick={() => setHotspotFilter('severe')}
+                className={`px-2 py-1 rounded-lg text-[11px] font-semibold transition cursor-pointer flex items-center gap-1 ${
+                  hotspotFilter === 'severe'
+                    ? 'bg-rose-600 text-white shadow-2xs'
+                    : 'text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30'
+                }`}
+              >
+                <span>🔴</span>
+                <span>{isIndo ? 'Bara Kritis' : 'Severe'}</span>
+              </button>
+              <button
+                onClick={() => setHotspotFilter('moderate')}
+                className={`px-2 py-1 rounded-lg text-[11px] font-semibold transition cursor-pointer flex items-center gap-1 ${
+                  hotspotFilter === 'moderate'
+                    ? 'bg-amber-600 text-white shadow-2xs'
+                    : 'text-amber-600 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-950/30'
+                }`}
+              >
+                <span>🟠</span>
+                <span>&gt;15 MW</span>
+              </button>
+            </div>
           </div>
+        </div>
+
+        {/* Quick Focus Bar & Wind Telemetry */}
+        <div className="px-4 py-2 bg-slate-50 dark:bg-[#0a0f1d] border-b border-slate-100 dark:border-slate-800 flex flex-wrap items-center justify-between gap-2 text-xs">
+          {/* Quick Focus Jump Chips */}
+          <div className="flex flex-wrap items-center gap-1.5">
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1 mr-1">
+              <Navigation className="w-3 h-3 text-sky-500" />
+              {isIndo ? 'Fokus Wilayah:' : 'Quick Focus:'}
+            </span>
+
+            <button
+              onClick={() => handleFlyTo(selectedAOI.center[0], selectedAOI.center[1], selectedAOI.zoom)}
+              className="px-2.5 py-1 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-sky-50 dark:hover:bg-sky-950/40 text-[11px] font-medium transition cursor-pointer flex items-center gap-1"
+            >
+              <span>🎯</span>
+              <span>{isIndo ? 'Pusat Wilayah' : 'Reset View'}</span>
+            </button>
+
+            {highestHotspot && (
+              <button
+                onClick={() => handleFlyTo(highestHotspot.lat, highestHotspot.lon, 11)}
+                className="px-2.5 py-1 rounded-lg bg-rose-50 dark:bg-rose-950/40 border border-rose-300 dark:border-rose-800 text-rose-700 dark:text-rose-300 hover:bg-rose-100 text-[11px] font-bold transition cursor-pointer flex items-center gap-1"
+              >
+                <span>🔥</span>
+                <span>{isIndo ? `Titik Terpanas (${Math.round(highestHotspot.frp)} MW)` : `Peak Fire (${Math.round(highestHotspot.frp)} MW)`}</span>
+              </button>
+            )}
+
+            {quickChips.map((chip, idx) => (
+              <button
+                key={idx}
+                onClick={() => handleFlyTo(chip.lat, chip.lng, chip.zoom)}
+                className="px-2 py-1 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:border-slate-300 text-[11px] transition cursor-pointer"
+              >
+                {chip.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Live Wind Vector Telemetry */}
+          {liveWeather && (
+            <div className="flex items-center gap-2 text-[11px] text-slate-600 dark:text-slate-400 font-mono">
+              <Compass className="w-3.5 h-3.5 text-sky-500 animate-spin" style={{ animationDuration: '8s' }} />
+              <span>
+                <b>{liveWeather.windSpeedKmH} km/h</b> &bull; Arah {Math.round(liveWeather.windDirectionDeg || 90)}&deg;
+              </span>
+              <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-50 dark:bg-amber-950/50 text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-amber-800">
+                {isIndo ? 'Asap Terbawa Angin' : 'Downwind Plume'}
+              </span>
+            </div>
+          )}
         </div>
 
         {/* The Leaflet Canvas */}
-        <div className="relative w-full h-[320px] sm:h-[380px] bg-slate-950">
+        <div className="relative w-full h-[380px] sm:h-[460px] bg-slate-950">
           <div ref={mapContainerRef} className="w-full h-full z-0" />
 
-          {/* Radar Legend Overlay */}
-          <div className="absolute bottom-3 left-3 z-[400] bg-white/95 dark:bg-[#0c121e]/95 backdrop-blur-md p-2.5 rounded-xl border border-slate-200/80 dark:border-slate-800 shadow-md text-[11px] space-y-1.5 pointer-events-auto max-w-[240px]">
+          {/* Enhanced Radar Legend Overlay */}
+          <div className="absolute bottom-3 left-3 z-[400] bg-white/95 dark:bg-[#0c121e]/95 backdrop-blur-md p-3 rounded-xl border border-slate-200/80 dark:border-slate-800 shadow-md text-[11px] space-y-2 pointer-events-auto max-w-[270px]">
             <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">
-              {isIndo ? 'Keterangan Visual Radar:' : 'Radar Legend:'}
+              {isIndo ? 'Legenda Akurasi Radar Satelit:' : 'Satellite Radar Legend:'}
             </span>
             <div className="flex items-center gap-2">
-              <span className="w-3 h-3 rounded-full bg-rose-500 border border-white shrink-0" />
-              <span className="text-slate-700 dark:text-slate-300 font-medium">{isIndo ? 'Bara Gambut Sangat Panas (>30 MW)' : 'High Heat Smoldering'}</span>
+              <span className="w-3 h-3 rounded-full bg-rose-500 border border-white shadow-xs shrink-0" />
+              <span className="text-slate-700 dark:text-slate-300 font-medium leading-tight">
+                {isIndo ? 'Bara Gambut Bawah Tanah (>40 MW)' : 'Severe Peat Smoldering (>40 MW)'}
+              </span>
             </div>
             <div className="flex items-center gap-2">
               <span className="w-2.5 h-2.5 rounded-full bg-amber-500 border border-white shrink-0" />
-              <span className="text-slate-700 dark:text-slate-300 font-medium">{isIndo ? 'Titik Api Permukaan/Vegetasi' : 'Surface Thermal Hotspot'}</span>
+              <span className="text-slate-700 dark:text-slate-300 font-medium leading-tight">
+                {isIndo ? 'Api Vegetasi / Permukaan (15-40 MW)' : 'Surface Fire (15-40 MW)'}
+              </span>
             </div>
-            <div className="pt-1 text-[10px] text-slate-400 border-t border-slate-100 dark:border-slate-800">
-              {isIndo ? 'Klik titik api pada peta untuk rincian satelit' : 'Click hotspot for satellite metadata'}
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-yellow-400 border border-white shrink-0" />
+              <span className="text-slate-700 dark:text-slate-300 font-medium leading-tight">
+                {isIndo ? 'Titik Hangat Awal (<15 MW)' : 'Warm Thermal Hotspot (<15 MW)'}
+              </span>
+            </div>
+            <div className="flex items-center gap-2 pt-1 border-t border-slate-100 dark:border-slate-800">
+              <span className="w-3 h-2 border-b-2 border-orange-500 border-dashed inline-block" />
+              <span className="text-slate-500 text-[10px]">
+                {isIndo ? 'Kerucut Oranye: Proyeksi Arah Sebaran Asap' : 'Orange Cone: Smoke Drift Projection'}
+              </span>
+            </div>
+            <div className="text-[10px] text-sky-600 dark:text-sky-400 font-semibold">
+              {isIndo ? '💡 Klik sembarang titik api untuk rincian desa & navigasi' : '💡 Click any point for subdistrict & navigation'}
             </div>
           </div>
         </div>
+
+        {/* Selected Hotspot Detailed Inspection Panel */}
+        {selectedHotspot && (
+          <div className="p-4 bg-sky-50/80 dark:bg-sky-950/40 border-t border-sky-200 dark:border-sky-800/80 flex flex-col md:flex-row md:items-center justify-between gap-4 animate-in fade-in duration-150">
+            <div className="flex items-start gap-3">
+              <div className="w-9 h-9 rounded-xl bg-rose-500 text-white flex items-center justify-center shrink-0 shadow-xs">
+                <Flame className="w-5 h-5 animate-pulse" />
+              </div>
+              <div className="space-y-0.5">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="text-xs font-bold text-slate-900 dark:text-white">
+                    {selectedHotspot.loc.regency}
+                  </span>
+                  {selectedHotspot.loc.district && (
+                    <span className="text-xs text-slate-600 dark:text-slate-300">
+                      &bull; Kec. <b>{selectedHotspot.loc.district}</b>
+                    </span>
+                  )}
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-rose-100 dark:bg-rose-900/60 text-rose-700 dark:text-rose-300 font-bold">
+                    {Math.round(selectedHotspot.spot.frp)} MW &bull; {(selectedHotspot.spot.brightness - 273.15).toFixed(1)}&deg;C
+                  </span>
+                </div>
+
+                <p className="text-xs text-sky-900 dark:text-sky-300 font-medium">
+                  {selectedHotspot.loc.landscape} {selectedHotspot.loc.isPeatland && `(${selectedHotspot.loc.peatDepthEstimate})`}
+                </p>
+
+                <div className="flex items-center gap-3 text-[11px] text-slate-500 font-mono pt-0.5">
+                  <span>GPS: {selectedHotspot.spot.lat.toFixed(5)}&deg;, {selectedHotspot.spot.lon.toFixed(5)}&deg;</span>
+                  <span>Waktu: {selectedHotspot.localTime.timeFormatted}</span>
+                  <span>Satelit: {selectedHotspot.spot.instrument}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Action Buttons for Selected Hotspot */}
+            <div className="flex items-center gap-2 shrink-0">
+              <a
+                href={selectedHotspot.loc.googleMapsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-3 py-1.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-xs font-semibold text-sky-600 dark:text-sky-400 transition flex items-center gap-1.5 shadow-2xs"
+              >
+                <ExternalLink className="w-3.5 h-3.5" />
+                <span>{isIndo ? 'Rute Google Maps' : 'Google Maps'}</span>
+              </a>
+
+              <button
+                onClick={() => handleUseHotspotForReport(selectedHotspot.spot, selectedHotspot.loc)}
+                className="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition flex items-center gap-1.5 shadow-2xs cursor-pointer"
+              >
+                <Send className="w-3.5 h-3.5" />
+                <span>{isIndo ? 'Lapor Titik Ini via WhatsApp' : 'Report via WhatsApp'}</span>
+              </button>
+
+              <button
+                onClick={() => setSelectedHotspot(null)}
+                className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition cursor-pointer"
+                title="Tutup"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* 3. SECTION 2 & 3 GRID: Panduan Kesehatan Asap & Prospek Cuaca ("Kapan Hujan Datang?") */}
@@ -648,7 +1064,7 @@ export const CitizenPortal: React.FC<CitizenPortalProps> = ({
       </div>
 
       {/* 4. SECTION 4: Jalur Cepat Lapor Bara Api / Asap via WhatsApp (1-Klik) */}
-      <div className="bg-white dark:bg-[#0c121e] border border-slate-200 dark:border-slate-800 rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
+      <div id="citizen-whatsapp-report" className="bg-white dark:bg-[#0c121e] border border-slate-200 dark:border-slate-800 rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-xl bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
