@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useEffect, useCallback, Suspense, lazy } from 'react';
-import { Navbar, NavTab, ThemeMode } from './components/Navbar';
+import { Navbar, NavTab, ThemeMode, AppMode } from './components/Navbar';
+import { CitizenPortal } from './components/CitizenPortal';
 import { DashboardControlBar, OverviewViewMode } from './components/DashboardControlBar';
 import { BurningCalendar } from './components/BurningCalendar';
 import { MapViewer } from './components/MapViewer';
@@ -196,6 +197,32 @@ export function App() {
     });
   };
 
+  // App Mode: 'citizen' (Mode Warga) or 'science' (Mode Riset / Satgas)
+  const [appMode, setAppMode] = useState<AppMode>(() => {
+    try {
+      if (typeof window !== 'undefined') {
+        const params = new URLSearchParams(window.location.search);
+        const modeParam = params.get('mode') as AppMode;
+        if (modeParam === 'citizen' || modeParam === 'science') return modeParam;
+        const saved = localStorage.getItem('wanareksa_app_mode') as AppMode;
+        if (saved === 'citizen' || saved === 'science') return saved;
+      }
+    } catch (e) {}
+    return 'citizen';
+  });
+
+  const handleToggleAppMode = (newMode: AppMode) => {
+    setAppMode(newMode);
+    try {
+      localStorage.setItem('wanareksa_app_mode', newMode);
+      if (typeof window !== 'undefined') {
+        const url = new URL(window.location.href);
+        url.searchParams.set('mode', newMode);
+        window.history.replaceState({}, '', url.toString());
+      }
+    } catch (e) {}
+  };
+
   const [activeTab, setActiveTab] = useState<NavTab>(() => {
     try {
       if (typeof window !== 'undefined') {
@@ -223,17 +250,18 @@ export function App() {
     return PRESET_AOIS[0];
   });
 
-  // Synchronize URL query params with active tab & selected AOI without reload
+  // Synchronize URL query params with active tab & selected AOI & appMode without reload
   useEffect(() => {
     try {
       if (typeof window !== 'undefined') {
         const url = new URL(window.location.href);
+        url.searchParams.set('mode', appMode);
         url.searchParams.set('tab', activeTab);
         url.searchParams.set('aoi', selectedAOI.id);
         window.history.replaceState({}, '', url.toString());
       }
     } catch (e) {}
-  }, [activeTab, selectedAOI.id]);
+  }, [appMode, activeTab, selectedAOI.id]);
 
   const [rawMode, setRawMode] = useState<boolean>(false);
   const [selectedKey, setSelectedKey] = useState<string | null>('2015-38');
@@ -372,6 +400,8 @@ export function App() {
         setActiveTab('data-hub');
       } else if (e.key === '5') {
         setActiveTab('team');
+      } else if (e.key === 'w' || e.key === 'W') {
+        handleToggleAppMode(appMode === 'citizen' ? 'science' : 'citizen');
       } else if (e.key === 'l' || e.key === 'L') {
         handleToggleLiveSync();
       } else if (e.key === 't' || e.key === 'T') {
@@ -385,7 +415,7 @@ export function App() {
 
     window.addEventListener('keydown', handleGlobalKeyDown);
     return () => window.removeEventListener('keydown', handleGlobalKeyDown);
-  }, [handleToggleLiveSync, toggleTheme]);
+  }, [handleToggleLiveSync, toggleTheme, appMode]);
 
   const displayedHotspots = useMemo(() => {
     if (isLiveSync && liveResult?.hotspots && liveResult.hotspots.length > 0) return liveResult.hotspots;
@@ -441,6 +471,8 @@ export function App() {
         onToggleTheme={toggleTheme}
         activeTab={activeTab}
         onSelectTab={setActiveTab}
+        appMode={appMode}
+        onToggleAppMode={handleToggleAppMode}
         onOpenTeam={() => setActiveTab('team')}
         onOpenTour={() => setIsTourModalOpen(true)}
         isLiveSync={isLiveSync}
@@ -451,11 +483,26 @@ export function App() {
 
       {/* Main Canvas */}
       <main className="flex-1 w-full px-4 sm:px-6 lg:px-8 py-6">
-        <TabErrorBoundary>
-
-        {/* Tab 0: Mission Story & Executive Overview */}
-        {activeTab === 'story' && (
-          <Suspense fallback={<TabLoadingFallback label={language === 'id' ? 'Memuat Misi & Ikhtisar Eksekutif...' : 'Loading Mission Story...'} />}>
+        {/* DUAL MODE: MODE WARGA (CITIZEN) vs MODE RISET / SATGAS (SCIENCE) */}
+        {appMode === 'citizen' ? (
+          <CitizenPortal
+            language={language}
+            selectedAOI={selectedAOI}
+            onSelectAOI={(aoi) => {
+              setSelectedAOI(aoi);
+              setSelectedKey(null);
+              setSelectedWeekData(null);
+            }}
+            hotspots={displayedHotspots}
+            isLiveSync={isLiveSync}
+            onSwitchToScience={() => handleToggleAppMode('science')}
+            onOpenBriefing={() => setIsBriefingModalOpen(true)}
+          />
+        ) : (
+          <>
+            {/* Tab 0: Mission Story & Executive Overview */}
+            {activeTab === 'story' && (
+              <Suspense fallback={<TabLoadingFallback label={language === 'id' ? 'Memuat Misi & Ikhtisar Eksekutif...' : 'Loading Mission Story...'} />}>
             <div className="animate-in fade-in duration-200">
               <LandingStory
                 language={language}
@@ -806,15 +853,16 @@ export function App() {
           </Suspense>
         )}
 
-        {/* Tab 5: Team Profile & Scientific Dossier */}
-        {activeTab === 'team' && (
-          <Suspense fallback={<TabLoadingFallback label={language === 'id' ? 'Memuat Profil Tim & Berkas Ilmiah...' : 'Loading Team Dossier...'} />}>
-            <div className="animate-in fade-in duration-200">
-              <TeamPage language={language} />
-            </div>
-          </Suspense>
+            {/* Tab 5: Team Profile & Scientific Dossier */}
+            {activeTab === 'team' && (
+              <Suspense fallback={<TabLoadingFallback label={language === 'id' ? 'Memuat Profil Tim & Berkas Ilmiah...' : 'Loading Team Dossier...'} />}>
+                <div className="animate-in fade-in duration-200">
+                  <TeamPage language={language} />
+                </div>
+              </Suspense>
+            )}
+          </>
         )}
-        </TabErrorBoundary>
       </main>
 
       {/* Immersive Orbital & NASA Terra Satellite Footer */}

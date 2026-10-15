@@ -17,6 +17,10 @@ export const translations = {
     navData: 'Data & Satellite',
     navTeam: 'Creator Dossier',
     liveFirms: 'NASA FIRMS Live',
+    modeCitizen: 'Citizen Mode',
+    modeScience: 'Science & Satgas',
+    modeCitizenDesc: 'Plain-language fire alerts, smoke health guidance, and community action',
+    modeScienceDesc: '26-year satellite harmonization, physics engine, and geospatial intelligence',
     
     // Quick Tools / Dashboard Control Bar
     mainIntelCalendar: 'Intel & Calendar',
@@ -358,6 +362,10 @@ export const translations = {
     navData: 'Data & Satelit',
     navTeam: 'Profil Kreator',
     liveFirms: 'NASA FIRMS Live',
+    modeCitizen: 'Mode Warga',
+    modeScience: 'Mode Riset / Satgas',
+    modeCitizenDesc: 'Status bahaya gambut, panduan kesehatan asap, dan aksi warga bahasa awam',
+    modeScienceDesc: 'Harmonisasi satelit 26 tahun, lab fisika, dan intelijen geospasial NASA',
     
     // Quick Tools / Dashboard Control Bar
     mainIntelCalendar: 'Kalender & Peta Utama',

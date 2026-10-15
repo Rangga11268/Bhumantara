@@ -92,10 +92,8 @@ export const Logo: React.FC<LogoProps> = ({
 
         {showNasaBadge && (
           <>
-            {/* Minimal Cross Divider */}
-            <span className={`text-[#86868b] dark:text-[#6b7280] font-medium opacity-60 select-none shrink-0 ${cross}`}>
-              ×
-            </span>
+            {/* Sleek Aerospace Vertical Divider */}
+            <span className="w-px h-5 sm:h-6 bg-slate-300 dark:bg-slate-700 mx-0.5 select-none shrink-0" />
 
             {/* Official NASA Insignia */}
             <div className={`flex items-center justify-center shrink-0 ${nasa} rounded-full overflow-hidden shadow-2xs`}>
@@ -111,12 +109,12 @@ export const Logo: React.FC<LogoProps> = ({
       </div>
 
       {/* Brand Typography */}
-      <div className="flex flex-col justify-center min-w-0 leading-tight shrink truncate">
-        <div className={`tracking-tight text-[#1d1d1f] dark:text-white font-bold flex items-center gap-1.5 truncate ${title}`}>
-          <span className="truncate">Wanareksa</span>
+      <div className="flex flex-col justify-center min-w-0 leading-tight shrink truncate ml-0.5">
+        <div className={`tracking-tight text-slate-900 dark:text-white font-black flex items-center gap-1.5 truncate ${title}`}>
+          <span className="truncate">WANAREKSA</span>
         </div>
         {showSubtitle && (
-          <span className={`text-[#86868b] dark:text-[#9ca3af] tracking-normal font-medium hidden sm:block truncate ${sub}`}>
+          <span className={`text-slate-500 dark:text-slate-400 tracking-wider font-mono text-[9px] sm:text-[10px] font-medium hidden sm:block truncate uppercase`}>
             NASA Space Apps 2026
           </span>
         )}
