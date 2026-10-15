@@ -49,14 +49,14 @@ export const JudgesEvaluationGuide: React.FC<JudgesEvaluationGuideProps> = ({
       num: 1,
       id: 'paradox',
       title: language === 'id' ? '1. Paradoks Sensor (Raw vs Harmonisasi)' : '1. Sensor Paradox (Raw vs Harmonized)',
-      badge: rawMode ? (language === 'id' ? 'Mode Mentah Aktif' : 'Raw Mode Active') : (language === 'id' ? 'Terkalibrasi' : 'Harmonized'),
-      badgeColor: rawMode ? 'bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300' : 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300',
+      badge: rawMode ? (language === 'id' ? 'Mode Mentah' : 'Raw Mode') : (language === 'id' ? 'Terkalibrasi' : 'Harmonized'),
+      badgeColor: rawMode ? 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/30' : 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30',
       desc: language === 'id'
         ? 'Perhatikan lonjakan semu 300% pada data mentah pasca-2012 akibat masuknya VIIRS (375m). Aktifkan saklar kalibrasi untuk melihat data sebenarnya.'
         : 'Observe the artificial 300% surge in raw post-2012 data when VIIRS (375m) launched. Toggle the calibration switch to see equalized truth.',
       actionLabel: rawMode
-        ? (language === 'id' ? 'Terapkan Kalibrasi Fisika (Harmonisasi)' : 'Apply Physics Calibration (Harmonize)')
-        : (language === 'id' ? 'Lihat Data Mentah Tidak Akurat (Raw)' : 'View Uncorrected Raw Surge (Raw)'),
+        ? (language === 'id' ? 'Terapkan Kalibrasi Fisika' : 'Apply Physics Calibration')
+        : (language === 'id' ? 'Lihat Data Mentah (Raw)' : 'View Uncorrected Raw'),
       onAction: () => setRawMode((prev) => !prev),
       secondaryAction: () => {
         const kalteng = PRESET_AOIS.find((a) => a.id === 'kalteng') || PRESET_AOIS[1];
@@ -68,8 +68,8 @@ export const JudgesEvaluationGuide: React.FC<JudgesEvaluationGuideProps> = ({
       num: 2,
       id: 'scenarios',
       title: language === 'id' ? '2. Simulasi 3 Skenario Karhutla Nyata' : '2. Simulate 3 Historic Fire Crises',
-      badge: activeScenario ? (language === 'id' ? 'Kasus Aktif' : 'Scenario Active') : (language === 'id' ? 'Pilih Kasus' : 'Select Case'),
-      badgeColor: 'bg-blue-100 text-blue-800 dark:bg-blue-950/60 dark:text-blue-300',
+      badge: activeScenario ? (language === 'id' ? 'Kasus Aktif' : 'Active Case') : (language === 'id' ? 'Pilih Kasus' : 'Select Case'),
+      badgeColor: 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700',
       desc: language === 'id'
         ? 'Bandingkan krisis asap El Niño 2015, anomali IOD+ 2019, dan efektivitas restorasi sekat kanal BRGM (2022–2026) secara instan.'
         : 'Instantly benchmark the 2015 El Niño smoke crisis, 2019 IOD+ anomaly, and 2022–2026 BRGM canal-blocking restoration impact.',
@@ -83,7 +83,7 @@ export const JudgesEvaluationGuide: React.FC<JudgesEvaluationGuideProps> = ({
       id: 'lab',
       title: language === 'id' ? '3. Uji Rumus Fisika & Simulasi Monte Carlo' : '3. Test Physics Engine & Monte Carlo Lab',
       badge: language === 'id' ? 'Lab Ilmiah' : 'Science Lab',
-      badgeColor: 'bg-purple-100 text-purple-800 dark:bg-purple-950/60 dark:text-purple-300',
+      badgeColor: 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700',
       desc: language === 'id'
         ? 'Jelajahi kalibrasi energi Stefan-Boltzmann, kurva Muka Air Tanah Gambut (TMAG < -40 cm), dan simulasi ketidakpastian 500 iterasi Monte Carlo.'
         : 'Explore Stefan-Boltzmann thermal energy models, BRGM Peat Water Table curves (TMAG < -40 cm), and 500-run Monte Carlo uncertainty simulations.',
@@ -97,7 +97,7 @@ export const JudgesEvaluationGuide: React.FC<JudgesEvaluationGuideProps> = ({
       id: 'mitigation',
       title: language === 'id' ? '4. Disposisi WhatsApp & Ekspor GIS (QGIS)' : '4. WhatsApp SitRep & GeoJSON GIS Export',
       badge: language === 'id' ? 'Aksi Nyata' : 'Field Action',
-      badgeColor: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300',
+      badgeColor: 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700',
       desc: language === 'id'
         ? 'Kirim format pesan tanggap darurat Manggala Agni via WhatsApp, salin koordinat GPS, dan unduh layer GeoJSON poligon 5.5 km (RFC 7946).'
         : 'Generate instant WhatsApp field sitreps for Manggala Agni brigades, copy GPS coordinates, and export RFC 7946 GeoJSON polygons for QGIS/ArcGIS.',
@@ -109,24 +109,24 @@ export const JudgesEvaluationGuide: React.FC<JudgesEvaluationGuideProps> = ({
   ];
 
   return (
-    <div className="bg-gradient-to-r from-blue-900/10 via-emerald-900/5 to-transparent dark:from-blue-950/40 dark:via-emerald-950/20 dark:to-transparent border border-blue-200/80 dark:border-blue-900/50 rounded-2xl p-4 sm:p-5 shadow-xs transition-all">
+    <div className="bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-slate-800 rounded-2xl p-4 sm:p-5 shadow-xs transition-all">
       
       {/* Header Bar */}
       <div className="flex items-center justify-between gap-3">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-xl bg-blue-600 text-white flex items-center justify-center shrink-0 shadow-xs">
+          <div className="w-8 h-8 rounded-xl bg-sky-600 text-white flex items-center justify-center shrink-0 shadow-xs">
             <Compass className="w-4 h-4" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h2 className="text-sm sm:text-base font-bold text-[#1d1d1f] dark:text-white tracking-tight">
+              <h2 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white tracking-tight">
                 {language === 'id' ? 'Panduan Cepat & Alur Eksplorasi Interaktif' : 'Quick-Start Interactive Exploration Guide'}
               </h2>
-              <span className="hidden sm:inline-block px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-600 text-white">
+              <span className="hidden sm:inline-block px-2 py-0.5 rounded-full text-[10px] font-bold bg-sky-600 text-white">
                 {language === 'id' ? 'Panduan Cepat' : 'Quick Guide'}
               </span>
             </div>
-            <p className="text-xs text-[#6e6e73] dark:text-[#9ca3af] mt-0.5">
+            <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">
               {language === 'id'
                 ? 'Jelajahi inovasi sains, peta satelit multi-sensor, dan sistem mitigasi karhutla Wanareksa melalui 4 alur langkah berikut:'
                 : "Explore Wanareksa's multi-sensor science, satellite intelligence, and field mitigation across 4 guided steps:"}
@@ -136,7 +136,7 @@ export const JudgesEvaluationGuide: React.FC<JudgesEvaluationGuideProps> = ({
 
         <button
           onClick={() => setIsCollapsed((prev) => !prev)}
-          className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-medium text-[#6e6e73] dark:text-[#9ca3af] hover:text-[#1d1d1f] dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5 transition cursor-pointer shrink-0"
+          className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer shrink-0"
           title={isCollapsed ? (language === 'id' ? 'Tampilkan Panduan' : 'Expand Guide') : (language === 'id' ? 'Sembunyikan Panduan' : 'Collapse Guide')}
         >
           <span className="hidden sm:inline">{isCollapsed ? (language === 'id' ? 'Buka Panduan' : 'Expand') : (language === 'id' ? 'Tutup' : 'Collapse')}</span>
@@ -146,27 +146,27 @@ export const JudgesEvaluationGuide: React.FC<JudgesEvaluationGuideProps> = ({
 
       {/* Expanded Roadmap Grid */}
       {!isCollapsed && (
-        <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-3 border-t border-blue-200/60 dark:border-blue-900/40">
+        <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-3 border-t border-slate-200 dark:border-slate-800">
           {steps.map((step) => (
             <div
               key={step.id}
-              className={`p-3.5 rounded-xl border transition-all flex flex-col justify-between space-y-3 ${
+              className={`p-3.5 rounded-xl border transition-all flex flex-col justify-between space-y-3 cursor-pointer ${
                 activeStep === step.num
-                  ? 'bg-white dark:bg-[#111827] border-blue-500 dark:border-blue-400 shadow-md ring-1 ring-blue-500/20'
-                  : 'bg-white/80 dark:bg-[#111827]/80 border-[#e5e5e7] dark:border-[#1f2937] hover:border-blue-300 dark:hover:border-blue-800'
+                  ? 'bg-slate-50 dark:bg-slate-900/90 border-sky-500 dark:border-sky-400 shadow-sm ring-1 ring-sky-500/20'
+                  : 'bg-white dark:bg-[#0f172a] border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
               }`}
               onClick={() => setActiveStep(step.num)}
             >
               <div>
                 <div className="flex items-center justify-between gap-2 mb-1.5">
-                  <span className="font-bold text-xs text-[#1d1d1f] dark:text-white truncate">
+                  <span className="font-bold text-xs text-slate-900 dark:text-white truncate">
                     {step.title}
                   </span>
-                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full shrink-0 ${step.badgeColor}`}>
+                  <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-md border shrink-0 ${step.badgeColor}`}>
                     {step.badge}
                   </span>
                 </div>
-                <p className="text-[11px] text-[#6e6e73] dark:text-[#9ca3af] leading-relaxed line-clamp-3">
+                <p className="text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed line-clamp-3">
                   {step.desc}
                 </p>
               </div>
@@ -178,7 +178,7 @@ export const JudgesEvaluationGuide: React.FC<JudgesEvaluationGuideProps> = ({
                     e.stopPropagation();
                     step.onAction();
                   }}
-                  className="w-full py-1.5 px-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-semibold transition-all shadow-xs flex items-center justify-center gap-1.5 cursor-pointer min-h-[34px]"
+                  className="w-full py-1.5 px-2.5 bg-sky-600 hover:bg-sky-500 text-white rounded-lg text-xs font-semibold transition-all shadow-xs flex items-center justify-center gap-1.5 cursor-pointer min-h-[34px]"
                 >
                   <span>{step.actionLabel}</span>
                   <ArrowRight className="w-3 h-3 shrink-0" />
@@ -190,7 +190,7 @@ export const JudgesEvaluationGuide: React.FC<JudgesEvaluationGuideProps> = ({
                       e.stopPropagation();
                       step.secondaryAction();
                     }}
-                    className="w-full py-1 px-2 border border-[#e5e5e7] dark:border-[#374151] hover:bg-black/5 dark:hover:bg-white/5 text-[#6e6e73] dark:text-[#9ca3af] hover:text-[#1d1d1f] dark:hover:text-white rounded-lg text-[11px] font-medium transition cursor-pointer min-h-[28px] text-center"
+                    className="w-full py-1 px-2 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-lg text-[11px] font-medium transition cursor-pointer min-h-[28px] text-center"
                   >
                     {step.secondaryLabel}
                   </button>
