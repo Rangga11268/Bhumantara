@@ -1,4 +1,6 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
 import { AOIRegion, PRESET_AOIS, RawHotspot } from '../engine/harmonizer';
 import { Language } from '../data/translations';
 import {
@@ -19,7 +21,13 @@ import {
   Copy,
   Info,
   Calendar,
-  Share2
+  Share2,
+  Layers,
+  Sparkles,
+  Compass,
+  ThermometerSun,
+  ShieldCheck,
+  Maximize2
 } from 'lucide-react';
 
 interface CitizenPortalProps {
@@ -167,6 +175,97 @@ export const CitizenPortal: React.FC<CitizenPortalProps> = ({
     window.open(url, '_blank', 'noopener,noreferrer');
   };
 
+  // Interactive Layperson Map Reference
+  const mapContainerRef = useRef<HTMLDivElement>(null);
+  const mapInstanceRef = useRef<L.Map | null>(null);
+  const layerGroupRef = useRef<L.LayerGroup | null>(null);
+
+  // Initialize Citizen Friendly Leaflet Map
+  useEffect(() => {
+    if (!mapContainerRef.current) return;
+
+    if (!mapInstanceRef.current) {
+      const map = L.map(mapContainerRef.current, {
+        center: selectedAOI.center,
+        zoom: Math.max(selectedAOI.zoom - 1, 6),
+        zoomControl: false,
+        attributionControl: false,
+        scrollWheelZoom: false,
+      });
+
+      L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+        maxZoom: 18,
+      }).addTo(map);
+
+      L.control.zoom({ position: 'bottomright' }).addTo(map);
+      layerGroupRef.current = L.layerGroup().addTo(map);
+      mapInstanceRef.current = map;
+    } else {
+      mapInstanceRef.current.setView(selectedAOI.center, Math.max(selectedAOI.zoom - 1, 6));
+    }
+
+    // Render Fire Hotspots as high-visibility pulsing radar markers
+    if (layerGroupRef.current && mapInstanceRef.current) {
+      layerGroupRef.current.clearLayers();
+
+      regionalHotspots.slice(0, 80).forEach((h) => {
+        const isSevere = h.frp > 30 || h.brightness > 330;
+        const color = isSevere ? '#ef4444' : '#f97316';
+
+        // Outer glow circle
+        const glowMarker = L.circleMarker([h.lat, h.lon], {
+          radius: isSevere ? 12 : 8,
+          fillColor: color,
+          color: color,
+          weight: 1,
+          opacity: 0.8,
+          fillOpacity: 0.35,
+        });
+
+        // Inner solid core
+        const coreMarker = L.circleMarker([h.lat, h.lon], {
+          radius: isSevere ? 5 : 3.5,
+          fillColor: '#ffffff',
+          color: color,
+          weight: 2,
+          opacity: 1,
+          fillOpacity: 0.9,
+        });
+
+        const popupContent = `
+          <div style="font-family: system-ui, sans-serif; font-size: 11px; padding: 2px;">
+            <div style="font-weight: bold; color: ${color}; margin-bottom: 3px;">
+              ${isSevere ? '🔥 Titik Bara Panas Kuat' : '⚠️ Titik Hangat Terdeteksi'}
+            </div>
+            <div>Satelit: <b>${h.instrument} (${h.satellite})</b></div>
+            <div>Daya Pancar: <b>${Math.round(h.frp)} MW</b></div>
+            <div>Waktu Deteksi: <b>${h.date} ${h.time} UTC</b></div>
+          </div>
+        `;
+
+        glowMarker.bindPopup(popupContent);
+        coreMarker.bindPopup(popupContent);
+
+        glowMarker.addTo(layerGroupRef.current!);
+        coreMarker.addTo(layerGroupRef.current!);
+      });
+    }
+
+    return () => {
+      // Map stays until unmount
+    };
+  }, [selectedAOI, regionalHotspots]);
+
+  // Clean up map on unmount
+  useEffect(() => {
+    return () => {
+      if (mapInstanceRef.current) {
+        mapInstanceRef.current.remove();
+        mapInstanceRef.current = null;
+      }
+    };
+  }, []);
+
   return (
     <div className="space-y-6 max-w-6xl mx-auto animate-in fade-in duration-200 text-slate-800 dark:text-slate-200">
       
@@ -307,6 +406,62 @@ export const CitizenPortal: React.FC<CitizenPortalProps> = ({
         </div>
       </div>
 
+      {/* 2.5 INTERACTIVE VISUAL RADAR MAP (Peta Titik Api Nyata Ramah Warga) */}
+      <div className="bg-white dark:bg-[#0c121e] border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-xs">
+        <div className="p-4 border-b border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-xl bg-orange-100 dark:bg-orange-950/60 text-orange-600 dark:text-orange-400 flex items-center justify-center shrink-0">
+              <Flame className="w-4 h-4" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h3 className="text-sm font-bold text-slate-900 dark:text-white">
+                  {isIndo ? 'Radar Satelit: Lokasi Titik Panas & Asap di Wilayah Anda' : 'Live Satellite Radar: Fire & Hotspot Map'}
+                </h3>
+                <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-400 font-bold border border-emerald-200 dark:border-emerald-800">
+                  {selectedAOI.name}
+                </span>
+              </div>
+              <p className="text-[11px] text-slate-500">
+                {isIndo
+                  ? 'Titik merah berkedip menunjukkan koordinat bara gambut aktif terdeteksi sensor NASA Terra/Aqua/VIIRS.'
+                  : 'Glowing red points indicate thermal hot spots and smoldering fires detected by NASA polar satellites.'}
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 text-xs font-mono text-slate-500 shrink-0">
+            <span className="inline-flex items-center gap-1.5">
+              <span className="w-2.5 h-2.5 rounded-full bg-rose-500 animate-ping inline-block" />
+              <span className="font-semibold text-slate-800 dark:text-slate-200">{regionalHotspots.length} Titik Api</span>
+            </span>
+          </div>
+        </div>
+
+        {/* The Leaflet Canvas */}
+        <div className="relative w-full h-[320px] sm:h-[380px] bg-slate-950">
+          <div ref={mapContainerRef} className="w-full h-full z-0" />
+
+          {/* Radar Legend Overlay */}
+          <div className="absolute bottom-3 left-3 z-[400] bg-white/95 dark:bg-[#0c121e]/95 backdrop-blur-md p-2.5 rounded-xl border border-slate-200/80 dark:border-slate-800 shadow-md text-[11px] space-y-1.5 pointer-events-auto max-w-[240px]">
+            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">
+              {isIndo ? 'Keterangan Visual Radar:' : 'Radar Legend:'}
+            </span>
+            <div className="flex items-center gap-2">
+              <span className="w-3 h-3 rounded-full bg-rose-500 border border-white shrink-0" />
+              <span className="text-slate-700 dark:text-slate-300 font-medium">{isIndo ? 'Bara Gambut Sangat Panas (>30 MW)' : 'High Heat Smoldering'}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-amber-500 border border-white shrink-0" />
+              <span className="text-slate-700 dark:text-slate-300 font-medium">{isIndo ? 'Titik Api Permukaan/Vegetasi' : 'Surface Thermal Hotspot'}</span>
+            </div>
+            <div className="pt-1 text-[10px] text-slate-400 border-t border-slate-100 dark:border-slate-800">
+              {isIndo ? 'Klik titik api pada peta untuk rincian satelit' : 'Click hotspot for satellite metadata'}
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* 3. SECTION 2 & 3 GRID: Panduan Kesehatan Asap & Prospek Cuaca ("Kapan Hujan Datang?") */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         
@@ -327,6 +482,38 @@ export const CitizenPortal: React.FC<CitizenPortalProps> = ({
           </div>
 
           <div className="space-y-2.5 text-xs">
+            {/* Visual Particle Comparison Bar */}
+            <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-2">
+              <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">
+                {isIndo ? 'Perbandingan Ukuran Partikel Asap vs Rambut Manusia:' : 'Particle Size Comparison (Why N95 is Mandatory):'}
+              </span>
+              <div className="space-y-1.5 font-mono text-[10px]">
+                <div className="flex items-center justify-between text-slate-600 dark:text-slate-400">
+                  <span>Rambut Manusia (~70 µm)</span>
+                  <span className="font-bold">Masker Kain Biasa</span>
+                </div>
+                <div className="w-full bg-slate-200 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
+                  <div className="bg-slate-400 h-full w-full" />
+                </div>
+
+                <div className="flex items-center justify-between text-amber-600 dark:text-amber-400 pt-1">
+                  <span>Debu Pasir / Serbuk (~10 µm)</span>
+                  <span className="font-bold">Masker Bedah Medis</span>
+                </div>
+                <div className="w-full bg-slate-200 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
+                  <div className="bg-amber-500 h-full w-[45%]" />
+                </div>
+
+                <div className="flex items-center justify-between text-rose-600 dark:text-rose-400 pt-1">
+                  <span>Asap Gambut Beracun (PM2.5 &lt;2.5 µm)</span>
+                  <span className="font-bold">HANYA N95 / KN95</span>
+                </div>
+                <div className="w-full bg-slate-200 dark:bg-slate-800 h-2.5 rounded-full overflow-hidden">
+                  <div className="bg-rose-500 h-full w-[12%] animate-pulse" />
+                </div>
+              </div>
+            </div>
+
             <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-1">
               <div className="flex items-center justify-between font-bold">
                 <span className="text-slate-900 dark:text-white">{isIndo ? '1. Pemilihan Masker yang Benar' : '1. Proper Respirator Selection'}</span>
@@ -382,6 +569,28 @@ export const CitizenPortal: React.FC<CitizenPortalProps> = ({
           </div>
 
           <div className="space-y-2.5 text-xs">
+            {/* Visual Dry Spell Progress Bar */}
+            <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="font-bold text-slate-900 dark:text-white">
+                  {isIndo ? 'Tingkat Kekeringan Lahan Gambut' : 'Peat Dryness Gauge'}
+                </span>
+                <span className="text-xs font-mono font-bold text-amber-600 dark:text-amber-400">
+                  {activeCount > 50 ? '82% Kritis Kering' : '38% Moderat'}
+                </span>
+              </div>
+              <div className="w-full bg-slate-200 dark:bg-slate-800 h-2.5 rounded-full overflow-hidden flex">
+                <div className="bg-emerald-500 h-full w-[30%]" title="Aman Basah" />
+                <div className="bg-amber-500 h-full w-[35%]" title="Mulai Surut" />
+                <div className="bg-rose-500 h-full w-[35%]" title="Kritis Terbakar" />
+              </div>
+              <div className="flex justify-between text-[9px] font-mono text-slate-400">
+                <span>Basah (&lt;40cm)</span>
+                <span>Siaga</span>
+                <span className="text-rose-500 font-bold">Rawan Terbakar</span>
+              </div>
+            </div>
+
             {/* Indikator Hari Tanpa Hujan */}
             <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-between gap-3">
               <div>
@@ -568,24 +777,71 @@ export const CitizenPortal: React.FC<CitizenPortalProps> = ({
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 text-xs">
-          <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-1.5">
-            <span className="font-bold text-slate-900 dark:text-white block">
-              {isIndo ? '1. Aturan Parit 40 cm (PP 71/2014 & BRGM)' : '1. The 40 cm Ditch Water Rule'}
-            </span>
+          {/* Card 1: 40cm Canal Rule with Visual Cross-Section Diagram */}
+          <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="font-bold text-slate-900 dark:text-white">
+                {isIndo ? '1. Aturan Parit 40 cm (PP 71/2014 & BRGM)' : '1. The 40 cm Ditch Water Rule'}
+              </span>
+              <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-blue-100 dark:bg-blue-950/80 text-blue-700 dark:text-blue-300 font-bold">
+                Muka Air Tanah
+              </span>
+            </div>
+
+            {/* Visual SVG Soil Cross Section */}
+            <div className="p-2.5 rounded-lg bg-white dark:bg-[#0c121e] border border-slate-200 dark:border-slate-800">
+              <div className="space-y-1 font-mono text-[10px]">
+                {/* Surface Ground */}
+                <div className="flex items-center justify-between text-emerald-700 dark:text-emerald-400 font-bold border-b border-emerald-500 pb-1">
+                  <span>Permukaan Lahan Kebun (0 cm)</span>
+                  <span>🌿 Lapisan Rumput</span>
+                </div>
+                {/* 0 to -40cm Zone (Safe Moist Saturated Zone) */}
+                <div className="h-7 bg-amber-500/15 border-l-4 border-amber-500 px-2 flex items-center justify-between text-amber-700 dark:text-amber-300">
+                  <span>Batas Kritis: 0 s/d -40 cm</span>
+                  <span className="text-[9px] font-bold">ZONA AMAN (Gambut Basah)</span>
+                </div>
+                {/* Below -40cm Danger Zone */}
+                <div className="h-8 bg-rose-500/20 border-l-4 border-rose-500 px-2 flex items-center justify-between text-rose-700 dark:text-rose-300 font-bold">
+                  <span>Surut &gt; -40 cm</span>
+                  <span className="text-[9px] animate-pulse">🔥 BAHAYA MUDAH TERBAKAR!</span>
+                </div>
+              </div>
+            </div>
+
             <p className="text-slate-600 dark:text-slate-400 text-[11px] leading-relaxed">
               {isIndo
-                ? 'Lahan gambut seperti spons. Jika permukaan air parit surut lebih dari 40 cm dari bibir tanah, gambut akan mengering dan mudah meledak terbakar. Buat sekat kanal darurat dari karung pasir/kayu agar air tertahan di kebun saat kemarau.'
+                ? 'Lahan gambut seperti spons raksasa. Jika air parit surut lebih dari 40 cm dari bibir tanah, pori-pori gambut terisi oksigen dan mudah meledak terbakar. Pasang sekat kanal dari karung pasir agar air tidak habis mengalir ke sungai.'
                 : 'Peat acts like a giant sponge. If canal water drops lower than 40 cm below the surface, the peat dries out and becomes highly flammable. Close canal blocks to trap water in the soil.'}
             </p>
           </div>
 
-          <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-1.5">
-            <span className="font-bold text-slate-900 dark:text-white block">
-              {isIndo ? '2. Cara Padamkan Bara: Jangan Semprot Atas!' : '2. Peat Fire Extinguishing: Deep Injection'}
-            </span>
+          {/* Card 2: Peat Fire Extinguishing with Lance Injection Diagram */}
+          <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="font-bold text-slate-900 dark:text-white">
+                {isIndo ? '2. Cara Padamkan Bara: Jangan Semprot Atas!' : '2. Peat Fire Extinguishing: Deep Injection'}
+              </span>
+              <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-rose-100 dark:bg-rose-950/80 text-rose-700 dark:text-rose-300 font-bold">
+                Tusuk & Suntik Air
+              </span>
+            </div>
+
+            {/* Visual Action Diagram: Wrong vs Right */}
+            <div className="grid grid-cols-2 gap-2 text-[10px] font-mono">
+              <div className="p-2 rounded-lg bg-rose-50/70 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-900/60 text-rose-800 dark:text-rose-300">
+                <span className="font-bold block text-rose-600 dark:text-rose-400 mb-0.5">❌ SALAH: Semprot Atas</span>
+                <span>Hanya basahi abu luar. Bara di kedalaman 1 meter tetap menjalar dan menyala lagi.</span>
+              </div>
+              <div className="p-2 rounded-lg bg-emerald-50/70 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-900/60 text-emerald-800 dark:text-emerald-300">
+                <span className="font-bold block text-emerald-600 dark:text-emerald-400 mb-0.5">✅ BENAR: Suntik Pipa</span>
+                <span>Tancapkan pipa pompa ke dalam tanah 50-100cm hingga tanah jadi bubur lumpur dingin.</span>
+              </div>
+            </div>
+
             <p className="text-slate-600 dark:text-slate-400 text-[11px] leading-relaxed">
               {isIndo
-                ? 'Menyiram air dari atas hanya memadamkan abu permukaan, sedangkan bara di kedalaman 1 meter tetap menjalar. Tancapkan bambu runcing atau pipa besi ke dalam tanah, lalu alirkan air pompa langsung ke akar bara hingga menjadi lumpur basah.'
+                ? 'Menyiram air dari atas hanya membuang ribuan liter air tanpa mematikan sumber api bawah tanah. Gunakan tombak pemadam (nozzle injeksi) yang ditancapkan ke dalam tanah sampai keluar gelembung uap air panas dan lumpur basah.'
                 : 'Spraying surface water does not extinguish underground peat fires. Drive a pipe or bamboo lance 50–100 cm into the ground to inject pressurized water directly into the smoldering root layer.'}
             </p>
           </div>

@@ -61,39 +61,39 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
 
           {/* Desktop Dual-Mode Switcher & Navigation Dock */}
-          <div className="hidden md:flex items-center gap-2.5">
-            {/* Primary Mode Switcher (Mode Warga vs Mode Riset) */}
-            <div className="flex items-center bg-slate-100 dark:bg-slate-900 p-1 rounded-xl border border-slate-200 dark:border-slate-800 text-xs shadow-2xs shrink-0">
+          <div className="hidden md:flex items-center gap-2">
+            {/* Minimalist Dual-Mode Segmented Pill */}
+            <div className="flex items-center bg-slate-100 dark:bg-slate-900/90 p-0.5 rounded-lg border border-slate-200 dark:border-slate-800 text-[11px] shadow-2xs shrink-0">
               <button
                 onClick={() => onToggleAppMode('citizen')}
-                className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer font-bold flex items-center gap-1.5 ${
+                className={`px-2.5 py-1 rounded-md transition-all cursor-pointer font-bold flex items-center gap-1.5 ${
                   appMode === 'citizen'
                     ? 'bg-emerald-600 text-white shadow-xs'
                     : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                 }`}
                 title={t.modeCitizenDesc}
               >
-                <ShieldAlert className="w-3.5 h-3.5 shrink-0" />
+                <ShieldAlert className="w-3 h-3 shrink-0" />
                 <span>{t.modeCitizen}</span>
               </button>
 
               <button
                 onClick={() => onToggleAppMode('science')}
-                className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer font-bold flex items-center gap-1.5 ${
+                className={`px-2.5 py-1 rounded-md transition-all cursor-pointer font-bold flex items-center gap-1.5 ${
                   appMode === 'science'
                     ? 'bg-sky-600 text-white shadow-xs'
                     : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                 }`}
                 title={t.modeScienceDesc}
               >
-                <Globe2 className="w-3.5 h-3.5 shrink-0" />
+                <Globe2 className="w-3 h-3 shrink-0" />
                 <span>{t.modeScience}</span>
               </button>
             </div>
 
-            {/* Science Navigation Sub-Tabs (Visible when in Science Mode) */}
+            {/* Science Navigation Sub-Tabs (Only visible when in Science Mode) */}
             {appMode === 'science' && (
-              <nav className="flex items-center bg-[#f0f2f5] dark:bg-[#141d2e] p-1 rounded-xl border border-slate-200/80 dark:border-slate-800/80 shadow-2xs animate-in fade-in duration-150">
+              <nav className="flex items-center bg-slate-100/80 dark:bg-slate-900/80 p-0.5 rounded-lg border border-slate-200 dark:border-slate-800 shadow-2xs animate-in fade-in duration-150">
                 {navItems.map((item) => {
                   const isActive = activeTab === item.id;
                   const Icon = item.icon;
@@ -101,21 +101,20 @@ export const Navbar: React.FC<NavbarProps> = ({
                     <button
                       key={item.id}
                       onClick={() => onSelectTab(item.id)}
-                      className={`group flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer relative ${
+                      className={`group flex items-center gap-1 px-2 py-1 rounded-md text-[11px] font-semibold transition-all cursor-pointer relative ${
                         isActive
-                          ? 'bg-white dark:bg-[#0c121e] text-slate-900 dark:text-white shadow-xs border border-slate-200/70 dark:border-slate-700/70 font-bold'
-                          : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-slate-800/40'
+                          ? 'bg-white dark:bg-[#0c121e] text-slate-900 dark:text-white shadow-2xs border border-slate-200/80 dark:border-slate-700/80 font-bold'
+                          : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-white/40 dark:hover:bg-slate-800/40'
                       }`}
                       aria-current={isActive ? 'page' : undefined}
                       title={item.label}
                     >
-                      <Icon className={`w-3.5 h-3.5 transition-colors shrink-0 ${
+                      <Icon className={`w-3 h-3 transition-colors shrink-0 ${
                         isActive 
                           ? (item.id === 'mitigation' ? 'text-rose-500 dark:text-rose-400' : 'text-sky-600 dark:text-sky-400')
                           : 'text-slate-400 dark:text-slate-500 group-hover:text-slate-700 dark:group-hover:text-slate-300'
                       }`} />
-                      <span className="hidden lg:inline">{item.label}</span>
-                      <span className="lg:hidden">{item.label.split(' ')[0]}</span>
+                      <span>{item.label}</span>
                     </button>
                   );
                 })}
@@ -124,12 +123,11 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
 
           {/* Right Controls */}
-          <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
-            
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
             {/* Live Indicator */}
             {isLiveSync && (
-              <span className="hidden sm:inline-flex items-center gap-1.5 text-[11px] font-medium text-[#1d1d1f] dark:text-emerald-400">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block animate-pulse" />
+              <span className="hidden xl:inline-flex items-center gap-1.5 text-[10px] font-mono font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800/60 px-2 py-0.5 rounded-md">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block animate-pulse" />
                 NASA FIRMS Live
               </span>
             )}
@@ -140,34 +138,34 @@ export const Navbar: React.FC<NavbarProps> = ({
                 onClick={onToggleTheme}
                 aria-label={themeLabel}
                 title={themeLabel}
-                className="p-1.5 sm:p-2 rounded-full text-[#6e6e73] dark:text-[#9ca3af] hover:text-[#1d1d1f] dark:hover:text-white hover:bg-[#f5f5f7] dark:hover:bg-[#1f2937] transition border border-[#e5e5e7] dark:border-[#374151] flex items-center justify-center min-w-[36px] min-h-[36px] cursor-pointer group"
+                className="p-1.5 rounded-lg text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition border border-slate-200 dark:border-slate-800 flex items-center justify-center min-w-[32px] min-h-[32px] cursor-pointer group"
               >
                 {theme === 'dark' ? (
-                  <Sun className="w-4 h-4 text-amber-400 group-hover:rotate-45 transition-transform" />
+                  <Sun className="w-3.5 h-3.5 text-amber-400 group-hover:rotate-45 transition-transform" />
                 ) : (
-                  <Moon className="w-4 h-4 text-[#515154] group-hover:-rotate-12 transition-transform" />
+                  <Moon className="w-3.5 h-3.5 text-slate-600 group-hover:-rotate-12 transition-transform" />
                 )}
               </button>
             )}
 
             {/* Language Switch */}
-            <div className="flex items-center bg-[#e5e5ea] dark:bg-[#1f2937] rounded-full p-0.5 text-[11px] font-medium">
+            <div className="flex items-center bg-slate-100 dark:bg-slate-800 rounded-lg p-0.5 text-[10px] font-mono font-bold border border-slate-200 dark:border-slate-700">
               <button
                 onClick={() => onToggleLanguage('en')}
-                className={`px-2.5 py-0.5 rounded-full transition-all cursor-pointer ${
+                className={`px-1.5 py-0.5 rounded transition-all cursor-pointer ${
                   language === 'en'
-                    ? 'bg-white dark:bg-[#374151] text-[#1d1d1f] dark:text-white shadow-xs font-semibold'
-                    : 'text-[#86868b] dark:text-[#9ca3af] hover:text-[#1d1d1f] dark:hover:text-white'
+                    ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-2xs'
+                    : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                 }`}
               >
                 EN
               </button>
               <button
                 onClick={() => onToggleLanguage('id')}
-                className={`px-2.5 py-0.5 rounded-full transition-all cursor-pointer ${
+                className={`px-1.5 py-0.5 rounded transition-all cursor-pointer ${
                   language === 'id'
-                    ? 'bg-white dark:bg-[#374151] text-[#1d1d1f] dark:text-white shadow-xs font-semibold'
-                    : 'text-[#86868b] dark:text-[#9ca3af] hover:text-[#1d1d1f] dark:hover:text-white'
+                    ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-2xs'
+                    : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                 }`}
               >
                 ID
@@ -178,12 +176,12 @@ export const Navbar: React.FC<NavbarProps> = ({
             {onOpenTour && (
               <button
                 onClick={onOpenTour}
-                className="hidden xl:inline-flex items-center gap-1.5 text-[12px] font-semibold px-3 py-1.5 rounded-xl border border-sky-600/30 dark:border-sky-500/30 bg-sky-50 dark:bg-sky-950/50 text-sky-700 dark:text-sky-300 hover:bg-sky-100 dark:hover:bg-sky-900/60 transition-all cursor-pointer shadow-2xs"
+                className="hidden xl:inline-flex items-center gap-1 text-[11px] font-semibold px-2.5 py-1 rounded-lg border border-sky-300 dark:border-sky-800/80 bg-sky-50/80 dark:bg-sky-950/40 text-sky-700 dark:text-sky-300 hover:bg-sky-100 dark:hover:bg-sky-900/60 transition-all cursor-pointer shadow-2xs"
                 title={language === 'id' ? 'Buka Ringkasan Ilmiah 30 Detik (Pintasan: ?)' : 'Open 30-Second Science Briefing (Shortcut: ?)'}
               >
-                <Compass className="w-3.5 h-3.5 text-sky-600 dark:text-sky-400" />
-                <span>{t.scienceTourBtn}</span>
-                <kbd className="text-[9px] font-mono px-1 py-0.2 rounded bg-white dark:bg-[#111827] border border-sky-300 dark:border-sky-700 text-sky-800 dark:text-sky-200">
+                <Compass className="w-3 h-3 text-sky-600 dark:text-sky-400" />
+                <span>Tour</span>
+                <kbd className="text-[9px] font-mono px-1 rounded bg-white dark:bg-slate-900 border border-sky-200 dark:border-sky-800 text-sky-800 dark:text-sky-300">
                   ?
                 </kbd>
               </button>
