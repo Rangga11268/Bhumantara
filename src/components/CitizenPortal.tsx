@@ -271,7 +271,7 @@ export const CitizenPortal: React.FC<CitizenPortalProps> = ({
       
       {/* 1. Header Bar: Quick Region Selector & Seamless Switch to Science Mode */}
       <div className="bg-white dark:bg-[#0c121e] border border-slate-200 dark:border-slate-800 rounded-2xl p-4 sm:p-5 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
+        <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
             <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
             <h1 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white tracking-tight">
@@ -289,7 +289,7 @@ export const CitizenPortal: React.FC<CitizenPortalProps> = ({
         </div>
 
         {/* Region Quick Select Buttons */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0">
+        <div className="flex items-center gap-1.5 shrink-0 flex-wrap sm:flex-nowrap">
           {[
             { id: 'riau', name: 'Riau', note: isIndo ? 'Gambut' : 'Peatland' },
             { id: 'kalteng', name: 'Kalteng', note: isIndo ? 'Biosfer' : 'Biosphere' },
@@ -328,10 +328,10 @@ export const CitizenPortal: React.FC<CitizenPortalProps> = ({
           ? 'bg-orange-50/60 dark:bg-orange-950/20 border-orange-300 dark:border-orange-800'
           : 'bg-rose-50/60 dark:bg-rose-950/20 border-rose-300 dark:border-rose-800'
       }`}>
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+        <div className="flex flex-col gap-5">
           <div className="space-y-2">
-            <div className="flex items-center gap-2">
-              <span className={`px-2.5 py-0.5 rounded-md text-xs font-mono font-bold tracking-wider uppercase border ${
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className={`px-2.5 py-0.5 rounded-md text-xs font-mono font-bold tracking-wider uppercase border shrink-0 ${
                 threatTier.level === 'safe'
                   ? 'bg-emerald-600 text-white border-emerald-600'
                   : threatTier.level === 'advisory'
@@ -347,7 +347,7 @@ export const CitizenPortal: React.FC<CitizenPortalProps> = ({
               </span>
             </div>
 
-            <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight">
+            <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight leading-tight">
               {threatTier.title}
             </h2>
 
@@ -356,32 +356,32 @@ export const CitizenPortal: React.FC<CitizenPortalProps> = ({
             </p>
           </div>
 
-          {/* Quick Metrics Tile */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 shrink-0 bg-white dark:bg-[#0c121e] p-3 rounded-xl border border-slate-200 dark:border-slate-800 shadow-2xs">
-            <div className="p-2 text-center border-r border-slate-100 dark:border-slate-800">
+          {/* Quick Metrics Tile (Clean 3-column responsive grid with full breathing room) */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 bg-white/80 dark:bg-[#0c121e]/80 backdrop-blur-sm p-3.5 rounded-xl border border-slate-200/80 dark:border-slate-800/80 shadow-2xs w-full">
+            <div className="p-2.5 text-center sm:border-r border-slate-100 dark:border-slate-800 flex flex-col justify-center items-center">
               <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
                 {isIndo ? 'Titik Api Aktif' : 'Active Fires'}
               </span>
-              <span className="text-xl sm:text-2xl font-black font-mono text-slate-900 dark:text-white tabular-nums">
-                {activeCount}
+              <span className="text-xl sm:text-2xl font-black font-mono text-slate-900 dark:text-white tabular-nums block mt-0.5">
+                {activeCount.toLocaleString()}
               </span>
             </div>
 
-            <div className="p-2 text-center border-r border-slate-100 dark:border-slate-800">
+            <div className="p-2.5 text-center sm:border-r border-slate-100 dark:border-slate-800 flex flex-col justify-center items-center">
               <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
                 {isIndo ? 'Estimasi ISPU' : 'Estimated AQI'}
               </span>
-              <span className="text-xs font-mono font-bold text-slate-800 dark:text-slate-200 mt-1 block">
+              <span className="text-xs font-mono font-bold text-slate-800 dark:text-slate-200 mt-1.5 block">
                 {threatTier.ispuEstimate}
               </span>
             </div>
 
-            <div className="col-span-2 sm:col-span-1 p-2 text-center flex flex-col justify-center items-center">
+            <div className="p-2.5 text-center flex flex-col justify-center items-center">
               <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
                 {isIndo ? 'Status Masker' : 'Mask Status'}
               </span>
-              <span className={`text-xs font-bold mt-1 ${threatTier.maskRecommended ? 'text-rose-600 dark:text-rose-400' : 'text-emerald-600 dark:text-emerald-400'}`}>
-                {threatTier.maskRecommended ? (isIndo ? 'Wajib Masker' : 'Mask Required') : (isIndo ? 'Kondisi Aman' : 'Normal Air')}
+              <span className={`text-xs font-bold mt-1.5 ${threatTier.maskRecommended ? 'text-rose-600 dark:text-rose-400' : 'text-emerald-600 dark:text-emerald-400'}`}>
+                {threatTier.maskRecommended ? (isIndo ? 'Wajib Masker N95' : 'N95 Required') : (isIndo ? 'Kondisi Aman' : 'Normal Air')}
               </span>
             </div>
           </div>
